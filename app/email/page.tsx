@@ -210,8 +210,8 @@ export default function EmailPage() {
         </span>
       </div>
 
-      <h2 className="font-headline-lg text-headline-lg text-on-surface mt-space-md">Welcome back</h2>
-      <p className="font-body-sm text-body-sm text-on-surface-variant leading-[18px] mt-1">
+      <div className="flex-1 min-h-[10vh]" aria-hidden="true" />
+      <h2 className="font-headline-lg text-headline-lg text-on-surface mt-space-md">Welcome back</h2>      <p className="font-body-sm text-body-sm text-on-surface-variant leading-[18px] mt-1">
         Sign in with Google, or use your email and password. New here? Switch to Create account —
         it takes a minute.
       </p>
