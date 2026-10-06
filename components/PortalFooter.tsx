@@ -3,43 +3,43 @@ import LogoEmblem from './LogoEmblem';
 
 export default function PortalFooter() {
   return (
-    <footer className="w-full bg-surface-container-lowest border-t border-outline/10 mt-auto pt-10 pb-28 md:pb-10 transition-colors">
-      <div className="max-w-6xl mx-auto px-margin md:px-8">
+    <footer className="w-full bg-surface-container-lowest border-t border-outline/10 mt-auto pt-6 pb-20 md:pt-10 md:pb-10 transition-colors">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-8">
         {/* Top Institutional Header Row */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-outline/10">
-          <div className="flex items-start md:items-center gap-3.5">
-            <LogoEmblem className="h-11 w-11 shadow-sm flex-shrink-0" />
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 pb-5 md:pb-8 border-b border-outline/10">
+          <div className="flex items-start md:items-center gap-3">
+            <LogoEmblem className="h-9 w-9 md:h-11 md:w-11 shadow-sm flex-shrink-0" />
             <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[17px] font-extrabold text-on-surface tracking-tight">
+              <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+                <span className="text-[15px] md:text-[17px] font-extrabold text-on-surface tracking-tight">
                   Lions Calcutta Greater Vidya Mandir
                 </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
-                  <span className="material-symbols-outlined text-[13px]">verified</span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[9.5px] md:text-[10px] font-bold uppercase tracking-wider">
+                  <span className="material-symbols-outlined text-[12px] md:text-[13px]">verified</span>
                   CISCE Affiliated
                 </span>
               </div>
-              <p className="font-body-sm text-[12px] text-on-surface-variant mt-0.5 leading-snug">
+              <p className="font-body-sm text-[11px] md:text-[12px] text-on-surface-variant mt-0.5 leading-snug">
                 Affiliation No. 2430095 • School Code: 15632 • Academic Session 2026–2027
               </p>
             </div>
           </div>
 
           {/* Institutional Badges */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-[11px] font-semibold text-on-surface-variant border border-outline/10">
-              <span className="material-symbols-outlined text-[15px] text-tertiary">lock</span>
+          <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 md:px-3 md:py-1 rounded-full bg-surface-container text-[10px] md:text-[11px] font-semibold text-on-surface-variant border border-outline/10">
+              <span className="material-symbols-outlined text-[13px] md:text-[15px] text-tertiary">lock</span>
               256-Bit SSL Encrypted
             </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-[11px] font-semibold text-on-surface-variant border border-outline/10">
-              <span className="material-symbols-outlined text-[15px] text-primary">security</span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 md:px-3 md:py-1 rounded-full bg-surface-container text-[10px] md:text-[11px] font-semibold text-on-surface-variant border border-outline/10">
+              <span className="material-symbols-outlined text-[13px] md:text-[15px] text-primary">security</span>
               ISO 27001 Certified
             </span>
           </div>
         </div>
 
         {/* Multi-column Navigation Links */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-outline/10 text-[13px]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8 py-5 md:py-8 border-b border-outline/10 text-[12px] md:text-[13px]">
           {/* Column 1: Academics */}
           <div className="flex flex-col gap-2.5">
             <span className="font-bold text-[12px] uppercase tracking-wider text-outline mb-1">
@@ -153,16 +153,16 @@ export default function PortalFooter() {
         </div>
 
         {/* Bottom Legal, Version & Copyright Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 text-[12px] text-on-surface-variant">
-          <div className="flex items-center gap-2 flex-wrap text-center md:text-left">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 pt-4 md:pt-6 text-[11px] md:text-[12px] text-on-surface-variant">
+          <div className="flex items-center gap-1.5 md:gap-2 flex-wrap text-center md:text-left justify-center md:justify-start">
             <span>© 2026 Lions Calcutta Greater Vidya Mandir. All rights reserved.</span>
             <span className="hidden md:inline">•</span>
             <span className="text-outline">Affiliated to CISCE, New Delhi</span>
           </div>
 
-          <div className="flex items-center gap-3 flex-wrap">
-            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-outline">
-              <span className="material-symbols-outlined text-[13px] text-tertiary">check_circle</span>
+          <div className="flex items-center gap-2.5 md:gap-3 flex-wrap justify-center">
+            <span className="inline-flex items-center gap-1 text-[10px] md:text-[11px] font-semibold text-outline">
+              <span className="material-symbols-outlined text-[12px] md:text-[13px] text-tertiary">check_circle</span>
               NexaCampus v2.5.3
             </span>
             <span>•</span>
