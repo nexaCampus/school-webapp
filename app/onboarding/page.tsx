@@ -13,6 +13,21 @@ export const dynamic = 'force-dynamic';
 
 const GENDERS = ['Male', 'Female', 'Other'];
 
+/** Display/storage form is DD-MM-YYYY; the native picker speaks YYYY-MM-DD. */
+function dobToISO(dob: string): string {
+  const m = dob.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+  return m ? `${m[3]}-${m[2]}-${m[1]}` : '';
+}
+
+function dobFromISO(iso: string): string {
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}-${m[2]}-${m[1]}` : '';
+}
+
+function todayISO(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
 function Field({
   label,
   icon,
@@ -245,11 +260,12 @@ function OnboardingForm() {
           <div className="flex-1 min-w-0">
             <Field label="Birth Date (optional)" icon="cake">
               <input
-                type="text"
-                placeholder="DD-MM-YYYY"
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-                className={inputCls}
+                type="date"
+                aria-label="Birth date"
+                value={dobToISO(dob)}
+                max={todayISO()}
+                onChange={(e) => setDob(dobFromISO(e.target.value))}
+                className={`${inputCls} min-h-[20px]`}
               />
             </Field>
           </div>
@@ -320,7 +336,7 @@ function OnboardingForm() {
 
       <section className="w-full bg-surface-container-lowest/95 rounded-[20px] shadow-[0_4px_16px_rgba(28,42,200,0.08)] p-4 flex flex-col gap-space-md mt-space-md">
         <SectionHead title="Contact Number" required />
-        <Field label="Student / Guardian Mobile" icon="phone_smartphone">
+          <Field label="Student / Guardian Mobile" icon="call">
           <>
             <span className="text-[13px] font-bold text-on-surface">+91</span>
             <input
