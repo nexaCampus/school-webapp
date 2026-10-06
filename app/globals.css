@@ -19,6 +19,9 @@
   --color-bg: #faf8ff;
   --color-primary: #1c2ac8;
   --color-primary-container: #3b49df;
+  --color-tertiary: #005036;
+  --color-tertiary-container: #006b49;
+  --color-on-tertiary-container: #62efb3;
 }
 
 .dark {
@@ -40,6 +43,9 @@
   --color-bg: #1e1e1e;
   --color-primary: #007acc;
   --color-primary-container: #0e639c;
+  --color-tertiary: #4edea3;
+  --color-tertiary-container: #1b4d3e;
+  --color-on-tertiary-container: #6ffbbe;
 }
 
 /* Base layer: ensure smooth, natural document scrolling and Poppins font everywhere */
