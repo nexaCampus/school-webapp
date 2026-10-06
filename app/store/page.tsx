@@ -100,10 +100,16 @@ export default function StorePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState<{ [id: string]: number }>({});
   const [orderNotification, setOrderNotification] = useState<string | null>(null);
+  const [studentName, setStudentName] = useState('Student');
 
   useEffect(() => {
     const s = getSession();
-    if (!s?.student) window.location.replace('/chooser');
+    if (!s?.student) {
+      window.location.replace('/chooser');
+      return;
+    }
+    const name = s.student.displayName || s.student.name || s.name;
+    if (name) setStudentName(name);
   }, []);
 
   const filteredProducts = PRODUCTS.filter((item) => {
@@ -277,7 +283,7 @@ export default function StorePage() {
                   </div>
                   <button
                     onClick={() => {
-                      alert(`Order placed successfully for ₹${totalCartPrice}! Collection slip generated for Student Rajen Shaw.`);
+                      alert(`Order placed successfully for ₹${totalCartPrice}! Collection slip generated for Student ${studentName}.`);
                       setCart({});
                     }}
                     className="w-full h-10 rounded-full bg-primary text-white font-bold text-[13px] shadow-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-1.5"

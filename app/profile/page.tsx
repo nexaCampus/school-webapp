@@ -105,19 +105,19 @@ export default function ProfilePage() {
                   <span>Active Student • AY 2026-2027</span>
                 </div>
                 <div className="grid grid-cols-2 gap-space-sm w-full pt-space-xs">
-                  <div className="bg-surface-container-low rounded-DEFAULT p-3 flex flex-col items-center justify-center">
-                    <span className="font-label-sm text-label-sm text-outline uppercase tracking-wider">
+                  <div className="bg-surface-container-low rounded-DEFAULT p-3 flex flex-col items-center justify-center min-w-0">
+                    <span className="font-label-sm text-[11px] text-outline uppercase tracking-wider text-center">
                       Roll Number
                     </span>
-                    <span className="font-headline-sm text-headline-sm text-on-surface mt-0.5">
+                    <span className="text-[17px] sm:text-[20px] font-bold text-on-surface mt-0.5 truncate max-w-full text-center">
                       {studentData.rollNo}
                     </span>
                   </div>
-                  <div className="bg-surface-container-low rounded-DEFAULT p-3 flex flex-col items-center justify-center">
-                    <span className="font-label-sm text-label-sm text-outline uppercase tracking-wider">
+                  <div className="bg-surface-container-low rounded-DEFAULT p-3 flex flex-col items-center justify-center min-w-0">
+                    <span className="font-label-sm text-[11px] text-outline uppercase tracking-wider text-center">
                       Admission ID
                     </span>
-                    <span className="font-headline-sm text-headline-sm text-primary mt-0.5">
+                    <span className="text-[14px] sm:text-[16px] md:text-[18px] font-bold text-primary mt-0.5 truncate max-w-full text-center">
                       #{studentData.admissionId}
                     </span>
                   </div>

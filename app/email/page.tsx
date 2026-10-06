@@ -22,6 +22,8 @@ import {
 } from '@/lib/firebase';
 import { getSession, setSession } from '@/lib/session';
 import { student as mockStudent } from '@/lib/data';
+import AuthFooter from '@/components/AuthFooter';
+import DarkModeToggle from '@/components/DarkModeToggle';
 
 const PENDING_SIGNUP_KEY = 'pendingSignupEmail';
 
@@ -356,13 +358,15 @@ export default function EmailPage() {
   }
 
   return (
-    <div className="relative min-h-screen bg-surface flex items-center justify-center p-0 md:p-10 w-full overflow-y-auto">
+    <div className="relative min-h-screen bg-surface flex flex-col justify-between w-full overflow-y-auto">
       {/* Ambient Backdrop Orbs */}
       <div className="hidden md:block absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
       <div className="hidden md:block absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none" />
 
-      {/* Main Responsive Split Card Container */}
-      <div className="w-full max-w-md md:max-w-4xl mx-auto bg-surface md:bg-surface-container-lowest rounded-none md:rounded-3xl shadow-none md:shadow-[0_24px_70px_-12px_rgba(28,42,200,0.16)] border-0 md:border md:border-outline/10 overflow-hidden md:grid md:grid-cols-12 relative z-10 min-h-screen md:min-h-0 flex flex-col justify-between md:block">
+      {/* Main Centered Content */}
+      <div className="flex-1 flex items-center justify-center p-0 md:p-10 w-full relative z-10">
+        {/* Main Responsive Split Card Container */}
+        <div className="w-full max-w-md md:max-w-4xl mx-auto bg-surface md:bg-surface-container-lowest rounded-none md:rounded-3xl shadow-none md:shadow-[0_24px_70px_-12px_rgba(28,42,200,0.16)] border-0 md:border md:border-outline/10 overflow-hidden md:grid md:grid-cols-12 relative z-10 min-h-screen md:min-h-0 flex flex-col justify-between md:block">
         {/* Left Branding Rail on Desktop */}
         <div className="hidden md:flex md:col-span-5 bg-gradient-to-br from-primary via-[#2435df] to-[#121c88] text-white p-8 md:p-10 flex-col justify-between relative overflow-hidden">
           <div className="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-white/10 blur-xl pointer-events-none" />
@@ -418,7 +422,7 @@ export default function EmailPage() {
           </div>
 
           <div className="relative z-10 flex items-center justify-between text-[11px] text-white/70">
-            <span>CBSE Affiliated Gateway</span>
+            <span>CISCE Affiliated Gateway</span>
             <span>v2.5.3</span>
           </div>
         </div>
@@ -436,6 +440,7 @@ export default function EmailPage() {
             <h1 className="font-headline-sm text-headline-sm font-bold text-on-surface flex-1">
               Sign In
             </h1>
+            <DarkModeToggle className="mr-1" />
             <span className="text-[10px] font-bold text-tertiary bg-tertiary/10 rounded-full px-2.5 py-1">
               SECURE
             </span>
@@ -574,6 +579,8 @@ export default function EmailPage() {
           )}
         </div>
       </div>
+    </div>
+
       {verifyEmail && (
         <div
           className="fixed inset-0 z-[90] bg-on-surface/50 backdrop-blur-[2px] flex items-end sm:items-center justify-center sm:px-margin"
@@ -646,7 +653,8 @@ export default function EmailPage() {
         </div>
       )}
 
-      <div className="flex-1 min-h-4" />
+      {/* Institutional Public Footer */}
+      <AuthFooter />
     </div>
   );
 }

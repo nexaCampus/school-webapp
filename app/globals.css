@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-surface: #faf8ff;
+  --color-surface-bright: #faf8ff;
+  --color-surface-dim: #d2d9f4;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f3ff;
+  --color-surface-container: #eaedff;
+  --color-surface-container-high: #e2e7ff;
+  --color-surface-container-highest: #dae2fd;
+  --color-surface-variant: #dae2fd;
+  --color-on-surface: #131b2e;
+  --color-on-surface-variant: #454655;
+  --color-outline: #757687;
+  --color-outline-variant: #c6c5d8;
+  --color-bg: #faf8ff;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-surface: #0b0f19;
+  --color-surface-bright: #151d2f;
+  --color-surface-dim: #070a12;
+  --color-surface-container-lowest: #121929;
+  --color-surface-container-low: #162035;
+  --color-surface-container: #1b263f;
+  --color-surface-container-high: #22304e;
+  --color-surface-container-highest: #2b3d63;
+  --color-surface-variant: #22304e;
+  --color-on-surface: #f1f5f9;
+  --color-on-surface-variant: #94a3b8;
+  --color-outline: #64748b;
+  --color-outline-variant: #334155;
+  --color-bg: #0b0f19;
+}
+
 /* Base layer: ensure smooth, natural document scrolling on all browsers */
 html {
   width: 100%;
@@ -16,8 +51,15 @@ body {
   min-height: 100%;
   margin: 0;
   padding: 0;
-  background: #faf8ff;
+  background: var(--color-bg, #faf8ff);
+  color: var(--color-on-surface, #131b2e);
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dark body {
+  background: #0b0f19;
+  color: #f1f5f9;
 }
 
 .pb-safe {
@@ -59,7 +101,13 @@ body {
     background:
       radial-gradient(900px 600px at 10% -80px, rgba(28, 42, 200, 0.05), transparent 60%),
       radial-gradient(800px 500px at 90% 120px, rgba(254, 166, 25, 0.07), transparent 60%),
-      #faf8ff;
+      var(--color-bg, #faf8ff);
+  }
+  .dark body {
+    background:
+      radial-gradient(900px 600px at 10% -80px, rgba(28, 42, 200, 0.18), transparent 60%),
+      radial-gradient(800px 500px at 90% 120px, rgba(254, 166, 25, 0.08), transparent 60%),
+      #0b0f19;
   }
 }
 

@@ -1,6 +1,6 @@
 // Firebase access for the web twin. Same contract as the Android
 // FirebaseAdmissionAuthRepository: anonymous session + students/{id} docs.
-import { initializeApp, type FirebaseApp } from 'firebase/app';
+import { getApps, getApp, initializeApp, type FirebaseApp } from 'firebase/app';
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
@@ -46,7 +46,7 @@ let cached: { app: FirebaseApp; auth: Auth; db: Firestore } | null = null;
 
 export function firebase() {
   if (!cached) {
-    const app = initializeApp(config);
+    const app = getApps().length > 0 ? getApp() : initializeApp(config);
     cached = { app, auth: getAuth(app), db: getFirestore(app) };
   }
   return cached;
