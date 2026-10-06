@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
+import BootSplash from '@/components/BootSplash';
 import './globals.css';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -30,7 +31,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
           />
         </head>
-        <body className={`${jakarta.className} antialiased`}>{children}</body>
+        <body className={`${jakarta.className} antialiased`}>
+          <BootSplash>{children}</BootSplash>
+        </body>
       </html>
   );
 }
