@@ -17,24 +17,29 @@
   --color-outline: #757687;
   --color-outline-variant: #c6c5d8;
   --color-bg: #faf8ff;
+  --color-primary: #1c2ac8;
+  --color-primary-container: #3b49df;
 }
 
 .dark {
   color-scheme: dark;
-  --color-surface: #0b0f19;
-  --color-surface-bright: #151d2f;
-  --color-surface-dim: #070a12;
-  --color-surface-container-lowest: #121929;
-  --color-surface-container-low: #162035;
-  --color-surface-container: #1b263f;
-  --color-surface-container-high: #22304e;
-  --color-surface-container-highest: #2b3d63;
-  --color-surface-variant: #22304e;
-  --color-on-surface: #f1f5f9;
-  --color-on-surface-variant: #94a3b8;
-  --color-outline: #64748b;
-  --color-outline-variant: #334155;
-  --color-bg: #0b0f19;
+  /* VS Code Dark+ Theme Palette */
+  --color-surface: #1e1e1e;
+  --color-surface-bright: #252526;
+  --color-surface-dim: #181818;
+  --color-surface-container-lowest: #252526;
+  --color-surface-container-low: #1e1e1e;
+  --color-surface-container: #252526;
+  --color-surface-container-high: #2d2d2d;
+  --color-surface-container-highest: #37373d;
+  --color-surface-variant: #2d2d2d;
+  --color-on-surface: #d4d4d4;
+  --color-on-surface-variant: #969696;
+  --color-outline: #858585;
+  --color-outline-variant: #3c3c3c;
+  --color-bg: #1e1e1e;
+  --color-primary: #007acc;
+  --color-primary-container: #0e639c;
 }
 
 /* Base layer: ensure smooth, natural document scrolling and Poppins font everywhere */
@@ -69,8 +74,8 @@ textarea {
 }
 
 .dark body {
-  background: #0b0f19;
-  color: #f1f5f9;
+  background: #1e1e1e;
+  color: #d4d4d4;
 }
 
 .pb-safe {
@@ -115,10 +120,13 @@ textarea {
       var(--color-bg, #faf8ff);
   }
   .dark body {
-    background:
-      radial-gradient(900px 600px at 10% -80px, rgba(28, 42, 200, 0.18), transparent 60%),
-      radial-gradient(800px 500px at 90% 120px, rgba(254, 166, 25, 0.08), transparent 60%),
-      #0b0f19;
+    background: #1e1e1e;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: #3c3c3c;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #4f4f4f;
   }
 }
 

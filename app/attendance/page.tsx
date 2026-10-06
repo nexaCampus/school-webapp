@@ -17,7 +17,7 @@ export default function AttendancePage() {
         {/* Top Metric & Quick Action Grid */}
         <div className="md:grid md:grid-cols-2 md:gap-6 flex flex-col gap-space-md">
           {/* Main Attendance Metric Hero */}
-          <section className="relative bg-gradient-to-br from-white/95 via-surface-container-lowest to-surface-container-low/80 rounded-lg p-space-lg shadow-[0_12px_28px_-6px_rgba(15,23,42,0.08)] overflow-hidden">
+          <section className="relative bg-gradient-to-br from-white/95 via-surface-container-lowest to-surface-container-low/80 dark:from-[#252526] dark:via-[#252526] dark:to-[#252526] dark:border dark:border-[#3c3c3c] rounded-lg p-space-lg shadow-[0_12px_28px_-6px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
             <div className="flex items-center gap-space-md">
               <div className="w-20 h-20 rounded-full bg-primary/10 flex flex-col items-center justify-center flex-shrink-0">
                 <span className="text-[22px] font-extrabold text-primary leading-none">95.8%</span>
@@ -37,9 +37,9 @@ export default function AttendancePage() {
           </section>
 
           {/* Apply for Leave Action Card */}
-          <section className="bg-surface-container-lowest rounded-lg shadow-sm p-space-lg flex flex-col justify-between">
+          <section className="bg-surface-container-lowest dark:bg-[#252526] dark:border dark:border-[#3c3c3c] rounded-lg shadow-sm p-space-lg flex flex-col justify-between">
             <div className="flex items-start gap-4">
-              <span className="w-12 h-12 rounded-2xl bg-primary-fixed flex items-center justify-center flex-shrink-0">
+              <span className="w-12 h-12 rounded-2xl bg-primary-fixed dark:bg-[#007acc]/20 flex items-center justify-center flex-shrink-0">
                 <span className="material-symbols-outlined text-primary text-[24px]">event_note</span>
               </span>
               <div className="flex-1">
@@ -60,7 +60,7 @@ export default function AttendancePage() {
         </div>
 
         {/* Detailed Monthly Attendance Breakdown Table / Cards */}
-        <section className="bg-white dark:bg-[#121929] rounded-[14px] border border-outline/10 dark:border-white/10 p-space-lg shadow-sm">
+        <section className="bg-white dark:bg-[#252526] rounded-[14px] border border-outline/10 dark:border-[#3c3c3c] p-space-lg shadow-sm">
           <div className="flex items-center justify-between mb-space-md">
             <div>
               <h3 className="font-headline-sm text-headline-sm text-on-surface">
@@ -76,7 +76,7 @@ export default function AttendancePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="p-4 rounded-[14px] bg-surface-container-low dark:bg-slate-800/60 border border-outline/10 flex flex-col">
+            <div className="p-4 rounded-[14px] bg-surface-container-low dark:bg-[#1e1e1e] border border-outline/10 dark:border-[#3c3c3c] flex flex-col">
               <span className="font-label-sm text-label-sm text-outline uppercase tracking-wider">Total Days</span>
               <span className="font-headline-md text-headline-md text-on-surface font-bold mt-1">24</span>
               <span className="font-body-sm text-[11px] text-on-surface-variant">Academic working</span>
