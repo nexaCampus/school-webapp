@@ -124,3 +124,36 @@ export function setSession(session: Session): void {
 export function clearSession(): void {
   storage()?.removeItem(KEY);
 }
+
+/**
+ * Fully logs out the active user:
+ * 1. Purges the active session from localStorage
+ * 2. Signs out of Firebase Auth (Google / Email)
+ * 3. Clears transient sessionStorage
+ * 4. Navigates cleanly to the target destination (defaults to /chooser)
+ */
+export async function logoutUser(redirectTo: string = '/chooser'): Promise<void> {
+  clearSession();
+  try {
+    const { signOutUser } = await import('./firebase');
+    await signOutUser();
+  } catch (err) {
+    console.warn('[Session] Firebase sign-out warning:', err);
+  }
+  if (typeof window !== 'undefined') {
+    try {
+      sessionStorage.clear();
+    } catch {}
+    window.location.href = redirectTo;
+  }
+}
+
+/**
+ * Switches the active student account:
+ * 1. Purges active session so chooser and login methods start fresh
+ * 2. Signs out of Firebase so account selector re-triggers
+ * 3. Navigates cleanly to /chooser
+ */
+export async function switchAccount(): Promise<void> {
+  await logoutUser('/chooser');
+}
