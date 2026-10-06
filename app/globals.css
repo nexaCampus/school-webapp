@@ -2,20 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base layer carried over from the Stitch design source. */
-html,
-body {
-  width: 100vw;
-  margin: 0;
-  padding: 0;
-  /* Ambient glows and the column shadow extend past the viewport edge;
-     clip instead of scrolling so the column never sits off-center. */
-  overflow-x: clip;
+/* Base layer: ensure smooth, natural document scrolling on all browsers */
+html {
+  width: 100%;
+  min-height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
-  overscroll-behavior: none;
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
   background: #faf8ff;
+  overflow-x: hidden;
 }
 
 .pb-safe {
@@ -26,18 +28,38 @@ body {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
-::-webkit-scrollbar {
-  display: none;
+/* Custom sleek scrollbar for desktop/laptop screens so users can see and drag scroll */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(28, 42, 200, 0.22);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(28, 42, 200, 0.45);
+  }
 }
 
-/* Desktop: ambient backdrop. Pages center themselves in a 430px column
-   (see .app-column); fixed bars are re-anchored by the converter. */
-@media (min-width: 480px) {
+/* Hide scrollbar on mobile devices to preserve native touch experience */
+@media (max-width: 767px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Ambient responsive backdrop for desktop/laptop screens */
+@media (min-width: 768px) {
   body {
     background:
-      radial-gradient(640px 420px at 12% -40px, rgba(28, 42, 200, 0.08), transparent 60%),
-      radial-gradient(560px 400px at 88% 180px, rgba(254, 166, 25, 0.12), transparent 60%),
-      #e9edfb;
+      radial-gradient(900px 600px at 10% -80px, rgba(28, 42, 200, 0.05), transparent 60%),
+      radial-gradient(800px 500px at 90% 120px, rgba(254, 166, 25, 0.07), transparent 60%),
+      #faf8ff;
   }
 }
 
@@ -46,26 +68,20 @@ body {
   margin-inline: auto;
 }
 
-@media (min-width: 480px) {
-  .app-column {
-    max-width: 430px;
-    box-shadow: 0 0 64px rgba(28, 42, 200, 0.12);
-  }
-}
-
-/* Laptop and up: lift the column into a floating device card so the stage
-   reads intentional instead of empty. The app UI inside is untouched. */
-@media (min-width: 1024px) {
-  body {
-    padding-block: 28px;
-  }
-
-  .app-column {
-    border-radius: 36px;
-    overflow: clip;
-    min-height: calc(100vh - 56px);
-    box-shadow:
-      0 32px 80px -16px rgba(28, 42, 200, 0.28),
-      0 0 0 1px rgba(28, 42, 200, 0.08);
-  }
+/* Material Symbols offline & ligature stability */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-display: swap;
 }

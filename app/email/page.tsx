@@ -10,6 +10,7 @@ import {
   emailSignIn,
   emailSignUp,
   friendlyAuthError,
+  getStudentByEmail,
   googleSignIn,
   googleSignInRedirect,
   onAuthChange,
@@ -49,7 +50,7 @@ export default function EmailPage() {
     setError(null);
   }
 
-  function routeGoogleAccount(account: AuthAccount) {
+  async function routeGoogleAccount(account: AuthAccount) {
     const existing = getSession();
     // Returning user who already has an onboarded student profile
     if (existing?.student && !existing.isNewAccount) {
@@ -59,6 +60,21 @@ export default function EmailPage() {
         name: account.displayName || existing.student.name,
         email: account.email || existing.student.guardianEmail,
         provider: 'google',
+      });
+      router.replace('/home');
+      return;
+    }
+
+    // Lookup in Firestore by email
+    const studentDoc = await getStudentByEmail(account.email);
+    if (studentDoc) {
+      setSession({
+        uid: account.uid,
+        name: studentDoc.name || account.displayName,
+        email: account.email,
+        provider: 'google',
+        isNewAccount: false,
+        student: studentDoc,
       });
       router.replace('/home');
       return;
@@ -115,7 +131,7 @@ export default function EmailPage() {
   // - A Google identity without a completed student profile routes to onboarding
   // - An existing student profile routes to home
   useEffect(() => {
-    const unsub = onAuthChange((user) => {
+    const unsub = onAuthChange(async (user) => {
       if (!user?.email) return;
       if (!user.emailVerified) {
         setVerifyEmail(user.email);
@@ -161,13 +177,30 @@ export default function EmailPage() {
         const q = new URLSearchParams({ email: user.email ?? '' });
         router.push(`/onboarding?${q.toString()}`);
       } else {
+        const studentDoc = await getStudentByEmail(user.email ?? '');
+        const derivedName =
+          studentDoc?.name ||
+          user.displayName ||
+          (user.email ? user.email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Student');
+        const studentProfile = studentDoc || {
+          ...mockStudent,
+          id: 'LCGVM-' + user.uid.slice(0, 6).toUpperCase(),
+          name: derivedName,
+          displayName: derivedName,
+          guardianEmail: user.email ?? '',
+          fatherName: 'Guardian of ' + derivedName,
+          motherName: 'Family of ' + derivedName,
+          contactPhone: 'Contact registered via ' + (user.email ?? ''),
+          emergencyPhone: 'Contact registered via ' + (user.email ?? ''),
+          residentialAddress: 'Address on school roster',
+        };
         setSession({
           uid: user.uid,
-          name: mockStudent.name,
-          email: user.email ?? mockStudent.guardianEmail,
+          name: derivedName,
+          email: user.email ?? '',
           provider: 'email',
           isNewAccount: false,
-          student: { ...mockStudent, guardianEmail: user.email ?? mockStudent.guardianEmail },
+          student: studentProfile,
         });
         router.replace('/home');
       }
@@ -276,13 +309,30 @@ export default function EmailPage() {
     try {
       if (mode === 'signin') {
         const account = await emailSignIn(cleanEmail, password);
+        const studentDoc = await getStudentByEmail(account.email);
+        const derivedName =
+          studentDoc?.name ||
+          account.displayName ||
+          cleanEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+        const studentProfile = studentDoc || {
+          ...mockStudent,
+          id: 'LCGVM-' + account.uid.slice(0, 6).toUpperCase(),
+          name: derivedName,
+          displayName: derivedName,
+          guardianEmail: account.email,
+          fatherName: 'Guardian of ' + derivedName,
+          motherName: 'Family of ' + derivedName,
+          contactPhone: 'Contact registered via ' + account.email,
+          emergencyPhone: 'Contact registered via ' + account.email,
+          residentialAddress: 'Address on school roster',
+        };
         setSession({
           uid: account.uid,
-          name: mockStudent.name,
+          name: derivedName,
           email: account.email,
           provider: 'email',
           isNewAccount: false,
-          student: { ...mockStudent, guardianEmail: account.email },
+          student: studentProfile,
         });
         router.replace('/home');
       } else {
@@ -306,146 +356,224 @@ export default function EmailPage() {
   }
 
   return (
-    <div className="app-column relative min-h-screen bg-surface flex flex-col w-full px-margin py-space-sm">
-      <div className="flex items-center gap-2">
-        <button
-          aria-label="Back"
-          onClick={() => router.back()}
-          className="w-10 h-10 flex items-center justify-center rounded-full text-on-surface"
-        >
-          <span className="material-symbols-outlined text-[22px]">arrow_back</span>
-        </button>
-        <h1 className="font-headline-sm text-headline-sm font-bold text-on-surface flex-1">Sign in</h1>
-        <span className="text-[9px] font-bold text-tertiary bg-tertiary/10 rounded-full px-2 py-1">
-          SECURE
-        </span>
-      </div>
+    <div className="relative min-h-screen bg-surface flex items-center justify-center p-0 md:p-10 w-full overflow-y-auto">
+      {/* Ambient Backdrop Orbs */}
+      <div className="hidden md:block absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
+      <div className="hidden md:block absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none" />
 
-      <h2 className="font-headline-lg text-headline-lg text-on-surface mt-space-md">Welcome back</h2>
-      <p className="font-body-sm text-body-sm text-on-surface-variant leading-[18px] mt-1">
-        Sign in with Google, or use your email and password. New here? Switch to Create account —
-        it takes a minute.
-      </p>
+      {/* Main Responsive Split Card Container */}
+      <div className="w-full max-w-md md:max-w-4xl mx-auto bg-surface md:bg-surface-container-lowest rounded-none md:rounded-3xl shadow-none md:shadow-[0_24px_70px_-12px_rgba(28,42,200,0.16)] border-0 md:border md:border-outline/10 overflow-hidden md:grid md:grid-cols-12 relative z-10 min-h-screen md:min-h-0 flex flex-col justify-between md:block">
+        {/* Left Branding Rail on Desktop */}
+        <div className="hidden md:flex md:col-span-5 bg-gradient-to-br from-primary via-[#2435df] to-[#121c88] text-white p-8 md:p-10 flex-col justify-between relative overflow-hidden">
+          <div className="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-white/10 blur-xl pointer-events-none" />
+          <div className="absolute -left-12 -bottom-12 w-48 h-48 rounded-full bg-secondary-container/20 blur-xl pointer-events-none" />
 
-      <button
-        onClick={google}
-        disabled={googleBusy || busy}
-        className="w-full h-[52px] mt-space-md bg-surface-container-lowest rounded-full shadow-[0_8px_20px_rgba(19,27,46,0.12)] flex items-center justify-center gap-[10px] active:scale-[0.99] transition-transform disabled:opacity-60"
-      >
-        {googleBusy ? (
-          <span className="w-[18px] h-[18px] rounded-full border-2 border-surface-container-high border-t-primary animate-spin" />
-        ) : (
-          <span className="w-6 h-6 rounded-full bg-white shadow flex items-center justify-center">
-            <span className="text-[15px] font-extrabold" style={{ color: '#4285F4' }}>
-              G
-            </span>
-          </span>
-        )}
-        <span className="text-[14px] font-bold text-on-surface">
-          {googleBusy ? 'Opening Google...' : 'Continue with Google'}
-        </span>
-      </button>
+          <div className="relative z-10">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white">
+                <span className="material-symbols-outlined text-[24px]">school</span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase tracking-widest text-white/70 font-bold block">
+                  Secure Access
+                </span>
+                <span className="text-[16px] font-extrabold text-white leading-tight block">
+                  Lions Calcutta
+                </span>
+                <span className="text-[12px] font-semibold text-secondary-fixed">
+                  Gr Vidya Mandir
+                </span>
+              </div>
+            </div>
 
-      <div className="flex items-center gap-[10px] w-full mt-space-md">
-        <span className="flex-1 h-px bg-surface-container-high" />
-        <span className="font-body-sm text-body-sm text-on-surface-variant">or continue with email</span>
-        <span className="flex-1 h-px bg-surface-container-high" />
-      </div>
+            <div className="mt-8 space-y-3">
+              <h2 className="text-[22px] font-bold leading-tight">
+                Student &amp; Guardian Credentials
+              </h2>
+              <p className="text-[13px] text-white/80 leading-relaxed">
+                Access your personalized dashboard with unified single sign-on across all devices.
+              </p>
+            </div>
+          </div>
 
-      <div className="bg-surface-container-low rounded-full p-1 flex mt-space-md">
-        {(['signin', 'signup'] as Mode[]).map((m) => (
-          <button
-            key={m}
-            onClick={() => setMode(m)}
-            className={`flex-1 rounded-full py-[9px] text-[12px] font-bold transition-all ${
-              mode === m
-                ? 'text-on-surface bg-surface-container-lowest shadow-sm'
-                : 'text-on-surface-variant'
-            }`}
-          >
-            {m === 'signin' ? 'Sign in' : 'Create account'}
-          </button>
-        ))}
-      </div>
-
-      <div className="w-full bg-surface-container-lowest/95 rounded-[20px] shadow-[0_4px_16px_rgba(28,42,200,0.08)] p-4 flex flex-col gap-space-md mt-space-md">
-        <label className="flex flex-col gap-1.5">
-          <span className="text-[12px] font-semibold text-on-surface">Email</span>
-          <span className="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
-            <span className="material-symbols-outlined text-on-surface-variant text-[18px]">mail</span>
-            <input
-              type="email"
-              autoComplete="email"
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError(null);
-              }}
-              className="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal"
-            />
-          </span>
-        </label>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-[12px] font-semibold text-on-surface">
-            Password{mode === 'signup' ? ' (min 6 characters)' : ''}
-          </span>
-          <span className="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
-            <span className="material-symbols-outlined text-on-surface-variant text-[18px]">lock</span>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              autoComplete="current-password"
-              placeholder="Your password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError(null);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') submitEmail();
-              }}
-              className="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal"
-            />
-            <button
-              type="button"
-              aria-label="Show password"
-              onClick={() => setShowPassword((s) => !s)}
-              className="w-8 h-8 flex items-center justify-center text-on-surface-variant"
-            >
-              <span className="material-symbols-outlined text-[18px]">
-                {showPassword ? 'visibility_off' : 'visibility'}
+          <div className="relative z-10 space-y-3 py-6 border-y border-white/10 my-4 text-[13px] text-white/90">
+            <div className="flex items-center gap-2.5">
+              <span className="material-symbols-outlined text-[18px] text-secondary-fixed">
+                verified_user
               </span>
-            </button>
-          </span>
-        </label>
-        {mode === 'signup' && (
-          <p className="font-body-sm text-body-sm text-on-surface-variant leading-[15px]">
-            We&apos;ll email you a verification link. You&apos;ll verify it first — the student
-            form opens only after that.
-          </p>
-        )}
-        <button
-          onClick={submitEmail}
-          disabled={busy || !email.includes('@') || password.length < 6}
-          className="w-full h-[52px] rounded-full bg-gradient-to-r from-primary to-primary-container shadow-[0_10px_24px_rgba(28,42,200,0.35)] text-white text-[15px] font-bold flex items-center justify-center gap-2 active:scale-[0.99] transition-transform disabled:opacity-60"
-        >
-          {busy ? (
-            <span className="w-[18px] h-[18px] rounded-full border-2 border-white/40 border-t-white animate-spin" />
-          ) : (
-            <>
-              {mode === 'signin' ? 'Sign In' : 'Create Account'}
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-            </>
-          )}
-        </button>
-      </div>
+              <span>OAuth 2.0 Secure Sign-In</span>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <span className="material-symbols-outlined text-[18px] text-secondary-fixed">
+                lock
+              </span>
+              <span>256-Bit Cryptographic Session</span>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <span className="material-symbols-outlined text-[18px] text-secondary-fixed">
+                support_agent
+              </span>
+              <span>24/7 Academic Admin Desk</span>
+            </div>
+          </div>
 
-      {error && (
-        <div className="w-full bg-error-container rounded-[10px] px-3 py-2 flex items-center gap-2 mt-space-md">
-          <span className="material-symbols-outlined text-on-error-container text-[16px]">error</span>
-          <p className="text-[12px] font-medium text-on-error-container">{error}</p>
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-white/70">
+            <span>CBSE Affiliated Gateway</span>
+            <span>v2.5.3</span>
+          </div>
         </div>
-      )}
+
+        {/* Right Form Rail */}
+        <div className="md:col-span-7 p-4 sm:p-6 md:p-10 flex flex-col justify-center flex-1">
+          <div className="flex items-center gap-2 mb-4">
+            <button
+              aria-label="Back"
+              onClick={() => router.back()}
+              className="w-10 h-10 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container transition-colors"
+            >
+              <span className="material-symbols-outlined text-[22px]">arrow_back</span>
+            </button>
+            <h1 className="font-headline-sm text-headline-sm font-bold text-on-surface flex-1">
+              Sign In
+            </h1>
+            <span className="text-[10px] font-bold text-tertiary bg-tertiary/10 rounded-full px-2.5 py-1">
+              SECURE
+            </span>
+          </div>
+
+          <div>
+            <h2 className="font-headline-lg text-[22px] md:text-[24px] font-bold text-on-surface">
+              Welcome back
+            </h2>
+            <p className="font-body-sm text-[13px] text-on-surface-variant leading-relaxed mt-1">
+              Sign in with Google, or use your email and password. New here? Switch to Create account.
+            </p>
+          </div>
+
+          <button
+            onClick={google}
+            disabled={googleBusy || busy}
+            className="w-full h-[50px] mt-5 bg-surface-container-lowest rounded-full shadow-[0_4px_16px_rgba(19,27,46,0.08)] border border-outline/10 flex items-center justify-center gap-[10px] hover:shadow-md hover:border-primary/30 active:scale-[0.99] transition-all disabled:opacity-60"
+          >
+            {googleBusy ? (
+              <span className="w-[18px] h-[18px] rounded-full border-2 border-surface-container-high border-t-primary animate-spin" />
+            ) : (
+              <span className="w-6 h-6 rounded-full bg-white shadow-sm flex items-center justify-center">
+                <span className="text-[15px] font-extrabold" style={{ color: '#4285F4' }}>
+                  G
+                </span>
+              </span>
+            )}
+            <span className="text-[14px] font-bold text-on-surface">
+              {googleBusy ? 'Opening Google...' : 'Continue with Google'}
+            </span>
+          </button>
+
+          <div className="flex items-center gap-3 w-full my-5">
+            <span className="flex-1 h-px bg-outline/10" />
+            <span className="font-body-sm text-[12px] text-outline font-medium">or continue with email</span>
+            <span className="flex-1 h-px bg-outline/10" />
+          </div>
+
+          <div className="bg-surface-container-low rounded-full p-1 flex mb-4">
+            {(['signin', 'signup'] as Mode[]).map((m) => (
+              <button
+                key={m}
+                onClick={() => setMode(m)}
+                className={`flex-1 rounded-full py-2 text-[12px] font-bold transition-all ${
+                  mode === m
+                    ? 'text-on-surface bg-surface-container-lowest shadow-sm'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                {m === 'signin' ? 'Sign In' : 'Create Account'}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[12px] font-semibold text-on-surface">Email Address</span>
+              <span className="flex items-center gap-2 bg-surface-container-low rounded-xl px-3.5 py-3 border border-transparent focus-within:border-primary/40 transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant text-[18px]">mail</span>
+                <input
+                  type="email"
+                  autoComplete="email"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError(null);
+                  }}
+                  className="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal"
+                />
+              </span>
+            </label>
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[12px] font-semibold text-on-surface">
+                Password{mode === 'signup' ? ' (min 6 characters)' : ''}
+              </span>
+              <span className="flex items-center gap-2 bg-surface-container-low rounded-xl px-3.5 py-3 border border-transparent focus-within:border-primary/40 transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant text-[18px]">lock</span>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  placeholder="Your password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') submitEmail();
+                  }}
+                  className="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal"
+                />
+                <button
+                  type="button"
+                  aria-label="Show password"
+                  onClick={() => setShowPassword((s) => !s)}
+                  className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-on-surface"
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    {showPassword ? 'visibility_off' : 'visibility'}
+                  </span>
+                </button>
+              </span>
+            </label>
+
+            {mode === 'signup' && (
+              <p className="font-body-sm text-[12px] text-on-surface-variant leading-relaxed">
+                We&apos;ll email you a verification link. You&apos;ll verify it first — the student
+                form opens only after that.
+              </p>
+            )}
+
+            <button
+              onClick={submitEmail}
+              disabled={busy || !email.includes('@') || password.length < 6}
+              className="w-full h-[50px] mt-2 rounded-full bg-gradient-to-r from-primary to-primary-container shadow-[0_10px_24px_rgba(28,42,200,0.3)] text-white text-[14px] font-bold flex items-center justify-center gap-2 active:scale-[0.99] transition-transform disabled:opacity-60"
+            >
+              {busy ? (
+                <span className="w-[18px] h-[18px] rounded-full border-2 border-white/40 border-t-white animate-spin" />
+              ) : (
+                <>
+                  {mode === 'signin' ? 'Sign In' : 'Create Account'}
+                  <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {error && (
+            <div className="w-full bg-error-container rounded-xl px-3.5 py-2.5 flex items-center gap-2 mt-4">
+              <span className="material-symbols-outlined text-on-error-container text-[18px]">error</span>
+              <p className="text-[12px] font-medium text-on-error-container">{error}</p>
+            </div>
+          )}
+        </div>
+      </div>
       {verifyEmail && (
         <div
           className="fixed inset-0 z-[90] bg-on-surface/50 backdrop-blur-[2px] flex items-end sm:items-center justify-center sm:px-margin"
