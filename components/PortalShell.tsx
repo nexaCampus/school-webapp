@@ -276,40 +276,40 @@ export default function PortalShell({
         </div>
       </header>
 
-      {/* MOBILE HEADER (< 768px): With Hamburger on Top Left & Dark Mode to the Left of Profile */}
-      <header className="md:hidden fixed top-0 w-full z-40 pt-safe bg-surface/90 dark:bg-[#181818]/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.2)] border-b border-outline/10 dark:border-[#2d2d2d]">
-        <div className="h-16 px-margin flex items-center justify-between gap-space-sm">
+      {/* MOBILE HEADER (< 768px): Compact & sleek with Hamburger on Top Left & Dark Mode to the Left of Profile */}
+      <header className="md:hidden fixed top-0 w-full z-40 pt-safe bg-surface/90 dark:bg-[#181818]/95 backdrop-blur-xl shadow-[0_1px_6px_rgba(0,0,0,0.15)] border-b border-outline/10 dark:border-[#2d2d2d]">
+        <div className="h-14 px-3 flex items-center justify-between gap-2">
           {/* Top Left: Hamburger menu button + School Emblem & Title */}
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <button
               type="button"
               onClick={openMobileServices}
-              className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-90 transition-transform flex-shrink-0 cursor-pointer z-30"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-90 transition-transform flex-shrink-0 cursor-pointer z-30"
               aria-label="Open School Services menu"
               title="Open Services"
             >
-              <span className="material-symbols-outlined text-[26px]">menu</span>
+              <span className="material-symbols-outlined text-[22px]">menu</span>
             </button>
-            <LogoEmblem className="h-8 w-8 flex-shrink-0" />
+            <LogoEmblem className="h-7 w-7 flex-shrink-0" />
             <div className="flex flex-col min-w-0">
-              <span className="font-label-sm text-[11px] text-outline uppercase tracking-wider font-bold truncate">
+              <span className="text-[10px] text-outline uppercase tracking-wider font-bold truncate leading-tight">
                 {subtitle}
               </span>
-              <span className="font-headline-sm text-headline-sm text-on-surface truncate">
+              <span className="text-[15px] font-bold text-on-surface truncate leading-tight">
                 {title}
               </span>
             </div>
           </div>
 
           {/* Top Right: Dark Mode Toggle to the LEFT of Profile Icon */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <DarkModeToggle />
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <DarkModeToggle className="w-8 h-8" />
             <Link
               href="/profile"
               title="My Profile"
               className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 shadow-sm active:scale-95 transition-transform"
             >
-              <span className="material-symbols-outlined text-on-primary text-[18px]">person</span>
+              <span className="material-symbols-outlined text-on-primary text-[17px]">person</span>
             </Link>
           </div>
         </div>
@@ -319,14 +319,14 @@ export default function PortalShell({
       {mobileServicesOpen && (
         <div className="md:hidden fixed inset-0 z-50 bg-white dark:bg-[#1e1e1e] flex flex-col animate-in fade-in slide-in-from-top-6 duration-200">
           {/* Top Bar inside Full-Screen Hamburger */}
-          <div className="h-16 px-margin pt-safe flex items-center justify-between border-b border-outline/10 dark:border-[#2d2d2d] bg-white dark:bg-[#181818] flex-shrink-0">
-            <div className="flex items-center gap-2.5">
-              <LogoEmblem className="h-8 w-8" />
+          <div className="h-14 px-3 pt-safe flex items-center justify-between border-b border-outline/10 dark:border-[#2d2d2d] bg-white dark:bg-[#181818] flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <LogoEmblem className="h-7 w-7" />
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-primary block">
+                <span className="text-[9.5px] uppercase font-bold tracking-widest text-primary block">
                   LCGVM Campus Gateway
                 </span>
-                <span className="text-[16px] font-extrabold text-on-surface block leading-tight">
+                <span className="text-[14.5px] font-extrabold text-on-surface block leading-tight">
                   All School Services
                 </span>
               </div>
@@ -337,26 +337,26 @@ export default function PortalShell({
               type="button"
               onClick={closeMobileServices}
               aria-label="Close menu"
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container dark:bg-[#252526] dark:border dark:border-[#3c3c3c] text-on-surface hover:bg-surface-container-high dark:hover:bg-[#2d2d2d] active:scale-90 transition-all shadow-sm cursor-pointer z-30"
+              className="w-9 h-9 rounded-full flex items-center justify-center bg-surface-container dark:bg-[#252526] dark:border dark:border-[#3c3c3c] text-on-surface hover:bg-surface-container-high dark:hover:bg-[#2d2d2d] active:scale-90 transition-all shadow-sm cursor-pointer z-30"
             >
-              <span className="material-symbols-outlined text-[24px]">close</span>
+              <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
           </div>
 
           {/* Body: 1 Row has 2 Blocks (grid-cols-2) with Proper Service Icons */}
-          <div className="flex-1 overflow-y-auto px-4 py-5 pb-safe">
+          <div className="flex-1 overflow-y-auto px-3.5 py-4 pb-safe">
             <div className="max-w-md mx-auto">
-              <div className="flex items-center justify-between mb-3 px-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-outline">
+              <div className="flex items-center justify-between mb-2.5 px-1">
+                <span className="text-[10.5px] font-bold uppercase tracking-wider text-outline">
                   Select Campus Service
                 </span>
-                <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                <span className="text-[9.5px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                   16 Modules Available
                 </span>
               </div>
 
               {/* Grid: Exactly 2 blocks per row */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
                 {MORE_SERVICES.map((s) => {
                   const isActive = pathname === s.href;
                   return (
@@ -364,26 +364,26 @@ export default function PortalShell({
                       key={s.href}
                       href={s.href}
                       onClick={closeMobileServices}
-                      className={`p-3.5 rounded-[14px] border transition-all duration-150 flex flex-col items-start gap-2 active:scale-95 shadow-sm cursor-pointer ${
+                      className={`p-2.5 sm:p-3 rounded-xl border transition-all duration-150 flex flex-col items-start gap-1.5 active:scale-95 shadow-sm cursor-pointer ${
                         isActive
                           ? 'bg-primary/10 border-primary text-primary'
                           : 'bg-white dark:bg-[#252526] border-outline/10 dark:border-[#3c3c3c] hover:border-primary/40 dark:hover:bg-[#2d2d2d] text-on-surface'
                       }`}
                     >
                       <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                           isActive
                             ? 'bg-primary text-on-primary shadow-sm'
                             : 'bg-surface-container-high dark:bg-[#1e1e1e] text-primary dark:text-[#3794ff]'
                         }`}
                       >
-                        <span className="material-symbols-outlined text-[22px]">{s.icon}</span>
+                        <span className="material-symbols-outlined text-[19px]">{s.icon}</span>
                       </div>
                       <div className="min-w-0 w-full">
-                        <span className="text-[13px] font-bold text-on-surface block truncate">
+                        <span className="text-[12px] font-bold text-on-surface block truncate">
                           {s.label}
                         </span>
-                        <span className="text-[10px] text-outline block truncate mt-0.5">
+                        <span className="text-[9.5px] text-outline block truncate mt-0.5">
                           {s.desc}
                         </span>
                       </div>
@@ -417,8 +417,8 @@ export default function PortalShell({
       )}
 
       {/* MAIN CONTENT AREA */}
-      <main className="flex-1 flex flex-col relative w-full pt-16 pb-8 md:pt-6 md:pb-12 bg-surface">
-        <div className="w-full max-w-6xl mx-auto px-margin md:px-8 flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col relative w-full pt-14 pb-14 md:pt-6 md:pb-12 bg-surface">
+        <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 md:px-8 flex-1 flex flex-col">
           {children}
         </div>
       </main>
@@ -426,42 +426,42 @@ export default function PortalShell({
       {/* INSTITUTIONAL PORTAL FOOTER */}
       <PortalFooter />
 
-      {/* MOBILE FLOATING PILL NAVBAR (< 768px): Exact original mobile look */}
+      {/* MOBILE FLOATING PILL NAVBAR (< 768px): Refined & proportional to phone UI */}
       <nav className="md:hidden fixed bottom-0 w-full z-30 pb-safe pointer-events-none">
-        <div className="px-margin pb-space-md pt-space-xs pointer-events-auto max-w-[430px] mx-auto">
-          <div className="bg-white/95 dark:bg-[#181818]/95 backdrop-blur-2xl rounded-full shadow-[0_12px_28px_-6px_rgba(0,0,0,0.5),0_4px_12px_-2px_rgba(0,0,0,0.3)] border border-outline/10 dark:border-[#3c3c3c] p-space-xs flex items-center justify-between">
+        <div className="px-3 pb-2 pt-0.5 pointer-events-auto max-w-[340px] mx-auto">
+          <div className="bg-white/95 dark:bg-[#181818]/95 backdrop-blur-2xl rounded-full shadow-[0_8px_20px_-4px_rgba(0,0,0,0.35)] border border-outline/10 dark:border-[#3c3c3c] p-1 flex items-center justify-between">
             <Link
-              className={`flex-1 min-h-[44px] flex flex-col items-center justify-center py-space-xs px-space-xs rounded-full transition-all duration-200 ${
+              className={`flex-1 min-h-[36px] flex flex-col items-center justify-center py-1 px-1 rounded-full transition-all duration-200 ${
                 currentPath === 'home' || pathname === '/home' || pathname === '/'
                   ? 'text-primary font-bold bg-primary/10'
                   : 'text-on-surface-variant hover:text-on-surface'
               }`}
               href="/home"
             >
-              <span className="material-symbols-outlined text-[20px]">grid_view</span>
-              <span className="font-label-sm text-label-sm mt-0.5">Home</span>
+              <span className="material-symbols-outlined text-[18px]">grid_view</span>
+              <span className="text-[10px] font-semibold mt-0.5 tracking-tight">Home</span>
             </Link>
             <Link
-              className={`flex-1 min-h-[44px] flex flex-col items-center justify-center py-space-xs px-space-xs rounded-full transition-all duration-200 ${
+              className={`flex-1 min-h-[36px] flex flex-col items-center justify-center py-1 px-1 rounded-full transition-all duration-200 ${
                 currentPath === 'academics' || pathname === '/academics'
                   ? 'text-primary font-bold bg-primary/10'
                   : 'text-on-surface-variant hover:text-on-surface'
               }`}
               href="/academics"
             >
-              <span className="material-symbols-outlined text-[20px]">menu_book</span>
-              <span className="font-label-sm text-label-sm mt-0.5">Academics</span>
+              <span className="material-symbols-outlined text-[18px]">menu_book</span>
+              <span className="text-[10px] font-semibold mt-0.5 tracking-tight">Academics</span>
             </Link>
             <Link
-              className={`flex-1 min-h-[44px] flex flex-col items-center justify-center py-space-xs px-space-xs rounded-full transition-all duration-200 ${
+              className={`flex-1 min-h-[36px] flex flex-col items-center justify-center py-1 px-1 rounded-full transition-all duration-200 ${
                 currentPath === 'notices' || pathname === '/notices'
                   ? 'text-primary font-bold bg-primary/10'
                   : 'text-on-surface-variant hover:text-on-surface'
               }`}
               href="/notices"
             >
-              <span className="material-symbols-outlined text-[20px]">campaign</span>
-              <span className="font-label-sm text-label-sm mt-0.5">Notices</span>
+              <span className="material-symbols-outlined text-[18px]">campaign</span>
+              <span className="text-[10px] font-semibold mt-0.5 tracking-tight">Notices</span>
             </Link>
           </div>
         </div>
