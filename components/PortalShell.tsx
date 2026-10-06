@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import LogoEmblem from './LogoEmblem';
 import PortalFooter from './PortalFooter';
 import DarkModeToggle from './DarkModeToggle';
-import { getSession } from '@/lib/session';
+import { getSession, logoutUser, switchAccount } from '@/lib/session';
 
 interface PortalShellProps {
   title: string;
@@ -54,7 +54,20 @@ export default function PortalShell({
   const [gradeSection, setGradeSection] = useState('Senior Wing');
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showSwitchModal, setShowSwitchModal] = useState(false);
+  const [isProcessingAuth, setIsProcessingAuth] = useState(false);
   const servicesRef = useRef<HTMLDivElement>(null);
+
+  const handlePerformLogout = async () => {
+    setIsProcessingAuth(true);
+    await logoutUser('/chooser');
+  };
+
+  const handlePerformSwitch = async () => {
+    setIsProcessingAuth(true);
+    await switchAccount();
+  };
 
   // Close Desktop Services dropdown when clicking outside
   useEffect(() => {
@@ -264,14 +277,27 @@ export default function PortalShell({
               </div>
             </Link>
 
-            {/* Switch Account / Logout */}
-            <Link
-              href="/chooser"
-              title="Switch user or portal mode"
-              className="w-9 h-9 rounded-full flex items-center justify-center text-outline hover:text-error hover:bg-error/10 transition-colors"
+            {/* Switch Account */}
+            <button
+              type="button"
+              onClick={() => setShowSwitchModal(true)}
+              title="Switch Student Account"
+              aria-label="Switch Student Account"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-outline hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[19px]">switch_account</span>
+            </button>
+
+            {/* Log Out */}
+            <button
+              type="button"
+              onClick={() => setShowLogoutModal(true)}
+              title="Log Out of NexaCampus"
+              aria-label="Log Out of NexaCampus"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-outline hover:text-error hover:bg-error/10 transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-[19px]">logout</span>
-            </Link>
+            </button>
           </div>
         </div>
       </header>
@@ -402,15 +428,103 @@ export default function PortalShell({
                   <span className="material-symbols-outlined text-[16px]">account_circle</span>
                   <span>My Student Profile</span>
                 </Link>
-                <Link
-                  href="/chooser"
-                  onClick={closeMobileServices}
-                  className="flex items-center gap-1.5 text-error font-semibold cursor-pointer"
-                >
-                  <span className="material-symbols-outlined text-[16px]">logout</span>
-                  <span>Switch Account</span>
-                </Link>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closeMobileServices();
+                      setShowSwitchModal(true);
+                    }}
+                    className="flex items-center gap-1 text-primary font-semibold cursor-pointer hover:opacity-85 transition-opacity"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">switch_account</span>
+                    <span>Switch</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closeMobileServices();
+                      setShowLogoutModal(true);
+                    }}
+                    className="flex items-center gap-1 text-error font-semibold cursor-pointer hover:opacity-85 transition-opacity"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">logout</span>
+                    <span>Log Out</span>
+                  </button>
+                </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#252526] border border-outline/15 dark:border-[#3c3c3c] p-6 shadow-2xl flex flex-col items-center text-center">
+            <div className="w-12 h-12 rounded-full bg-error/15 text-error flex items-center justify-center mb-3">
+              <span className="material-symbols-outlined text-[28px]">logout</span>
+            </div>
+            <h3 className="text-[17px] font-bold text-on-surface mb-1.5">
+              Confirm Log Out?
+            </h3>
+            <p className="text-[12px] text-on-surface-variant leading-relaxed mb-5">
+              You will be signed out of <strong className="text-on-surface">{studentName}</strong>. You can sign back in anytime using your admission number or registered credentials.
+            </p>
+            <div className="flex flex-col w-full gap-2">
+              <button
+                type="button"
+                disabled={isProcessingAuth}
+                onClick={handlePerformLogout}
+                className="w-full py-2.5 rounded-full bg-error text-white text-[13px] font-bold shadow-sm hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                <span className="material-symbols-outlined text-[16px]">logout</span>
+                <span>{isProcessingAuth ? 'Logging out...' : 'Yes, Log Out'}</span>
+              </button>
+              <button
+                type="button"
+                disabled={isProcessingAuth}
+                onClick={() => setShowLogoutModal(false)}
+                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#333333] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+              >
+                Cancel &amp; Stay
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Switch Account Modal */}
+      {showSwitchModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#252526] border border-outline/15 dark:border-[#3c3c3c] p-6 shadow-2xl flex flex-col items-center text-center">
+            <div className="w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-3">
+              <span className="material-symbols-outlined text-[28px]">switch_account</span>
+            </div>
+            <h3 className="text-[17px] font-bold text-on-surface mb-1.5">
+              Switch Student Account?
+            </h3>
+            <p className="text-[12px] text-on-surface-variant leading-relaxed mb-5">
+              Switch to another student admission number, sibling, or guardian profile. Your current timetable and diary records will remain securely cached.
+            </p>
+            <div className="flex flex-col w-full gap-2">
+              <button
+                type="button"
+                disabled={isProcessingAuth}
+                onClick={handlePerformSwitch}
+                className="w-full py-2.5 rounded-full bg-primary text-white text-[13px] font-bold shadow-sm hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                <span className="material-symbols-outlined text-[16px]">swap_horiz</span>
+                <span>{isProcessingAuth ? 'Switching...' : 'Switch Account'}</span>
+              </button>
+              <button
+                type="button"
+                disabled={isProcessingAuth}
+                onClick={() => setShowSwitchModal(false)}
+                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#333333] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
