@@ -87,16 +87,19 @@ export default function AcademicsPage() {
                 </span>
               </div>
               <div className="relative z-10 flex flex-col gap-3 sm:gap-space-md">
-                <div className="flex items-center justify-between">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/20 backdrop-blur-md text-on-primary">
-                    <span className="material-symbols-outlined text-[13px] sm:text-[15px] text-secondary-fixed">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/20 backdrop-blur-md text-on-primary flex-shrink-0 max-w-fit">
+                    <span className="material-symbols-outlined text-[12px] sm:text-[15px] text-secondary-fixed flex-shrink-0">
                       error
                     </span>
-                    <span className="text-[10px] sm:text-label-sm uppercase tracking-wide font-bold">
-                      Term 2 Dues Pending
+                    <span className="text-[8.5px] sm:text-label-sm uppercase tracking-tight sm:tracking-wide font-bold whitespace-nowrap">
+                      <span className="sm:hidden">Term 2 Dues</span>
+                      <span className="hidden sm:inline">Term 2 Dues Pending</span>
                     </span>
                   </div>
-                  <span className="text-[11px] sm:text-label-md text-primary-fixed">Due: Oct 30, 2026</span>
+                  <span className="text-[10px] sm:text-label-md text-primary-fixed whitespace-nowrap flex-shrink-0 font-medium">
+                    Due: Oct 30, 2026
+                  </span>
                 </div>
                 <div className="flex items-baseline justify-between mt-1">
                   <div>
