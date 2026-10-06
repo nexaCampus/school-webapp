@@ -5,7 +5,7 @@
 // Contact Number section — Google/email sign-ups never capture one.
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { normalizeAdmissionNumber, saveStudent } from '@/lib/firebase';
+import { normalizeAdmissionNumber, onAuthChange, saveStudent } from '@/lib/firebase';
 import { getSession, setSession } from '@/lib/session';
 import { student as mockStudent } from '@/lib/data';
 
@@ -85,6 +85,16 @@ function OnboardingForm() {
   const [address, setAddress] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Hard gate: a signed-in email that is still unverified has no business
+    // here — bounce to /email, which reopens the verification dialog.
+    // Google and admission (anonymous) identities carry no such requirement.
+    const unsub = onAuthChange((user) => {
+      if (user?.email && !user.emailVerified) router.replace('/email');
+    });
+    return unsub;
+  }, [router]);
 
   useEffect(() => {
     const normalized = normalizeAdmissionNumber(params.get('admissionNumber') ?? '');
