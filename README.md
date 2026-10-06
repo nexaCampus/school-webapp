@@ -76,6 +76,8 @@ content pages redirect to `/chooser` without one.
 
 Email sign-up shows a verification dialog (Gmail link instruction with
 Continue/Resend/Start-over) and never opens onboarding until the link is
-clicked; onboarding bounces unverified emails back to `/email`. Google uses a
-full redirect (no popup, so no COOP errors); the return trip is consumed
-exactly once via a shared outcome so re-mounts cannot strand the user.
+clicked; onboarding bounces unverified password emails back to `/email`. Google uses
+an interactive popup with automatic redirect fallback, ensuring instant account
+selection on localhost and mobile without storage-partitioning loops; users
+without a completed student profile route directly to `/onboarding` prefilled
+with their Google name and email.

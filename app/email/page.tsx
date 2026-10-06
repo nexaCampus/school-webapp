@@ -10,6 +10,7 @@ import {
   emailSignIn,
   emailSignUp,
   friendlyAuthError,
+  googleSignIn,
   googleSignInRedirect,
   onAuthChange,
   redirectOutcome,
@@ -49,36 +50,34 @@ export default function EmailPage() {
   }
 
   function routeGoogleAccount(account: AuthAccount) {
-    if (account.isNewAccount) {
-      const q = new URLSearchParams({ name: account.displayName, email: account.email });
+    const existing = getSession();
+    // Returning user who already has an onboarded student profile
+    if (existing?.student && !existing.isNewAccount) {
       setSession({
+        ...existing,
         uid: account.uid,
-        name: account.displayName,
-        email: account.email,
+        name: account.displayName || existing.student.name,
+        email: account.email || existing.student.guardianEmail,
         provider: 'google',
-        isNewAccount: true,
-        student: null,
-      });
-      router.push(`/onboarding?${q.toString()}`);
-    } else {
-      setSession({
-        uid: account.uid,
-        name: account.displayName || mockStudent.name,
-        email: account.email || mockStudent.guardianEmail,
-        provider: 'google',
-        isNewAccount: false,
-        // Same projection as before: Firebase owns identity, the seeded
-        // profile feeds every downstream screen until a Firebase-backed
-        // student record exists for this user.
-        student: {
-          ...mockStudent,
-          name: account.displayName || mockStudent.name,
-          displayName: account.displayName || mockStudent.displayName,
-          guardianEmail: account.email || mockStudent.guardianEmail,
-        },
       });
       router.replace('/home');
+      return;
     }
+
+    // New Google registration or user without a completed student record:
+    // Route to onboarding so they can add student details and verify info.
+    const q = new URLSearchParams();
+    if (account.displayName) q.set('name', account.displayName);
+    if (account.email) q.set('email', account.email);
+    setSession({
+      uid: account.uid,
+      name: account.displayName,
+      email: account.email,
+      provider: 'google',
+      isNewAccount: true,
+      student: null,
+    });
+    router.push(`/onboarding?${q.toString()}`);
   }
 
   // Completes a returning Google redirect via ONE shared outcome. Calling
@@ -112,10 +111,9 @@ export default function EmailPage() {
 
   // Restores the dialog for a signed-in-but-unverified email (fresh reload,
   // return visit, or bounce-back from the onboarding gate). Also heals users
-  // stranded by earlier looped attempts: a verified email with no local
-  // session is routed by pending-signup flag (onboarding) or as a returning
-  // user (home). Google identities are skipped — the redirect outcome effect
-  // above owns their routing to avoid double navigation.
+  // returning from Google or email sign-ins:
+  // - A Google identity without a completed student profile routes to onboarding
+  // - An existing student profile routes to home
   useEffect(() => {
     const unsub = onAuthChange((user) => {
       if (!user?.email) return;
@@ -123,7 +121,22 @@ export default function EmailPage() {
         setVerifyEmail(user.email);
         return;
       }
-      if (user.providerData.some((p) => p.providerId === 'google.com')) return;
+      const isGoogle = user.providerData.some((p) => p.providerId === 'google.com');
+      if (isGoogle) {
+        const existing = getSession();
+        if (existing?.student && !existing.isNewAccount) {
+          router.replace('/home');
+        } else {
+          routeGoogleAccount({
+            uid: user.uid,
+            displayName: user.displayName || '',
+            email: user.email || '',
+            isNewAccount: false,
+          });
+        }
+        return;
+      }
+
       if (getSession()?.student) return;
       let pending: string | null = null;
       try {
@@ -166,11 +179,25 @@ export default function EmailPage() {
     setError(null);
     setGoogleBusy(true);
     try {
-      // Redirect leaves this page; errors here are launch failures only
-      // (e.g. unauthorized-domain). The success path resumes above.
-      await googleSignInRedirect();
+      let account: AuthAccount;
+      try {
+        account = await googleSignIn();
+      } catch (popupErr: unknown) {
+        const code =
+          typeof popupErr === 'object' && popupErr !== null && 'code' in popupErr
+            ? String((popupErr as { code: unknown }).code)
+            : '';
+        // If popup was blocked or prevented by the browser, fall back to redirect
+        if (code === 'auth/popup-blocked' || code === 'auth/cancelled-popup-request') {
+          await googleSignInRedirect();
+          return;
+        }
+        throw popupErr;
+      }
+      routeGoogleAccount(account);
     } catch (e) {
       setError(friendlyAuthError(e, 'signin'));
+    } finally {
       setGoogleBusy(false);
     }
   }
