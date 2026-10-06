@@ -1,0 +1,138 @@
+<!-- Onboarding: mirrors Android StudentOnboardingScreen (3 sections). -->
+<div class="flex flex-col w-full flex-1 py-space-sm">
+  <div class="flex items-center gap-2">
+    <a href="/chooser.html" aria-label="Back" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface">
+      <span class="material-symbols-outlined text-[22px]">arrow_back</span>
+    </a>
+    <h1 class="font-headline-sm text-headline-sm font-bold text-on-surface">New student registration</h1>
+  </div>
+
+  <h2 class="font-headline-lg text-headline-lg text-on-surface mt-space-md">Tell us about the student</h2>
+  <p class="font-body-sm text-body-sm text-on-surface-variant leading-[18px] mt-1">This creates the school record. Details marked required cannot be skipped.</p>
+
+  <section class="w-full bg-surface-container-lowest/95 rounded-[20px] shadow-[0_4px_16px_rgba(28,42,200,0.08)] p-4 flex flex-col gap-space-md mt-space-md">
+    <div class="flex items-center justify-between">
+      <h3 class="text-[14px] font-bold text-on-surface">Student details</h3>
+      <span class="text-[10px] font-bold text-primary bg-surface-container-high rounded-full px-2 py-[3px]">Required</span>
+    </div>
+    <label class="flex flex-col gap-1.5">
+      <span class="text-[12px] font-semibold text-on-surface">Admission Number</span>
+      <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">badge</span>
+        <input id="admission-input" type="text" placeholder="E.G. 10211125" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface tracking-[1px] placeholder:text-outline placeholder:font-normal placeholder:tracking-normal uppercase" />
+        <span id="admission-lock" class="hidden material-symbols-outlined text-outline text-[16px]">lock</span>
+      </span>
+    </label>
+    <label class="flex flex-col gap-1.5">
+      <span class="text-[12px] font-semibold text-on-surface">Full Name</span>
+      <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">person</span>
+        <input id="name-input" type="text" autocomplete="name" placeholder="As printed on the ID card" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal" />
+      </span>
+    </label>
+    <div class="flex gap-[10px]">
+      <label class="flex-1 flex flex-col gap-1.5 min-w-0">
+        <span class="text-[12px] font-semibold text-on-surface">Class</span>
+        <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+          <span class="material-symbols-outlined text-on-surface-variant text-[18px]">school</span>
+          <input id="grade-input" type="text" inputmode="numeric" placeholder="12" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal" />
+        </span>
+      </label>
+      <label class="flex-1 flex flex-col gap-1.5 min-w-0">
+        <span class="text-[12px] font-semibold text-on-surface">Section</span>
+        <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+          <span class="material-symbols-outlined text-on-surface-variant text-[18px]">tag</span>
+          <input id="section-input" type="text" placeholder="E" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal uppercase" />
+        </span>
+      </label>
+    </div>
+    <div class="flex gap-[10px]">
+      <label class="flex-1 flex flex-col gap-1.5 min-w-0">
+        <span class="text-[12px] font-semibold text-on-surface">Roll No. (optional)</span>
+        <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+          <span class="material-symbols-outlined text-on-surface-variant text-[18px]">tag</span>
+          <input id="roll-input" type="text" placeholder="20" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal" />
+        </span>
+      </label>
+      <label class="flex-1 flex flex-col gap-1.5 min-w-0">
+        <span class="text-[12px] font-semibold text-on-surface">Birth Date (optional)</span>
+        <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+          <span class="material-symbols-outlined text-on-surface-variant text-[18px]">cake</span>
+          <input id="dob-input" type="text" placeholder="DD-MM-YYYY" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal" />
+        </span>
+      </label>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <span class="text-[12px] font-semibold text-on-surface">Gender</span>
+      <input id="gender-input" type="hidden" value="" />
+      <div class="flex gap-2">
+        <button type="button" data-gender="Male" class="flex-1 rounded-full py-[9px] text-[12px] font-bold bg-surface-container-high text-on-surface-variant transition-all">Male</button>
+        <button type="button" data-gender="Female" class="flex-1 rounded-full py-[9px] text-[12px] font-bold bg-surface-container-high text-on-surface-variant transition-all">Female</button>
+        <button type="button" data-gender="Other" class="flex-1 rounded-full py-[9px] text-[12px] font-bold bg-surface-container-high text-on-surface-variant transition-all">Other</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-full bg-surface-container-lowest/95 rounded-[20px] shadow-[0_4px_16px_rgba(28,42,200,0.08)] p-4 flex flex-col gap-space-md mt-space-md">
+    <div class="flex items-center justify-between">
+      <h3 class="text-[14px] font-bold text-on-surface">Guardian</h3>
+      <span class="text-[10px] font-bold text-on-surface-variant bg-surface-container-high rounded-full px-2 py-[3px]">Optional</span>
+    </div>
+    <label class="flex flex-col gap-1.5">
+      <span class="text-[12px] font-semibold text-on-surface">Father's Name (optional)</span>
+      <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">family_restroom</span>
+        <input id="father-input" type="text" placeholder="Full name" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal" />
+      </span>
+    </label>
+    <label class="flex flex-col gap-1.5">
+      <span class="text-[12px] font-semibold text-on-surface">Mother's Name (optional)</span>
+      <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">family_restroom</span>
+        <input id="mother-input" type="text" placeholder="Full name" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal" />
+      </span>
+    </label>
+    <label class="flex flex-col gap-1.5">
+      <span class="text-[12px] font-semibold text-on-surface">Guardian Email (optional)</span>
+      <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">mail</span>
+        <input id="email-input" type="email" placeholder="name@example.com" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal" />
+      </span>
+    </label>
+    <label class="flex flex-col gap-1.5">
+      <span class="text-[12px] font-semibold text-on-surface">Home Address (optional)</span>
+      <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">home</span>
+        <input id="address-input" type="text" placeholder="Street, area, city - PIN" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface placeholder:text-outline placeholder:font-normal" />
+      </span>
+    </label>
+  </section>
+
+  <section class="w-full bg-surface-container-lowest/95 rounded-[20px] shadow-[0_4px_16px_rgba(28,42,200,0.08)] p-4 flex flex-col gap-space-md mt-space-md">
+    <div class="flex items-center justify-between">
+      <h3 class="text-[14px] font-bold text-on-surface">Contact Number</h3>
+      <span class="text-[10px] font-bold text-primary bg-surface-container-high rounded-full px-2 py-[3px]">Required</span>
+    </div>
+    <label class="flex flex-col gap-1.5">
+      <span class="text-[12px] font-semibold text-on-surface">Student / Guardian Mobile</span>
+      <span class="flex items-center gap-2 bg-surface-container-low rounded-[14px] px-3 py-3">
+        <span class="material-symbols-outlined text-on-surface-variant text-[18px]">phone_smartphone</span>
+        <span class="text-[13px] font-bold text-on-surface">+91</span>
+        <input id="phone-input" type="tel" inputmode="numeric" placeholder="10-digit mobile number" class="flex-1 min-w-0 bg-transparent outline-none text-[14px] font-semibold text-on-surface tracking-[1px] placeholder:text-outline placeholder:font-normal placeholder:tracking-normal" />
+      </span>
+    </label>
+    <p class="font-body-sm text-body-sm text-on-surface-variant leading-[15px]">Used for school SMS alerts and as the account contact.</p>
+  </section>
+
+  <div id="err" class="hidden w-full bg-error-container rounded-[10px] px-3 py-2 flex items-center gap-2 mt-space-md">
+    <span class="material-symbols-outlined text-on-error-container text-[16px]">error</span>
+    <p id="err-text" class="text-[12px] font-medium text-on-error-container"></p>
+  </div>
+
+  <button id="save-btn" class="w-full h-[52px] rounded-full bg-gradient-to-r from-primary to-primary-container shadow-[0_10px_24px_rgba(28,42,200,0.35)] text-white text-[15px] font-bold flex items-center justify-center gap-2 active:scale-[0.99] transition-transform disabled:opacity-60 mt-space-md">
+    <span data-idle-label id="save-btn-idle" class="flex items-center gap-2">Save &amp; Enter Portal<span class="material-symbols-outlined text-[18px]">arrow_forward</span></span>
+    <span data-busy-label id="save-btn-busy" class="hidden">Creating record...</span>
+  </button>
+
+  <div class="flex-1 min-h-4"></div>
+</div>

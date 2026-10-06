@@ -1,0 +1,44 @@
+<!-- Admission number: mirrors Android AdmissionLoginScreen. -->
+<div class="flex flex-col items-center w-full flex-1 py-space-sm">
+  <div class="w-full flex items-center gap-2">
+    <a href="/chooser.html" aria-label="Back" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface">
+      <span class="material-symbols-outlined text-[22px]">arrow_back</span>
+    </a>
+    <h1 class="font-headline-sm text-headline-sm font-bold text-on-surface">Admission number</h1>
+  </div>
+
+  <div class="w-[68px] h-[68px] rounded-full bg-surface-container-lowest shadow-[0_8px_20px_rgba(28,42,200,0.12)] p-1.5 mt-space-md">
+    <div class="w-full h-full rounded-full bg-gradient-to-b from-primary to-primary-container flex items-center justify-center">
+      <span class="material-symbols-outlined text-white text-[28px]">badge</span>
+    </div>
+  </div>
+
+  <h2 class="font-headline-lg text-headline-lg text-on-surface text-center mt-space-md">Sign in with admission number</h2>
+  <p class="font-body-sm text-body-sm text-on-surface-variant text-center leading-[18px] mt-1">The number issued by the school on your ID card or fee receipt.</p>
+
+  <div class="w-full bg-surface-container-lowest/95 rounded-[20px] shadow-[0_4px_16px_rgba(28,42,200,0.08)] p-4 flex flex-col gap-[14px] mt-space-lg">
+    <span class="text-[12px] font-semibold text-on-surface">Admission Number / Registration ID</span>
+    <label class="flex items-center gap-[10px] bg-surface-container-low rounded-[14px] px-3.5 py-3.5">
+      <span class="material-symbols-outlined text-on-surface-variant text-[20px]">school</span>
+      <input id="admission-input" type="text" autocomplete="off" placeholder="E.G. 10211125" class="flex-1 min-w-0 bg-transparent outline-none text-[15px] font-semibold text-on-surface tracking-[1px] placeholder:text-outline placeholder:font-normal placeholder:tracking-normal uppercase" />
+    </label>
+    <div id="err" class="hidden bg-error-container rounded-[10px] px-3 py-2 flex items-center gap-2">
+      <span class="material-symbols-outlined text-on-error-container text-[16px]">error</span>
+      <p id="err-text" class="text-[12px] font-medium text-on-error-container"></p>
+    </div>
+    <button id="admission-btn" class="w-full h-[52px] rounded-full bg-gradient-to-r from-primary to-primary-container shadow-[0_10px_24px_rgba(28,42,200,0.35)] text-white text-[15px] font-bold flex items-center justify-center gap-2 active:scale-[0.99] transition-transform disabled:opacity-60">
+      <span data-idle-label id="admission-btn-idle" class="flex items-center gap-2">Continue<span class="material-symbols-outlined text-[18px]">arrow_forward</span></span>
+      <span data-busy-label id="admission-btn-busy" class="hidden">Checking roster...</span>
+    </button>
+  </div>
+
+  <div class="w-full bg-surface-container-low/70 rounded-[14px] p-3 flex gap-[10px] mt-space-md">
+    <span class="material-symbols-outlined text-primary text-[18px] flex-shrink-0">info</span>
+    <div class="flex flex-col gap-1">
+      <p class="font-body-sm text-body-sm text-on-surface-variant leading-[15px]">Verified against the live Firebase roster.</p>
+      <span class="self-start text-[9px] text-primary bg-primary-fixed rounded-full px-2 py-[3px]">Admission numbers are matched without spaces or dashes</span>
+    </div>
+  </div>
+
+  <div class="flex-1"></div>
+</div>

@@ -1,0 +1,19 @@
+{
+  "name": "nexacampus-school-webapp",
+  "private": true,
+  "version": "2.5.3",
+  "type": "module",
+  "description": "NexaCampus School web twin — mobile-first, pixel-faithful to the Android app (Stitch Academic Fluidity system).",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@clerk/clerk-js": "^5.0.0",
+    "firebase": "^11.0.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}
