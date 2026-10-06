@@ -7,12 +7,14 @@ import {
   getAdditionalUserInfo,
   getAuth,
   getRedirectResult,
+  onAuthStateChanged,
   sendEmailVerification,
   signInAnonymously,
   signInWithEmailAndPassword,
   signInWithRedirect,
   signOut as firebaseSignOut,
   type Auth,
+  type Unsubscribe,
   type User,
   type UserCredential,
 } from 'firebase/auth';
@@ -153,8 +155,65 @@ export async function completeGoogleRedirect(): Promise<AuthAccount | null> {
   return accountOf(credential.user, isNewAccount);
 }
 
+type RedirectOutcome = { account: AuthAccount | null } | { error: unknown };
+
+let redirectFlight: Promise<RedirectOutcome> | null = null;
+let redirectActed = false;
+
+/**
+ * Single-flight redirect outcome, shared by every mount of the return page.
+ *
+ * getRedirectResult can only hand its result out once; if two effect runs
+ * (React StrictMode double-mount in dev, or a remount) each call it
+ * separately, the first retrieval is discarded and the user is left staring
+ * at the Sign in page with a completed sign-in nobody acted on — the
+ * account-chooser loop. One shared promise means every waiter sees the same
+ * outcome, and the acted flag guarantees exactly one navigation.
+ */
+export function redirectOutcome(): Promise<RedirectOutcome> {
+  if (!redirectFlight) {
+    redirectFlight = completeGoogleRedirect().then(
+      (account) => ({ account }) as RedirectOutcome,
+      (error: unknown) => ({ error }) as RedirectOutcome,
+    );
+  }
+  return redirectFlight;
+}
+
+/** Marks a non-null redirect account as acted upon. Returns false if spent. */
+export function claimRedirectAccount(): boolean {
+  if (redirectActed) return false;
+  redirectActed = true;
+  return true;
+}
+
 export async function signOutUser(): Promise<void> {
   await firebaseSignOut(firebase().auth);
+}
+
+/** Synchronous snapshot; null before restore or when signed out. */
+export function getAuthUser(): User | null {
+  return firebase().auth.currentUser;
+}
+
+/** Reloads the user from the server (picks up a fresh email verification). */
+export async function reloadAuthUser(): Promise<User | null> {
+  const before = firebase().auth.currentUser;
+  if (!before) return null;
+  await before.reload();
+  return firebase().auth.currentUser;
+}
+
+/** Re-sends the verification link to the signed-in email user. */
+export async function resendVerificationMail(): Promise<void> {
+  const user = firebase().auth.currentUser;
+  if (!user) throw new Error('No signed-in account found. Create your account again.');
+  await sendEmailVerification(user);
+}
+
+/** Auth-state listener (restore, cross-tab verify, sign-out). */
+export function onAuthChange(callback: (user: User | null) => void): Unsubscribe {
+  return onAuthStateChanged(firebase().auth, callback);
 }
 
 /** Firebase error codes → the red-block message. Never leaks internals. */

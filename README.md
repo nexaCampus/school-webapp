@@ -73,3 +73,9 @@ service cloud.firestore {
 email/password via Firebase Auth) → onboarding (new accounts: phone asked in
 its own Contact Number section) → home`. Session lives in `localStorage`;
 content pages redirect to `/chooser` without one.
+
+Email sign-up shows a verification dialog (Gmail link instruction with
+Continue/Resend/Start-over) and never opens onboarding until the link is
+clicked; onboarding bounces unverified emails back to `/email`. Google uses a
+full redirect (no popup, so no COOP errors); the return trip is consumed
+exactly once via a shared outcome so re-mounts cannot strand the user.

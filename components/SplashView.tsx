@@ -14,6 +14,7 @@ export default function SplashView({
       className="app-column relative min-h-screen bg-surface flex flex-col items-center w-full px-margin py-space-lg cursor-pointer"
       onClick={onClick}
     >
+      <div className="flex-1 min-h-[10vh]" aria-hidden="true" />
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center gap-[5px]">
           <span className="w-1.5 h-1.5 rounded-full bg-primary" />
