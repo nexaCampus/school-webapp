@@ -34,7 +34,7 @@ module.exports = {
         'error-container': '#ffdad6',
         'inverse-primary': '#bdc2ff',
         'on-primary-fixed-variant': '#1d2cc9',
-        tertiary: '#005036',
+        tertiary: 'var(--color-tertiary, #005036)',
         'on-secondary-fixed-variant': '#653e00',
         'surface-container-low': 'var(--color-surface-container-low, #f2f3ff)',
         'on-surface': 'var(--color-on-surface, #131b2e)',
@@ -54,7 +54,7 @@ module.exports = {
         'on-primary-fixed': '#000668',
         'on-background': 'var(--color-on-surface, #131b2e)',
         'primary-fixed-dim': '#bdc2ff',
-        'tertiary-container': '#006b49',
+        'tertiary-container': 'var(--color-tertiary-container, #006b49)',
         'tertiary-fixed-dim': '#4edea3',
       },
       borderRadius: {
