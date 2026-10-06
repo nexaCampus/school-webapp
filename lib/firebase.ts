@@ -11,6 +11,7 @@ import {
   sendEmailVerification,
   signInAnonymously,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signInWithRedirect,
   signOut as firebaseSignOut,
   type Auth,
@@ -129,30 +130,53 @@ export async function emailSignUp(email: string, password: string): Promise<Auth
 }
 
 /**
- * Google sign-in via full redirect (not popup). Popups trip
- * Cross-Origin-Opener-Policy errors in Chrome (`window.closed` polling is
- * blocked) and are routinely swallowed on mobile browsers; a redirect has
- * neither problem. The browser leaves for Google and returns to whichever
- * page started the flow — that page completes it with
- * completeGoogleRedirect().
+ * Google sign-in via interactive popup. Primary flow for modern browsers
+ * on desktop and tablet: runs entirely within the session without full
+ * page reloads, avoids redirect cross-origin storage partitioning on localhost,
+ * and yields the UserCredential directly.
+ */
+export async function googleSignIn(): Promise<AuthAccount> {
+  const { auth } = firebase();
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  const credential = await signInWithPopup(auth, provider);
+  const isNewAccount = getAdditionalUserInfo(credential)?.isNewUser ?? false;
+  return accountOf(credential.user, isNewAccount);
+}
+
+/**
+ * Google sign-in via full redirect. Used as an automatic fallback when
+ * browser popup blockers prevent popup authentication.
  */
 export async function googleSignInRedirect(): Promise<void> {
   const { auth } = firebase();
-  await signInWithRedirect(auth, new GoogleAuthProvider());
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  await signInWithRedirect(auth, provider);
 }
 
 /**
  * Completes a returning Google redirect. Resolves to the account, or null
- * when this load is not a redirect return. getAdditionalUserInfo reports
- * whether the Google identity just created its Firebase account
- * (new → onboarding).
+ * when this load is not a redirect return. Handles cases where getRedirectResult
+ * is null due to third-party storage restrictions but the user was restored.
  */
 export async function completeGoogleRedirect(): Promise<AuthAccount | null> {
   const { auth } = firebase();
-  const credential = await getRedirectResult(auth);
-  if (!credential) return null;
-  const isNewAccount = getAdditionalUserInfo(credential)?.isNewUser ?? false;
-  return accountOf(credential.user, isNewAccount);
+  try {
+    const credential = await getRedirectResult(auth);
+    if (credential) {
+      const isNewAccount = getAdditionalUserInfo(credential)?.isNewUser ?? false;
+      return accountOf(credential.user, isNewAccount);
+    }
+  } catch (err) {
+    console.warn('getRedirectResult warning:', err);
+  }
+  // Fallback: If auth.currentUser is already populated with a Google identity
+  const current = auth.currentUser;
+  if (current && current.providerData.some((p) => p.providerId === 'google.com')) {
+    return accountOf(current, false);
+  }
+  return null;
 }
 
 type RedirectOutcome = { account: AuthAccount | null } | { error: unknown };
