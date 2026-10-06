@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 import { isBooted, markBooted } from '@/lib/boot';
 import SplashView from './SplashView';
 
-const DURATION_MS = 2600;
+const DURATION_MS = 350;
 
 function labelFor(pct: number): string {
   if (pct < 40) return 'Initializing secure portal...';
@@ -40,9 +40,9 @@ export default function BootSplash({ children }: { children: React.ReactNode }) 
         setTimeout(() => {
           markBooted();
           setShow(false);
-        }, 250);
+        }, 50);
       }
-    }, 50);
+    }, 25);
     return () => clearInterval(id);
   }, [pathname]);
 

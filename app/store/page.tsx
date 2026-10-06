@@ -1,62 +1,322 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
+import PortalShell from '@/components/PortalShell';
+
+interface ProductItem {
+  id: string;
+  name: string;
+  category: 'Uniform' | 'Books' | 'Merch' | 'Equipment';
+  description: string;
+  price: number;
+  icon: string;
+  badge?: string;
+  inStock: boolean;
+}
+
+const PRODUCTS: ProductItem[] = [
+  {
+    id: 'p1',
+    name: 'Senior School Blazer',
+    category: 'Uniform',
+    description: 'Sizes 36–44 · Wool blend with woven school crest',
+    price: 2850,
+    icon: 'checkroom',
+    badge: 'Mandatory',
+    inStock: true,
+  },
+  {
+    id: 'p2',
+    name: 'House T-Shirt (Blue - Phoenix)',
+    category: 'Merch',
+    description: 'Sizes S–XL · Breathable dry-fit sports cotton',
+    price: 650,
+    icon: 'styler',
+    inStock: true,
+  },
+  {
+    id: 'p3',
+    name: 'Lab Record + Graph Bundle',
+    category: 'Books',
+    description: 'Physics & Chemistry practical sets with hardbound covers',
+    price: 320,
+    icon: 'menu_book',
+    badge: 'Required',
+    inStock: true,
+  },
+  {
+    id: 'p4',
+    name: 'Formal Navy Trousers',
+    category: 'Uniform',
+    description: 'Sizes 28–38 · Wrinkle-resistant polyester viscose',
+    price: 1200,
+    icon: 'apparel',
+    inStock: true,
+  },
+  {
+    id: 'p5',
+    name: 'School Crest Tie & Belt Set',
+    category: 'Uniform',
+    description: 'Regulation striped tie + brass buckle canvas belt',
+    price: 450,
+    icon: 'straighten',
+    inStock: true,
+  },
+  {
+    id: 'p6',
+    name: 'Senior Chemistry Coat & Goggles',
+    category: 'Equipment',
+    description: 'Cotton safety apron + UV-certified splash goggles',
+    price: 780,
+    icon: 'biotech',
+    inStock: true,
+  },
+  {
+    id: 'p7',
+    name: 'Mathematics Geometry Instrument Kit',
+    category: 'Equipment',
+    description: 'Precision compass, divider, protractor and set squares',
+    price: 390,
+    icon: 'architecture',
+    inStock: true,
+  },
+  {
+    id: 'p8',
+    name: 'Official Campus Backpack (32L)',
+    category: 'Merch',
+    description: 'Water-resistant, padded laptop compartment, school patch',
+    price: 1850,
+    icon: 'backpack',
+    inStock: true,
+  },
+];
+
+const CATEGORIES = ['All', 'Uniform', 'Books', 'Equipment', 'Merch'];
 
 export default function StorePage() {
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [cart, setCart] = useState<{ [id: string]: number }>({});
+  const [orderNotification, setOrderNotification] = useState<string | null>(null);
+
   useEffect(() => {
     const s = getSession();
     if (!s?.student) window.location.replace('/chooser');
   }, []);
-  return (
-    <div className="app-column relative min-h-screen bg-surface">
-      <header className="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] max-w-[430px] left-1/2 -translate-x-1/2 [@media(min-width:1024px)]:top-7"><div className="h-16 px-margin flex items-center justify-between gap-space-sm"><div className="flex items-center gap-space-sm min-w-0 flex-1"><img alt="EduPortal Emblem Logo" className="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1XzchOrmrFK4e0IrFKXMuSOAQzIVLl76Oyo1eMqHBOhkSBE3tJxbJqhaJWeUubO-LOz2k8S6mkNZYqGQGOgO-sy_7g3Ng_nzGrBTR9R1WdQ7WryFFY0RE26C5gE2PqViSYilm0gDJ9AuARfpt1mtdWTOoXh9_PkdlBOhbLNfE9r8xoRb4uprzCubdRKfCMtAsrpAgEwVAOII4Jr_2t1y4qnwZN05K3k4rVmli9sQlrmUxohAGvmAFaegpRI"/><div className="flex flex-col min-w-0"><span className="font-label-sm text-label-sm text-outline uppercase tracking-wider truncate">High School Portal</span><span className="font-headline-sm text-headline-sm text-on-surface truncate">Store</span></div></div><div className="flex items-center gap-space-xs flex-shrink-0"><button aria-label="Notifications" className="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors relative"><span className="material-symbols-outlined text-[22px]">notifications</span><span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-secondary-container"></span></button><div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 ml-space-xs shadow-sm"><span className="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main className="flex-1 flex flex-col relative w-full pt-16 pb-28 bg-surface">
-      <div className="flex flex-col w-full px-margin pb-space-lg">
-      <div className="flex flex-col gap-space-sm mt-space-sm">
-      <div className="bg-surface-container-lowest rounded-[18px] shadow-sm p-4 flex items-center gap-3">
-      <span className="w-12 h-12 rounded-[14px] bg-primary/10 flex items-center justify-center flex-shrink-0">
-      <span className="material-symbols-outlined text-primary text-[24px]">checkroom</span>
-      </span>
-      <div className="flex-1">
-      <p className="text-[14px] font-bold text-on-surface">Senior School Blazer</p>
-      <p className="font-body-sm text-body-sm text-on-surface-variant">Sizes 36–44 · Counter pickup</p>
-      </div>
-      <div className="text-right">
-      <p className="text-[14px] font-extrabold text-primary">₹2,850</p>
-      <button className="mt-1 text-[11px] font-bold text-white bg-primary rounded-full px-3 py-1.5">Order</button>
-      </div>
-      </div>
-      <div className="bg-surface-container-lowest rounded-[18px] shadow-sm p-4 flex items-center gap-3">
-      <span className="w-12 h-12 rounded-[14px] bg-tertiary/10 flex items-center justify-center flex-shrink-0">
-      <span className="material-symbols-outlined text-tertiary text-[24px]">styler</span>
-      </span>
-      <div className="flex-1">
-      <p className="text-[14px] font-bold text-on-surface">House T-Shirt (Blue)</p>
-      <p className="font-body-sm text-body-sm text-on-surface-variant">Sizes S–XL · Counter pickup</p>
-      </div>
-      <div className="text-right">
-      <p className="text-[14px] font-extrabold text-primary">₹650</p>
-      <button className="mt-1 text-[11px] font-bold text-white bg-primary rounded-full px-3 py-1.5">Order</button>
-      </div>
-      </div>
-      <div className="bg-surface-container-lowest rounded-[18px] shadow-sm p-4 flex items-center gap-3">
-      <span className="w-12 h-12 rounded-[14px] bg-secondary/10 flex items-center justify-center flex-shrink-0">
-      <span className="material-symbols-outlined text-secondary text-[24px]">menu_book</span>
-      </span>
-      <div className="flex-1">
-      <p className="text-[14px] font-bold text-on-surface">Lab Record + Graph Bundle</p>
-      <p className="font-body-sm text-body-sm text-on-surface-variant">Physics + Chemistry set</p>
-      </div>
-      <div className="text-right">
-      <p className="text-[14px] font-extrabold text-primary">₹320</p>
-      <button className="mt-1 text-[11px] font-bold text-white bg-primary rounded-full px-3 py-1.5">Order</button>
-      </div>
-      </div>
-      </div>
-      </div>
 
-      </main><nav className="fixed bottom-0 w-full z-50 pb-safe pointer-events-none max-w-[430px] left-1/2 -translate-x-1/2 [@media(min-width:480px)]:max-w-none [@media(min-width:480px)]:left-0 [@media(min-width:480px)]:translate-x-0 [@media(min-width:480px)]:bg-surface/85 [@media(min-width:480px)]:backdrop-blur-2xl [@media(min-width:480px)]:border-t [@media(min-width:480px)]:border-outline/10 [@media(min-width:1024px)]:bottom-7" data-active-classes="text-on-surface-variant"><div className="px-margin pb-space-md pt-space-xs pointer-events-auto [@media(min-width:480px)]:px-0 [@media(min-width:480px)]:pb-0 [@media(min-width:480px)]:pt-0"><div className="bg-white/90 backdrop-blur-2xl rounded-full shadow-[0_12px_28px_-6px_rgba(15,23,42,0.08),0_4px_12px_-2px_rgba(59,73,223,0.06)] p-space-xs flex items-center justify-between [@media(min-width:480px)]:rounded-none [@media(min-width:480px)]:shadow-none [@media(min-width:480px)]:bg-transparent [@media(min-width:480px)]:backdrop-blur-none [@media(min-width:480px)]:max-w-[430px] [@media(min-width:480px)]:mx-auto"><Link aria-current="page" className="flex-1 min-h-[44px] flex flex-col items-center justify-center py-space-xs px-space-xs rounded-full transition-all duration-200 text-on-surface-variant" data-path="home" href="/home"><span className="material-symbols-outlined text-[20px]">grid_view</span><span className="font-label-sm text-label-sm mt-0.5">Home</span></Link><Link className="flex-1 min-h-[44px] flex flex-col items-center justify-center py-space-xs px-space-xs rounded-full text-on-surface-variant hover:text-on-surface transition-all duration-200" data-path="academics" href="/academics"><span className="material-symbols-outlined text-[20px]">menu_book</span><span className="font-label-sm text-label-sm mt-0.5">Academics</span></Link><Link className="flex-1 min-h-[44px] flex flex-col items-center justify-center py-space-xs px-space-xs rounded-full text-on-surface-variant hover:text-on-surface transition-all duration-200" data-path="notices" href="/notices"><span className="material-symbols-outlined text-[20px]">campaign</span><span className="font-label-sm text-label-sm mt-0.5">Notices</span></Link><Link className="flex-1 min-h-[44px] flex flex-col items-center justify-center py-space-xs px-space-xs rounded-full text-on-surface-variant hover:text-on-surface transition-all duration-200" data-path="profile" href="/profile"><span className="material-symbols-outlined text-[20px]">account_circle</span><span className="font-label-sm text-label-sm mt-0.5">Profile</span></Link></div></div></nav>
-    </div>
+  const filteredProducts = PRODUCTS.filter((item) => {
+    const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const addToCart = (product: ProductItem) => {
+    setCart((prev) => ({
+      ...prev,
+      [product.id]: (prev[product.id] || 0) + 1,
+    }));
+    setOrderNotification(`Added "${product.name}" to counter pickup order.`);
+    setTimeout(() => setOrderNotification(null), 4000);
+  };
+
+  const totalCartCount = Object.values(cart).reduce((a, b) => a + b, 0);
+  const totalCartPrice = Object.entries(cart).reduce((sum, [id, qty]) => {
+    const prod = PRODUCTS.find((p) => p.id === id);
+    return sum + (prod ? prod.price * qty : 0);
+  }, 0);
+
+  return (
+    <PortalShell title="School Store" activePath="store">
+      <div className="flex flex-col w-full relative gap-space-md">
+        {/* Ambient Backdrops */}
+        <div className="absolute -top-10 -left-12 w-64 h-64 rounded-full bg-primary-container/10 blur-3xl pointer-events-none"></div>
+        <div className="absolute top-72 -right-16 w-72 h-72 rounded-full bg-secondary-container/10 blur-3xl pointer-events-none"></div>
+
+        {/* Top Search & Filter Bar */}
+        <div className="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline/10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="relative flex-1">
+            <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px]">
+              search
+            </span>
+            <input
+              type="text"
+              placeholder="Search uniforms, textbooks, lab bundles..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-11 pr-4 py-2 bg-surface-container-high/40 rounded-xl text-[14px] text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+            />
+          </div>
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-3.5 py-1.5 rounded-full text-[12px] font-bold whitespace-nowrap transition-all ${
+                  activeCategory === cat
+                    ? 'bg-primary text-white shadow-sm'
+                    : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {orderNotification && (
+          <div className="bg-primary/10 border border-primary/20 text-primary p-3 rounded-xl text-[13px] font-semibold flex items-center justify-between animate-fade-in">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
+              <span>{orderNotification}</span>
+            </div>
+            <span className="text-[12px] font-bold underline cursor-pointer" onClick={() => setOrderNotification(null)}>
+              Dismiss
+            </span>
+          </div>
+        )}
+
+        {/* 2-Column Responsive Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-start">
+          {/* Main Product Catalog */}
+          <div className="lg:col-span-8 flex flex-col gap-space-md">
+            <div className="flex items-center justify-between">
+              <p className="text-[14px] font-bold text-on-surface">
+                Catalog Items <span className="text-outline font-normal">({filteredProducts.length})</span>
+              </p>
+              <span className="text-[12px] text-on-surface-variant">Counter Pickup within 24h</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+              {filteredProducts.map((prod) => (
+                <div
+                  key={prod.id}
+                  className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline/10 p-4 flex flex-col justify-between hover:shadow-md transition-shadow group"
+                >
+                  <div>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                        <span className="material-symbols-outlined text-primary text-[24px]">{prod.icon}</span>
+                      </div>
+                      {prod.badge && (
+                        <span className="px-2 py-0.5 rounded-full bg-secondary-container text-secondary text-[10px] font-bold tracking-wide uppercase">
+                          {prod.badge}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="mt-3">
+                      <h4 className="text-[14px] font-bold text-on-surface line-clamp-1">{prod.name}</h4>
+                      <p className="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-2">
+                        {prod.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-outline/10 flex items-center justify-between">
+                    <div>
+                      <span className="text-[11px] text-outline uppercase block">Price</span>
+                      <span className="text-[16px] font-extrabold text-primary">₹{prod.price.toLocaleString('en-IN')}</span>
+                    </div>
+                    <button
+                      onClick={() => addToCart(prod)}
+                      className="h-[36px] px-4 rounded-full bg-primary text-white text-[12px] font-bold hover:bg-primary/90 transition-transform active:scale-95 flex items-center gap-1.5 shadow-sm"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">add_shopping_cart</span>
+                      Order
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Rail: Cart Summary & Store Info */}
+          <div className="lg:col-span-4 flex flex-col gap-space-md">
+            {/* Pickup Cart Summary Card */}
+            <div className="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline/10">
+              <div className="flex items-center justify-between mb-3 pb-2 border-b border-outline/10">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[22px]">shopping_cart</span>
+                  <h3 className="font-headline-sm text-[15px] text-on-surface font-bold">Pickup Cart</h3>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-bold text-[11px]">
+                  {totalCartCount} {totalCartCount === 1 ? 'item' : 'items'}
+                </span>
+              </div>
+
+              {totalCartCount === 0 ? (
+                <div className="py-6 text-center text-on-surface-variant">
+                  <span className="material-symbols-outlined text-[32px] text-outline/50 mb-1">production_quantity_limits</span>
+                  <p className="text-[12px]">Your counter order bag is empty.</p>
+                  <p className="text-[11px] text-outline mt-0.5">Click &quot;Order&quot; on any item to reserve.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
+                    {Object.entries(cart).map(([id, qty]) => {
+                      const prod = PRODUCTS.find((p) => p.id === id);
+                      if (!prod) return null;
+                      return (
+                        <div key={id} className="flex items-center justify-between text-[12px] py-1 border-b border-outline/5">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-semibold text-on-surface truncate">{prod.name}</p>
+                            <p className="text-outline text-[11px]">₹{prod.price} × {qty}</p>
+                          </div>
+                          <span className="font-bold text-on-surface ml-2">₹{(prod.price * qty).toLocaleString('en-IN')}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="pt-2 border-t border-outline/10 flex items-center justify-between text-[14px] font-bold">
+                    <span>Total Amount</span>
+                    <span className="text-primary text-[16px]">₹{totalCartPrice.toLocaleString('en-IN')}</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      alert(`Order placed successfully for ₹${totalCartPrice}! Collection slip generated for Student Rajen Shaw.`);
+                      setCart({});
+                    }}
+                    className="w-full h-10 rounded-full bg-primary text-white font-bold text-[13px] shadow-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-1.5"
+                  >
+                    <span>Confirm Counter Order</span>
+                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Store Counter Details */}
+            <div className="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline/10">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="material-symbols-outlined text-secondary text-[20px]">storefront</span>
+                <h3 className="font-headline-sm text-[14px] text-on-surface font-bold">Counter Pickup Info</h3>
+              </div>
+              <ul className="space-y-2.5 text-[12px] text-on-surface-variant">
+                <li className="flex items-start gap-2">
+                  <span className="material-symbols-outlined text-outline text-[16px] mt-0.5">location_on</span>
+                  <span>Senior School Store, Wing A Ground Floor (adjacent to Accounts Office).</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="material-symbols-outlined text-outline text-[16px] mt-0.5">schedule</span>
+                  <span>Counter Timings: Mon–Sat, 08:30 AM to 03:30 PM.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="material-symbols-outlined text-outline text-[16px] mt-0.5">receipt</span>
+                  <span>Charges are billed directly to your student ledger or payable via UPI.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="material-symbols-outlined text-outline text-[16px] mt-0.5">sync_alt</span>
+                  <span>Uniform exchanges accepted within 7 school days with original tags intact.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </PortalShell>
   );
 }

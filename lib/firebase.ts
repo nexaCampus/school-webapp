@@ -19,7 +19,17 @@ import {
   type User,
   type UserCredential,
 } from 'firebase/auth';
-import { doc, getDoc, getFirestore, setDoc, type Firestore } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  setDoc,
+  where,
+  type Firestore,
+} from 'firebase/firestore';
 import type { Student } from './data';
 
 const config = {
@@ -63,6 +73,25 @@ export async function getStudent(admissionNumber: string): Promise<(Student & { 
   if (!snap.exists()) return null;
   const { id: _docId, ...data } = snap.data() as Student;
   return { id: snap.id, ...data };
+}
+
+/** Looks up student profile by guardian or student email. */
+export async function getStudentByEmail(email: string): Promise<(Student & { id: string }) | null> {
+  const clean = (email || '').trim().toLowerCase();
+  if (!clean) return null;
+  await ensureAnonymous();
+  const { db } = firebase();
+  try {
+    const q = query(collection(db, 'students'), where('guardianEmail', '==', clean));
+    const snap = await getDocs(q);
+    if (!snap.empty) {
+      const firstDoc = snap.docs[0];
+      return { ...(firstDoc.data() as Student), id: firstDoc.id };
+    }
+  } catch (err) {
+    console.warn('getStudentByEmail query error:', err);
+  }
+  return null;
 }
 
 /** Merge-writes the onboarding profile. Never overwrites office-filled fields. */
