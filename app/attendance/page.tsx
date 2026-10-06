@@ -60,7 +60,7 @@ export default function AttendancePage() {
         </div>
 
         {/* Detailed Monthly Attendance Breakdown Table / Cards */}
-        <section className="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm">
+        <section className="bg-white dark:bg-[#121929] rounded-[14px] border border-outline/10 dark:border-white/10 p-space-lg shadow-sm">
           <div className="flex items-center justify-between mb-space-md">
             <div>
               <h3 className="font-headline-sm text-headline-sm text-on-surface">
@@ -76,23 +76,23 @@ export default function AttendancePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="p-4 rounded-xl bg-surface-container-low flex flex-col">
-              <span className="font-label-sm text-label-sm text-outline uppercase">Total Days</span>
+            <div className="p-4 rounded-[14px] bg-surface-container-low dark:bg-slate-800/60 border border-outline/10 flex flex-col">
+              <span className="font-label-sm text-label-sm text-outline uppercase tracking-wider">Total Days</span>
               <span className="font-headline-md text-headline-md text-on-surface font-bold mt-1">24</span>
               <span className="font-body-sm text-[11px] text-on-surface-variant">Academic working</span>
             </div>
-            <div className="p-4 rounded-xl bg-tertiary/10 flex flex-col">
-              <span className="font-label-sm text-label-sm text-tertiary uppercase">Present</span>
+            <div className="p-4 rounded-[14px] bg-tertiary/10 border border-tertiary/20 flex flex-col">
+              <span className="font-label-sm text-label-sm text-tertiary uppercase tracking-wider">Present</span>
               <span className="font-headline-md text-headline-md text-tertiary font-bold mt-1">22</span>
               <span className="font-body-sm text-[11px] text-tertiary">Morning &amp; Lab</span>
             </div>
-            <div className="p-4 rounded-xl bg-error/10 flex flex-col">
-              <span className="font-label-sm text-label-sm text-error uppercase">Absent</span>
+            <div className="p-4 rounded-[14px] bg-error/10 border border-error/20 flex flex-col">
+              <span className="font-label-sm text-label-sm text-error uppercase tracking-wider">Absent</span>
               <span className="font-headline-md text-headline-md text-error font-bold mt-1">1</span>
               <span className="font-body-sm text-[11px] text-error">Sick leave approved</span>
             </div>
-            <div className="p-4 rounded-xl bg-secondary-container/15 flex flex-col">
-              <span className="font-label-sm text-label-sm text-secondary uppercase">Late Marks</span>
+            <div className="p-4 rounded-[14px] bg-secondary-container/15 border border-secondary/20 flex flex-col">
+              <span className="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Late Marks</span>
               <span className="font-headline-md text-headline-md text-secondary font-bold mt-1">1</span>
               <span className="font-body-sm text-[11px] text-secondary">Bus route delayed</span>
             </div>

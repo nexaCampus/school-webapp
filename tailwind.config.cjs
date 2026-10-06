@@ -74,17 +74,18 @@ module.exports = {
           "space-md": "1rem"
         },
         "fontFamily": {
-          "headline-sm": ["Plus Jakarta Sans"],
-          "label-sm": ["Plus Jakarta Sans"],
-          "body-md": ["Plus Jakarta Sans"],
-          "body-lg": ["Plus Jakarta Sans"],
-          "label-md": ["Plus Jakarta Sans"],
-          "display-lg": ["Plus Jakarta Sans"],
-          "headline-lg": ["Plus Jakarta Sans"],
-          "display-lg-mobile": ["Plus Jakarta Sans"],
-          "label-lg": ["Plus Jakarta Sans"],
-          "body-sm": ["Plus Jakarta Sans"],
-          "headline-md": ["Plus Jakarta Sans"]
+          "sans": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "headline-sm": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "label-sm": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "body-md": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "body-lg": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "label-md": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "display-lg": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "headline-lg": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "display-lg-mobile": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "label-lg": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "body-sm": ["var(--font-poppins)", "Poppins", "sans-serif"],
+          "headline-md": ["var(--font-poppins)", "Poppins", "sans-serif"]
         },
         "fontSize": {
           "headline-sm": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
