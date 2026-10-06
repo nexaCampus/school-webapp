@@ -87,11 +87,15 @@ function OnboardingForm() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Hard gate: a signed-in email that is still unverified has no business
+    // Hard gate: a password signed-in email that is still unverified has no business
     // here — bounce to /email, which reopens the verification dialog.
     // Google and admission (anonymous) identities carry no such requirement.
     const unsub = onAuthChange((user) => {
-      if (user?.email && !user.emailVerified) router.replace('/email');
+      if (!user) return;
+      const isPassword = user.providerData.some((p) => p.providerId === 'password');
+      if (isPassword && user.email && !user.emailVerified) {
+        router.replace('/email');
+      }
     });
     return unsub;
   }, [router]);
@@ -115,10 +119,16 @@ function OnboardingForm() {
       }
     })();
     const session = getSession();
-    if (params.get('name')) setName(params.get('name') ?? '');
+    const queryName = params.get('name');
+    if (queryName) setName(queryName);
     else if (pending?.name) setName(pending.name);
-    if (pending?.email) setGuardianEmail(pending.email);
+    else if (session?.name) setName(session.name);
+
+    const queryEmail = params.get('email');
+    if (queryEmail) setGuardianEmail(queryEmail);
+    else if (pending?.email) setGuardianEmail(pending.email);
     else if (session?.email) setGuardianEmail(session.email);
+
     try {
       sessionStorage.removeItem('pendingProfile');
     } catch {

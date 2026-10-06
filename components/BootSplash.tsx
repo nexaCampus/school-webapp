@@ -46,11 +46,27 @@ export default function BootSplash({ children }: { children: React.ReactNode }) 
     return () => clearInterval(id);
   }, [pathname]);
 
-  if (!show) return <>{children}</>;
-
   return (
-    <div className="fixed inset-0 z-[100] bg-surface overflow-y-auto">
-      <SplashView pct={pct} label={labelFor(pct)} />
-    </div>
+    <>
+      {children}
+      {show && (
+        <div
+          className="fixed inset-0 z-[100] bg-surface overflow-y-auto cursor-pointer"
+          onClick={() => {
+            markBooted();
+            setShow(false);
+          }}
+        >
+          <SplashView
+            pct={pct}
+            label={labelFor(pct)}
+            onClick={() => {
+              markBooted();
+              setShow(false);
+            }}
+          />
+        </div>
+      )}
+    </>
   );
 }
