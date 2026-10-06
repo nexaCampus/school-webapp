@@ -53,6 +53,7 @@ export default function AdmissionPage() {
         </h1>
       </div>
 
+      <div className="flex-1 min-h-[10vh]" aria-hidden="true" />
       <div className="w-[68px] h-[68px] rounded-full bg-surface-container-lowest shadow-[0_8px_20px_rgba(28,42,200,0.12)] p-1.5 mt-space-md">
         <div className="w-full h-full rounded-full bg-gradient-to-b from-primary to-primary-container flex items-center justify-center">
           <span className="material-symbols-outlined text-white text-[28px]">badge</span>
