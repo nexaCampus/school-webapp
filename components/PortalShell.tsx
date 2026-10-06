@@ -111,18 +111,26 @@ export default function PortalShell({
     };
   }, [mobileServicesOpen]);
 
-  const openMobileServices = () => {
+  const toggleServices = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setServicesOpen((prev) => !prev);
+  };
+
+  const openMobileServices = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setMobileServicesOpen(true);
   };
 
-  const closeMobileServices = () => {
+  const closeMobileServices = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setMobileServicesOpen(false);
-  };
-
-  // Dedicated mobile navigation handler ensuring routes open reliably without history conflicts
-  const handleServiceNavigation = (href: string) => {
-    setMobileServicesOpen(false);
-    router.push(href);
   };
 
   // Auto-close on route change
@@ -149,7 +157,7 @@ export default function PortalShell({
   return (
     <div className="relative min-h-screen bg-surface flex flex-col max-w-full overflow-x-hidden">
       {/* DESKTOP HEADER (>= 768px): Sleek, properly-aligned executive top bar */}
-      <header className="hidden md:block sticky top-0 w-full z-50 bg-surface/90 dark:bg-[#0b0f19]/90 backdrop-blur-xl border-b border-outline/10 shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+      <header className="hidden md:block sticky top-0 w-full z-50 bg-surface/90 dark:bg-[#181818]/95 backdrop-blur-xl border-b border-outline/10 dark:border-[#2d2d2d] shadow-sm">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
           {/* Brand Identity */}
           <Link href="/home" className="flex items-center gap-3 group flex-shrink-0">
@@ -178,7 +186,7 @@ export default function PortalShell({
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all ${
                     isActive
                       ? 'bg-primary text-on-primary shadow-sm'
-                      : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
+                      : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container dark:hover:bg-[#2d2d2d]'
                   }`}
                 >
                   <span className="material-symbols-outlined text-[19px]">{item.icon}</span>
@@ -191,11 +199,11 @@ export default function PortalShell({
             <div ref={servicesRef} className="relative">
               <button
                 type="button"
-                onClick={() => setServicesOpen((prev) => !prev)}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all ${
+                onClick={toggleServices}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${
                   servicesOpen
-                    ? 'bg-surface-container-high text-primary ring-2 ring-primary/20'
-                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
+                    ? 'bg-surface-container-high dark:bg-[#2d2d2d] text-primary ring-2 ring-primary/20'
+                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container dark:hover:bg-[#2d2d2d]'
                 }`}
               >
                 <span className="material-symbols-outlined text-[19px]">apps</span>
@@ -206,8 +214,8 @@ export default function PortalShell({
               </button>
 
               {servicesOpen && (
-                <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl bg-white dark:bg-[#0f172a] shadow-[0_20px_50px_rgba(0,0,0,0.25)] border border-outline/15 dark:border-slate-800 p-2 z-50 grid grid-cols-1 gap-0.5 max-h-[70vh] overflow-y-auto opacity-100">
-                  <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-outline border-b border-outline/10 mb-1">
+                <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl bg-white dark:bg-[#252526] shadow-2xl border border-outline/15 dark:border-[#3c3c3c] p-2 z-50 grid grid-cols-1 gap-0.5 max-h-[70vh] overflow-y-auto opacity-100">
+                  <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-outline border-b border-outline/10 dark:border-[#3c3c3c] mb-1">
                     All Student Services
                   </div>
                   {MORE_SERVICES.map((s) => (
@@ -215,9 +223,9 @@ export default function PortalShell({
                       key={s.href}
                       href={s.href}
                       onClick={() => setServicesOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] text-on-surface hover:bg-surface-container transition-colors"
+                      className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] text-on-surface hover:bg-surface-container dark:hover:bg-[#2d2d2d] transition-colors"
                     >
-                      <span className="w-8 h-8 rounded-lg bg-surface-container dark:bg-slate-800 flex items-center justify-center text-primary dark:text-primary-fixed">
+                      <span className="w-8 h-8 rounded-lg bg-surface-container dark:bg-[#1e1e1e] flex items-center justify-center text-primary dark:text-[#3794ff]">
                         <span className="material-symbols-outlined text-[18px]">{s.icon}</span>
                       </span>
                       <span className="font-medium">{s.label}</span>
@@ -240,7 +248,7 @@ export default function PortalShell({
               className={`flex items-center gap-2.5 pl-2.5 pr-4 py-1.5 rounded-full border transition-all ${
                 pathname === '/profile'
                   ? 'bg-primary/10 border-primary text-primary'
-                  : 'bg-surface-container border-transparent hover:bg-surface-container-high text-on-surface'
+                  : 'bg-surface-container dark:bg-[#252526] border-transparent dark:border-[#3c3c3c] hover:bg-surface-container-high dark:hover:bg-[#2d2d2d] text-on-surface'
               }`}
             >
               <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-on-primary text-[14px] shadow-sm">
@@ -269,18 +277,18 @@ export default function PortalShell({
       </header>
 
       {/* MOBILE HEADER (< 768px): With Hamburger on Top Left & Dark Mode to the Left of Profile */}
-      <header className="md:hidden fixed top-0 w-full z-40 pt-safe bg-surface/90 dark:bg-[#0b0f19]/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-outline/10">
+      <header className="md:hidden fixed top-0 w-full z-40 pt-safe bg-surface/90 dark:bg-[#181818]/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.2)] border-b border-outline/10 dark:border-[#2d2d2d]">
         <div className="h-16 px-margin flex items-center justify-between gap-space-sm">
           {/* Top Left: Hamburger menu button + School Emblem & Title */}
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <button
               type="button"
               onClick={openMobileServices}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-95 transition-transform flex-shrink-0"
+              className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-90 transition-transform flex-shrink-0 cursor-pointer z-30"
               aria-label="Open School Services menu"
               title="Open Services"
             >
-              <span className="material-symbols-outlined text-[24px]">menu</span>
+              <span className="material-symbols-outlined text-[26px]">menu</span>
             </button>
             <LogoEmblem className="h-8 w-8 flex-shrink-0" />
             <div className="flex flex-col min-w-0">
@@ -309,9 +317,9 @@ export default function PortalShell({
 
       {/* FULL-SCREEN MOBILE HAMBURGER MENU: Coming from Top to Entire Bottom with Cross Button on Top Right */}
       {mobileServicesOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-white dark:bg-[#0b0f19] flex flex-col animate-in fade-in slide-in-from-top-6 duration-200">
+        <div className="md:hidden fixed inset-0 z-50 bg-white dark:bg-[#1e1e1e] flex flex-col animate-in fade-in slide-in-from-top-6 duration-200">
           {/* Top Bar inside Full-Screen Hamburger */}
-          <div className="h-16 px-margin pt-safe flex items-center justify-between border-b border-outline/10 bg-white dark:bg-[#0b0f19] flex-shrink-0">
+          <div className="h-16 px-margin pt-safe flex items-center justify-between border-b border-outline/10 dark:border-[#2d2d2d] bg-white dark:bg-[#181818] flex-shrink-0">
             <div className="flex items-center gap-2.5">
               <LogoEmblem className="h-8 w-8" />
               <div>
@@ -329,7 +337,7 @@ export default function PortalShell({
               type="button"
               onClick={closeMobileServices}
               aria-label="Close menu"
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container dark:bg-slate-800 text-on-surface hover:bg-surface-container-high active:scale-90 transition-all shadow-sm"
+              className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container dark:bg-[#252526] dark:border dark:border-[#3c3c3c] text-on-surface hover:bg-surface-container-high dark:hover:bg-[#2d2d2d] active:scale-90 transition-all shadow-sm cursor-pointer z-30"
             >
               <span className="material-symbols-outlined text-[24px]">close</span>
             </button>
@@ -355,21 +363,18 @@ export default function PortalShell({
                     <Link
                       key={s.href}
                       href={s.href}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleServiceNavigation(s.href);
-                      }}
+                      onClick={closeMobileServices}
                       className={`p-3.5 rounded-[14px] border transition-all duration-150 flex flex-col items-start gap-2 active:scale-95 shadow-sm cursor-pointer ${
                         isActive
                           ? 'bg-primary/10 border-primary text-primary'
-                          : 'bg-white dark:bg-[#121929] border-outline/10 hover:border-primary/40 text-on-surface'
+                          : 'bg-white dark:bg-[#252526] border-outline/10 dark:border-[#3c3c3c] hover:border-primary/40 dark:hover:bg-[#2d2d2d] text-on-surface'
                       }`}
                     >
                       <div
                         className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                           isActive
                             ? 'bg-primary text-on-primary shadow-sm'
-                            : 'bg-surface-container-high dark:bg-slate-800 text-primary dark:text-primary-fixed'
+                            : 'bg-surface-container-high dark:bg-[#1e1e1e] text-primary dark:text-[#3794ff]'
                         }`}
                       >
                         <span className="material-symbols-outlined text-[22px]">{s.icon}</span>
@@ -388,13 +393,10 @@ export default function PortalShell({
               </div>
 
               {/* Quick links footer inside hamburger */}
-              <div className="mt-6 pt-4 border-t border-outline/10 flex items-center justify-between text-[11px] text-outline px-1">
+              <div className="mt-6 pt-4 border-t border-outline/10 dark:border-[#3c3c3c] flex items-center justify-between text-[11px] text-outline px-1">
                 <Link
                   href="/profile"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleServiceNavigation('/profile');
-                  }}
+                  onClick={closeMobileServices}
                   className="flex items-center gap-1.5 text-on-surface hover:text-primary font-semibold cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[16px]">account_circle</span>
@@ -402,10 +404,7 @@ export default function PortalShell({
                 </Link>
                 <Link
                   href="/chooser"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleServiceNavigation('/chooser');
-                  }}
+                  onClick={closeMobileServices}
                   className="flex items-center gap-1.5 text-error font-semibold cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[16px]">logout</span>
@@ -430,7 +429,7 @@ export default function PortalShell({
       {/* MOBILE FLOATING PILL NAVBAR (< 768px): Exact original mobile look */}
       <nav className="md:hidden fixed bottom-0 w-full z-30 pb-safe pointer-events-none">
         <div className="px-margin pb-space-md pt-space-xs pointer-events-auto max-w-[430px] mx-auto">
-          <div className="bg-white/95 dark:bg-[#121929]/95 backdrop-blur-2xl rounded-full shadow-[0_12px_28px_-6px_rgba(15,23,42,0.12),0_4px_12px_-2px_rgba(59,73,223,0.08)] border border-outline/10 p-space-xs flex items-center justify-between">
+          <div className="bg-white/95 dark:bg-[#181818]/95 backdrop-blur-2xl rounded-full shadow-[0_12px_28px_-6px_rgba(0,0,0,0.5),0_4px_12px_-2px_rgba(0,0,0,0.3)] border border-outline/10 dark:border-[#3c3c3c] p-space-xs flex items-center justify-between">
             <Link
               className={`flex-1 min-h-[44px] flex flex-col items-center justify-center py-space-xs px-space-xs rounded-full transition-all duration-200 ${
                 currentPath === 'home' || pathname === '/home' || pathname === '/'
