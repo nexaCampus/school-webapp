@@ -409,10 +409,12 @@ function OnboardingForm() {
 
 export default function OnboardingPage() {
   return (
-    <div className="app-column relative min-h-screen bg-surface flex flex-col w-full px-margin py-space-sm">
-      <Suspense>
-        <OnboardingForm />
-      </Suspense>
+    <div className="relative min-h-screen bg-surface flex items-center justify-center p-4 sm:p-6 md:p-10 w-full">
+      <div className="w-full max-w-md md:max-w-2xl mx-auto bg-surface-container-lowest rounded-3xl shadow-[0_24px_70px_-12px_rgba(28,42,200,0.14)] border border-outline/10 p-6 md:p-10">
+        <Suspense>
+          <OnboardingForm />
+        </Suspense>
+      </div>
     </div>
   );
 }

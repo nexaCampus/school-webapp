@@ -15,7 +15,7 @@ const STAGES = [
   { pct: 100, label: 'Welcome to Lions Portal' },
 ];
 
-const WAITS = [500, 600, 600, 600, 500];
+const WAITS = [80, 80, 80, 80, 80];
 
 export default function SplashPage() {
   const router = useRouter();
