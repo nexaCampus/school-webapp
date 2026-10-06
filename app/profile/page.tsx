@@ -3,12 +3,14 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { clearSession, getSession } from '@/lib/session';
+import { getSession, logoutUser, switchAccount } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
 
 export default function ProfilePage() {
   const router = useRouter();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showSwitchModal, setShowSwitchModal] = useState(false);
+  const [isProcessingAuth, setIsProcessingAuth] = useState(false);
   const [studentData, setStudentData] = useState({
     name: 'Student',
     grade: '—',
@@ -55,9 +57,14 @@ export default function ProfilePage() {
     }
   }, []);
 
-  function handleLogout() {
-    clearSession();
-    router.replace('/chooser');
+  async function handleLogout() {
+    setIsProcessingAuth(true);
+    await logoutUser('/chooser');
+  }
+
+  async function handleSwitchAccount() {
+    setIsProcessingAuth(true);
+    await switchAccount();
   }
 
   return (
@@ -125,17 +132,25 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Quick Actions & Logout Trigger */}
-            <div className="flex flex-col gap-2">
+            {/* Quick Actions: Switch Account & Log Out */}
+            <div className="flex flex-col gap-2.5">
               <button
-                className="w-full py-3.5 px-space-md rounded-full bg-error-container text-on-error-container hover:bg-error hover:text-on-error transition-all duration-200 flex items-center justify-center gap-2 shadow-sm font-label-lg text-label-lg active:scale-[0.98]"
+                className="w-full py-3 px-space-md rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-200 flex items-center justify-center gap-2 shadow-sm font-label-lg text-[13px] font-bold active:scale-[0.98] cursor-pointer"
+                onClick={() => setShowSwitchModal(true)}
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[19px]">switch_account</span>
+                <span>Switch Student Account</span>
+              </button>
+              <button
+                className="w-full py-3 px-space-md rounded-full bg-error-container text-on-error-container hover:bg-error hover:text-on-error transition-all duration-200 flex items-center justify-center gap-2 shadow-sm font-label-lg text-[13px] font-bold active:scale-[0.98] cursor-pointer"
                 onClick={() => setShowLogoutModal(true)}
                 type="button"
               >
-                <span className="material-symbols-outlined text-[20px]">logout</span>
+                <span className="material-symbols-outlined text-[19px]">logout</span>
                 <span>Log Out of Account</span>
               </button>
-              <p className="font-label-sm text-label-sm text-outline text-center">
+              <p className="font-label-sm text-label-sm text-outline text-center mt-1">
                 Version 3.4.1 (Build 2026.04) • EduPortal Student OS
               </p>
             </div>
@@ -500,31 +515,68 @@ export default function ProfilePage() {
 
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
-        <div className="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-surface-container-lowest p-space-lg shadow-2xl flex flex-col items-center text-center animate-in fade-in zoom-in-95 duration-150">
-            <div className="w-14 h-14 rounded-full bg-error-container text-error flex items-center justify-center mb-space-sm">
-              <span className="material-symbols-outlined text-[30px]">warning</span>
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#252526] border border-outline/15 dark:border-[#3c3c3c] p-6 shadow-2xl flex flex-col items-center text-center">
+            <div className="w-12 h-12 rounded-full bg-error/15 text-error flex items-center justify-center mb-3">
+              <span className="material-symbols-outlined text-[28px]">logout</span>
             </div>
-            <h3 className="font-headline-md text-headline-md text-on-surface mb-1">Confirm Log Out?</h3>
-            <p className="font-body-md text-body-md text-on-surface-variant mb-space-lg">
+            <h3 className="text-[17px] font-bold text-on-surface mb-1.5">Confirm Log Out?</h3>
+            <p className="text-[12px] text-on-surface-variant leading-relaxed mb-5">
               You will need your student admission ID (
               <strong className="text-on-surface">#{studentData.admissionId}</strong>) to re-enter the
               academic portal.
             </p>
             <div className="flex flex-col w-full gap-2">
               <button
-                className="w-full py-3 rounded-full bg-error text-on-error font-label-lg text-label-lg shadow-sm hover:opacity-90 active:scale-95 transition-all"
+                className="w-full py-2.5 rounded-full bg-error text-white text-[13px] font-bold shadow-sm hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                 onClick={handleLogout}
+                disabled={isProcessingAuth}
                 type="button"
               >
-                Yes, Log Out
+                <span className="material-symbols-outlined text-[16px]">logout</span>
+                <span>{isProcessingAuth ? 'Logging out...' : 'Yes, Log Out'}</span>
               </button>
               <button
-                className="w-full py-3 rounded-full bg-surface-container-high text-on-surface font-label-lg text-label-lg hover:bg-surface-container-highest active:scale-95 transition-all"
+                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#333333] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
                 onClick={() => setShowLogoutModal(false)}
+                disabled={isProcessingAuth}
                 type="button"
               >
                 Cancel &amp; Stay
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Switch Account Modal */}
+      {showSwitchModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#252526] border border-outline/15 dark:border-[#3c3c3c] p-6 shadow-2xl flex flex-col items-center text-center">
+            <div className="w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-3">
+              <span className="material-symbols-outlined text-[28px]">switch_account</span>
+            </div>
+            <h3 className="text-[17px] font-bold text-on-surface mb-1.5">Switch Student Account?</h3>
+            <p className="text-[12px] text-on-surface-variant leading-relaxed mb-5">
+              Switch to another student admission number, sibling, or guardian profile. Your current timetable and diary records will remain securely cached.
+            </p>
+            <div className="flex flex-col w-full gap-2">
+              <button
+                className="w-full py-2.5 rounded-full bg-primary text-white text-[13px] font-bold shadow-sm hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                onClick={handleSwitchAccount}
+                disabled={isProcessingAuth}
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[16px]">swap_horiz</span>
+                <span>{isProcessingAuth ? 'Switching...' : 'Switch Account'}</span>
+              </button>
+              <button
+                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#333333] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                onClick={() => setShowSwitchModal(false)}
+                disabled={isProcessingAuth}
+                type="button"
+              >
+                Cancel
               </button>
             </div>
           </div>

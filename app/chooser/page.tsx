@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { getSession } from '@/lib/session';
+import { clearSession, getSession, type Session } from '@/lib/session';
 import LogoEmblem from '@/components/LogoEmblem';
 import AuthFooter from '@/components/AuthFooter';
 import DarkModeToggle from '@/components/DarkModeToggle';
@@ -16,6 +16,7 @@ function DesktopMethodCard({
   icon,
   iconWell,
   accent,
+  onClick,
 }: {
   href: string;
   title: string;
@@ -24,11 +25,13 @@ function DesktopMethodCard({
   icon: string;
   iconWell: string;
   accent: string;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
-      className="w-full bg-surface-container-lowest dark:bg-[#252526] rounded-2xl shadow-sm border border-outline/10 dark:border-[#3c3c3c] p-4 flex items-center gap-4 hover:shadow-md hover:border-primary/30 dark:hover:bg-[#2d2d2d] transition-all active:scale-[0.99] group"
+      onClick={onClick}
+      className="w-full bg-surface-container-lowest dark:bg-[#252526] rounded-2xl shadow-sm border border-outline/10 dark:border-[#3c3c3c] p-4 flex items-center gap-4 hover:shadow-md hover:border-primary/30 dark:hover:bg-[#2d2d2d] transition-all active:scale-[0.99] group cursor-pointer"
     >
       <span
         className={`w-12 h-12 rounded-xl ${iconWell} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform`}
@@ -64,6 +67,7 @@ function MobileMethodCard({
   icon,
   iconWell,
   accent,
+  onClick,
 }: {
   href: string;
   title: string;
@@ -73,11 +77,13 @@ function MobileMethodCard({
   icon: string;
   iconWell: string;
   accent: string;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
-      className="w-full bg-surface-container-lowest dark:bg-[#252526] rounded-[22px] shadow-[0_8px_20px_rgba(28,42,200,0.08)] dark:shadow-none border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-3.5 sm:p-4 flex items-center gap-3.5 active:scale-[0.99] transition-transform"
+      onClick={onClick}
+      className="w-full bg-surface-container-lowest dark:bg-[#252526] rounded-[22px] shadow-[0_8px_20px_rgba(28,42,200,0.08)] dark:shadow-none border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-3.5 sm:p-4 flex items-center gap-3.5 active:scale-[0.99] transition-transform cursor-pointer"
     >
       <span
         className={`w-[46px] h-[46px] rounded-[14px] ${iconWell} flex items-center justify-center flex-shrink-0 shadow-sm`}
@@ -104,13 +110,21 @@ function MobileMethodCard({
 
 export default function ChooserPage() {
   const router = useRouter();
+  const [activeSession, setActiveSession] = useState<Session | null>(null);
 
   useEffect(() => {
     const s = getSession();
     if (s?.student || s?.name) {
-      router.replace('/home');
+      setActiveSession(s);
     }
-  }, [router]);
+  }, []);
+
+  const handleSelectMethod = () => {
+    // When switching account, clear the existing active session so the selected login method starts fresh
+    if (activeSession) {
+      clearSession();
+    }
+  };
 
   return (
     <>
@@ -168,10 +182,37 @@ export default function ChooserPage() {
             </p>
           </div>
 
+          {/* Active Session Info when Switching Accounts */}
+          {activeSession && (
+            <div className="mb-3 p-3 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-between gap-2.5 flex-shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs flex-shrink-0">
+                  <span className="material-symbols-outlined text-[17px]">person</span>
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[11.5px] font-bold text-on-surface block truncate">
+                    Active: {activeSession.student?.displayName || activeSession.student?.name || activeSession.name}
+                  </span>
+                  <span className="text-[10px] text-primary block truncate font-medium">
+                    {activeSession.student ? `Class ${activeSession.student.grade}-${activeSession.student.section} • #${activeSession.student.id || activeSession.student.admissionId}` : 'Signed in'}
+                  </span>
+                </div>
+              </div>
+              <Link
+                href="/home"
+                className="px-2.5 py-1 rounded-full bg-primary text-white text-[10.5px] font-bold flex items-center gap-0.5 shadow-sm active:scale-95 transition-all flex-shrink-0 cursor-pointer"
+              >
+                <span>Dashboard</span>
+                <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+              </Link>
+            </div>
+          )}
+
           {/* Method Selection Cards */}
           <div className="w-full space-y-3 my-auto">
             <MobileMethodCard
               href="/admission"
+              onClick={handleSelectMethod}
               title="Admission Number"
               subtitle="Issued on your physical student ID card and fee receipt"
               badge="Registered Student"
@@ -182,6 +223,7 @@ export default function ChooserPage() {
             />
             <MobileMethodCard
               href="/email"
+              onClick={handleSelectMethod}
               title="Email or Google Account"
               subtitle="Sign in with your registered Google account or guardian email"
               badge="Google + Email"
@@ -313,10 +355,37 @@ export default function ChooserPage() {
                 </p>
               </div>
 
+              {/* Active Session Info when Switching Accounts */}
+              {activeSession && (
+                <div className="mb-5 p-3.5 rounded-2xl bg-primary/10 border border-primary/25 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0">
+                      <span className="material-symbols-outlined text-[19px]">person</span>
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[13px] font-bold text-on-surface block truncate">
+                        Currently Active: {activeSession.student?.displayName || activeSession.student?.name || activeSession.name}
+                      </span>
+                      <span className="text-[11px] text-primary block truncate font-medium">
+                        {activeSession.student ? `Class ${activeSession.student.grade}-${activeSession.student.section} • ID #${activeSession.student.id || activeSession.student.admissionId}` : 'Signed in'}
+                      </span>
+                    </div>
+                  </div>
+                  <Link
+                    href="/home"
+                    className="px-3.5 py-1.5 rounded-full bg-primary text-white text-[12px] font-bold flex items-center gap-1 shadow-sm hover:opacity-90 active:scale-95 transition-all flex-shrink-0 cursor-pointer"
+                  >
+                    <span>Return to Dashboard</span>
+                    <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+                  </Link>
+                </div>
+              )}
+
               {/* Selection Cards */}
               <div className="space-y-4">
                 <DesktopMethodCard
                   href="/admission"
+                  onClick={handleSelectMethod}
                   title="Admission Number"
                   subtitle="Issued on your physical student ID card and fee receipt"
                   badge="Registered Student"
@@ -326,6 +395,7 @@ export default function ChooserPage() {
                 />
                 <DesktopMethodCard
                   href="/email"
+                  onClick={handleSelectMethod}
                   title="Email or Google Account"
                   subtitle="Sign in with your registered Google account or guardian email"
                   badge="Google + Email"
