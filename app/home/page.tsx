@@ -124,14 +124,14 @@ export default function HomePage() {
         </div>
         {/* Micro Highlights / Attendance & Today's Metric */}
         <div className="mt-2.5 pt-2 sm:mt-space-md sm:pt-space-md flex items-center justify-between gap-2 relative z-10 border-t border-outline/10 dark:border-[#3c3c3c]">
-          <div className="flex items-center gap-1.5 bg-tertiary/10 text-tertiary px-2.5 py-1 sm:px-space-md sm:py-1.5 rounded-full">
+          <div className="flex items-center gap-1.5 bg-emerald-500/10 dark:bg-emerald-400/15 text-emerald-700 dark:text-emerald-300 px-2.5 py-1 sm:px-space-md sm:py-1.5 rounded-full border border-emerald-500/20 dark:border-emerald-400/25">
             <span
-              className="material-symbols-outlined text-[15px] sm:text-[18px]"
+              className="material-symbols-outlined text-[15px] sm:text-[18px] text-emerald-600 dark:text-emerald-400"
               style={{ fontVariationSettings: "'FILL' 1" }}
             >
               verified
             </span>
-            <span className="text-[10.5px] sm:text-label-md text-tertiary font-medium">
+            <span className="text-[10.5px] sm:text-label-md text-emerald-700 dark:text-emerald-300 font-semibold tracking-tight">
               96% Overall Attendance
             </span>
           </div>

@@ -32,7 +32,7 @@ module.exports = {
           "error-container": "#ffdad6",
           "inverse-primary": "#bdc2ff",
           "on-primary-fixed-variant": "#1d2cc9",
-          "tertiary": "#005036",
+          "tertiary": "var(--color-tertiary, #005036)",
           "on-secondary-fixed-variant": "#653e00",
           "surface-container-low": "#f2f3ff",
           "on-surface": "#131b2e",
