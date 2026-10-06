@@ -49,8 +49,8 @@ export default function NoticesPage() {
         <div className="absolute -top-12 -left-16 w-64 h-64 rounded-full bg-primary/5 blur-3xl pointer-events-none"></div>
         <div className="absolute top-80 -right-16 w-72 h-72 rounded-full bg-secondary-container/10 blur-3xl pointer-events-none"></div>
 
-        {/* Student Context Bar */}
-        <div>
+        {/* Student Context Bar - Hidden on phone screen (< md), visible on laptop screen (>= md) */}
+        <div className="hidden md:block">
           <div className="flex items-center justify-between bg-surface-container-low px-3 py-1 sm:px-space-md sm:py-space-xs rounded-full shadow-sm">
             <div className="flex items-center gap-1.5 sm:gap-space-xs min-w-0">
               <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold text-[9px] sm:text-[10px]">
@@ -65,8 +65,8 @@ export default function NoticesPage() {
               </div>
             </div>
             <div className="flex items-center gap-1 flex-shrink-0">
-              <span className="inline-flex w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-tertiary-container animate-pulse"></span>
-              <span className="text-[10px] sm:text-label-sm text-tertiary font-bold tracking-tight">
+              <span className="inline-flex w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
+              <span className="text-[10px] sm:text-label-sm text-emerald-700 dark:text-emerald-300 font-bold tracking-tight">
                 Active Sync
               </span>
             </div>
