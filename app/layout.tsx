@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { ClerkProvider } from '@clerk/nextjs';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 
@@ -24,8 +23,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-      <html lang="en">
+    <html lang="en">
         <head>
           <link
             rel="stylesheet"
@@ -34,6 +32,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </head>
         <body className={`${jakarta.className} antialiased`}>{children}</body>
       </html>
-    </ClerkProvider>
   );
 }
