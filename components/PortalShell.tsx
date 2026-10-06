@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import LogoEmblem from './LogoEmblem';
 import PortalFooter from './PortalFooter';
 import DarkModeToggle from './DarkModeToggle';
@@ -49,6 +49,7 @@ export default function PortalShell({
   children,
 }: PortalShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [studentName, setStudentName] = useState('Student');
   const [gradeSection, setGradeSection] = useState('Senior Wing');
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -82,33 +83,46 @@ export default function PortalShell({
     };
   }, [servicesOpen]);
 
-  // Support hardware/browser back button to dismiss the mobile full-screen hamburger
+  // Close mobile hamburger menu on Escape key
   useEffect(() => {
     if (!mobileServicesOpen) return;
 
-    const handlePopState = () => {
-      setMobileServicesOpen(false);
-    };
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setMobileServicesOpen(false);
+      }
+    }
 
-    window.addEventListener('popstate', handlePopState);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.removeEventListener('popstate', handlePopState);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileServicesOpen]);
+
+  // Lock body scroll while full-screen mobile menu is open
+  useEffect(() => {
+    if (mobileServicesOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
     };
   }, [mobileServicesOpen]);
 
   const openMobileServices = () => {
-    if (typeof window !== 'undefined') {
-      window.history.pushState({ servicesMenuOpen: true }, '');
-    }
     setMobileServicesOpen(true);
   };
 
   const closeMobileServices = () => {
-    if (typeof window !== 'undefined' && window.history.state?.servicesMenuOpen) {
-      window.history.back();
-    } else {
-      setMobileServicesOpen(false);
-    }
+    setMobileServicesOpen(false);
+  };
+
+  // Dedicated mobile navigation handler ensuring routes open reliably without history conflicts
+  const handleServiceNavigation = (href: string) => {
+    setMobileServicesOpen(false);
+    router.push(href);
   };
 
   // Auto-close on route change
@@ -192,7 +206,7 @@ export default function PortalShell({
               </button>
 
               {servicesOpen && (
-                <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl bg-surface-container-lowest/98 dark:bg-[#121929]/98 backdrop-blur-xl shadow-[0_16px_40px_rgba(28,42,200,0.14)] border border-outline/10 p-2 z-50 grid grid-cols-1 gap-0.5 max-h-[70vh] overflow-y-auto">
+                <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl bg-white dark:bg-[#0f172a] shadow-[0_20px_50px_rgba(0,0,0,0.25)] border border-outline/15 dark:border-slate-800 p-2 z-50 grid grid-cols-1 gap-0.5 max-h-[70vh] overflow-y-auto opacity-100">
                   <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-outline border-b border-outline/10 mb-1">
                     All Student Services
                   </div>
@@ -295,9 +309,9 @@ export default function PortalShell({
 
       {/* FULL-SCREEN MOBILE HAMBURGER MENU: Coming from Top to Entire Bottom with Cross Button on Top Right */}
       {mobileServicesOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-surface dark:bg-[#0b0f19] flex flex-col animate-in fade-in slide-in-from-top-6 duration-200">
+        <div className="md:hidden fixed inset-0 z-50 bg-white dark:bg-[#0b0f19] flex flex-col animate-in fade-in slide-in-from-top-6 duration-200">
           {/* Top Bar inside Full-Screen Hamburger */}
-          <div className="h-16 px-margin pt-safe flex items-center justify-between border-b border-outline/10 bg-surface/95 dark:bg-[#0b0f19]/95 backdrop-blur-xl flex-shrink-0">
+          <div className="h-16 px-margin pt-safe flex items-center justify-between border-b border-outline/10 bg-white dark:bg-[#0b0f19] flex-shrink-0">
             <div className="flex items-center gap-2.5">
               <LogoEmblem className="h-8 w-8" />
               <div>
@@ -341,11 +355,14 @@ export default function PortalShell({
                     <Link
                       key={s.href}
                       href={s.href}
-                      onClick={closeMobileServices}
-                      className={`p-3.5 rounded-2xl border transition-all duration-150 flex flex-col items-start gap-2 active:scale-95 shadow-sm ${
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleServiceNavigation(s.href);
+                      }}
+                      className={`p-3.5 rounded-[14px] border transition-all duration-150 flex flex-col items-start gap-2 active:scale-95 shadow-sm cursor-pointer ${
                         isActive
                           ? 'bg-primary/10 border-primary text-primary'
-                          : 'bg-surface-container-lowest dark:bg-[#121929] border-outline/10 hover:border-primary/40 text-on-surface'
+                          : 'bg-white dark:bg-[#121929] border-outline/10 hover:border-primary/40 text-on-surface'
                       }`}
                     >
                       <div
@@ -374,16 +391,22 @@ export default function PortalShell({
               <div className="mt-6 pt-4 border-t border-outline/10 flex items-center justify-between text-[11px] text-outline px-1">
                 <Link
                   href="/profile"
-                  onClick={closeMobileServices}
-                  className="flex items-center gap-1.5 text-on-surface hover:text-primary font-semibold"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleServiceNavigation('/profile');
+                  }}
+                  className="flex items-center gap-1.5 text-on-surface hover:text-primary font-semibold cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[16px]">account_circle</span>
                   <span>My Student Profile</span>
                 </Link>
                 <Link
                   href="/chooser"
-                  onClick={closeMobileServices}
-                  className="flex items-center gap-1.5 text-error font-semibold"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleServiceNavigation('/chooser');
+                  }}
+                  className="flex items-center gap-1.5 text-error font-semibold cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[16px]">logout</span>
                   <span>Switch Account</span>
