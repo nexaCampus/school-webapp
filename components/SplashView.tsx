@@ -1,3 +1,5 @@
+import AuthFooter from './AuthFooter';
+
 // Shared splash visuals: the boot overlay and the / splash route render
 // the exact same markup so a reload looks identical to a fresh launch.
 export default function SplashView({
@@ -11,15 +13,16 @@ export default function SplashView({
 }) {
   return (
     <div
-      className="relative min-h-screen bg-surface flex items-center justify-center p-4 sm:p-6 md:p-12 cursor-pointer w-full overflow-hidden"
+      className="relative min-h-screen bg-surface flex flex-col justify-between cursor-pointer w-full overflow-y-auto"
       onClick={onClick}
     >
       {/* Ambient Atmospheric Backdrop Glows on Desktop */}
       <div className="hidden md:block absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
       <div className="hidden md:block absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none" />
 
-      {/* Main Responsive Card Container */}
-      <div className="w-full max-w-md md:max-w-2xl mx-auto bg-surface-container-lowest/95 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 md:p-12 shadow-[0_20px_60px_-10px_rgba(28,42,200,0.14)] border border-outline/10 flex flex-col items-center text-center relative z-10 transition-all">
+      {/* Main Centered Content */}
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-10 w-full relative z-10">
+        <div className="w-full max-w-md md:max-w-2xl mx-auto bg-surface-container-lowest/95 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 md:p-12 shadow-[0_20px_60px_-10px_rgba(28,42,200,0.14)] border border-outline/10 flex flex-col items-center text-center relative z-10 transition-all">
         {/* Top Header Row */}
         <div className="w-full flex items-center justify-between pb-2 md:pb-4 border-b border-outline/5">
           <div className="flex items-center gap-[5px]">
@@ -115,6 +118,10 @@ export default function SplashView({
           </div>
         </div>
       </div>
+    </div>
+
+      {/* Institutional Public Footer */}
+      <AuthFooter />
     </div>
   );
 }

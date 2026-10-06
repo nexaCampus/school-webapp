@@ -4,6 +4,14 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import {
+  initOrRestoreStudentCache,
+  DEFAULT_TIMETABLE_BY_DAY,
+  DEFAULT_IMPORTANT_DATES,
+  type TimetablePeriod,
+  type ImportantDate,
+} from '@/lib/studentCache';
+import { student as fallbackStudent } from '@/lib/data';
 
 export default function HomePage() {
   const [student, setStudent] = useState({
@@ -12,6 +20,13 @@ export default function HomePage() {
     rollNo: 'Roll No. 20',
     initials: 'ST',
   });
+  const [pendingDiaryCount, setPendingDiaryCount] = useState<number>(2);
+  const [todayPeriods, setTodayPeriods] = useState<TimetablePeriod[]>(
+    DEFAULT_TIMETABLE_BY_DAY.wed
+  );
+  const [nextSchoolEvent, setNextSchoolEvent] = useState<ImportantDate | null>(
+    DEFAULT_IMPORTANT_DATES[0]
+  );
 
   useEffect(() => {
     const s = getSession();
@@ -19,10 +34,11 @@ export default function HomePage() {
       window.location.replace('/chooser');
       return;
     }
-    const name = s?.student?.displayName || s?.student?.name || s?.name || 'Student';
-    const grade = s?.student?.grade || '12';
-    const section = s?.student?.section || 'E';
-    const roll = s?.student?.rollNo || '20';
+    const currentStudent = s?.student || { ...fallbackStudent, name: s.name || 'Student' };
+    const name = currentStudent.displayName || currentStudent.name || s.name || 'Student';
+    const grade = currentStudent.grade || '12';
+    const section = currentStudent.section || 'E';
+    const roll = currentStudent.rollNo || '20';
     const parts = name.trim().split(/\s+/);
     const initials =
       parts.length > 1
@@ -34,6 +50,21 @@ export default function HomePage() {
       rollNo: `Roll No. ${roll}`,
       initials,
     });
+
+    // Hydrate timetable, diary tasks, and important dates from student cache
+    const cache = initOrRestoreStudentCache(currentStudent, s.email);
+    if (cache) {
+      const pending = cache.diaryTasks.filter((t) => t.status === 'Pending').length;
+      setPendingDiaryCount(pending);
+      const dayMap: Record<number, string> = { 1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri' };
+      const currentDayKey = dayMap[new Date().getDay()] || 'wed';
+      setTodayPeriods(
+        cache.timetable[currentDayKey] || cache.timetable.wed || DEFAULT_TIMETABLE_BY_DAY.wed
+      );
+      if (cache.importantDates && cache.importantDates.length > 0) {
+        setNextSchoolEvent(cache.importantDates[0]);
+      }
+    }
   }, []);
 
   return (
@@ -131,12 +162,14 @@ export default function HomePage() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
                   <span className="font-label-sm text-label-sm uppercase text-secondary font-bold">
-                    Campus Alert
+                    Official Date • {nextSchoolEvent?.tag || 'ALERT'}
                   </span>
-                  <span className="font-label-sm text-label-sm text-outline">• 25m ago</span>
+                  <span className="font-label-sm text-label-sm text-outline">
+                    • {nextSchoolEvent?.date || 'Campus Roster'}
+                  </span>
                 </div>
                 <p className="font-body-sm text-body-sm text-on-surface truncate">
-                  Regular classes resume Thursday, 24th Sep - 1 new circular uploaded
+                  {nextSchoolEvent ? `${nextSchoolEvent.title} — ${nextSchoolEvent.description}` : 'Regular classes resume Thursday - official circular uploaded'}
                 </p>
               </div>
               <span className="material-symbols-outlined text-outline-variant text-[20px] flex-shrink-0">
@@ -164,64 +197,69 @@ export default function HomePage() {
             </div>
             {/* Active Class Card Stream */}
             <div className="bg-surface-container-lowest rounded-lg p-space-md shadow-[0_8px_20px_rgba(0,0,0,0.03)] space-y-space-sm">
-              {/* Period 1: Live Now */}
-              <div className="flex items-center justify-between p-space-sm rounded-DEFAULT bg-primary/5 transition-all">
-                <div className="flex items-center gap-space-sm min-w-0">
-                  <div className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center flex-shrink-0 shadow-[0_4px_12px_rgba(28,42,200,0.3)]">
-                    <span className="material-symbols-outlined text-[20px]">science</span>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-label-sm text-label-sm uppercase bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-bold">
-                        Now • Period 1
-                      </span>
-                      <span className="font-label-sm text-label-sm text-outline">
-                        08:30 - 09:30 AM
+              {/* Period 1: Live / First Period */}
+              {todayPeriods[0] && (
+                <div
+                  className={`flex items-center justify-between p-space-sm rounded-DEFAULT transition-all ${
+                    todayPeriods[0].isLive ? 'bg-primary/5 ring-1 ring-tertiary/30' : 'bg-surface-container-low'
+                  }`}
+                >
+                  <div className="flex items-center gap-space-sm min-w-0">
+                    <div className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center flex-shrink-0 shadow-[0_4px_12px_rgba(28,42,200,0.3)]">
+                      <span className="material-symbols-outlined text-[20px]">
+                        {todayPeriods[0].accent === 'tertiary' ? 'science' : 'menu_book'}
                       </span>
                     </div>
-                    <p className="font-headline-sm text-headline-sm text-on-surface truncate">
-                      Physics Lab (Optics &amp; Laser)
-                    </p>
-                    <p className="font-body-sm text-body-sm text-on-surface-variant truncate">
-                      Lab 3 • Dr. Aris Thorne
-                    </p>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-label-sm text-label-sm uppercase bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-bold">
+                          {todayPeriods[0].isLive ? 'Now • ' : ''}
+                          {todayPeriods[0].period}
+                        </span>
+                        <span className="font-label-sm text-label-sm text-outline">
+                          {todayPeriods[0].time}
+                        </span>
+                      </div>
+                      <p className="font-headline-sm text-headline-sm text-on-surface truncate">
+                        {todayPeriods[0].subject}
+                      </p>
+                      <p className="font-body-sm text-body-sm text-on-surface-variant truncate">
+                        {todayPeriods[0].room} • {todayPeriods[0].teacher}
+                      </p>
+                    </div>
                   </div>
+                  <Link
+                    href="/timetable"
+                    className="bg-primary text-on-primary font-label-md text-label-md px-3.5 py-1.5 rounded-full shadow-[0_4px_12px_rgba(28,42,200,0.25)] flex items-center gap-1 flex-shrink-0 hover:opacity-90 active:scale-95 transition-all"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">
+                      {todayPeriods[0].isLive ? 'videocam' : 'meeting_room'}
+                    </span>
+                    {todayPeriods[0].isLive ? 'Join Lab' : 'View'}
+                  </Link>
                 </div>
-                <button className="bg-primary text-on-primary font-label-md text-label-md px-3.5 py-1.5 rounded-full shadow-[0_4px_12px_rgba(28,42,200,0.25)] flex items-center gap-1 flex-shrink-0">
-                  <span className="material-symbols-outlined text-[16px]">meeting_room</span>
-                  Join Lab
-                </button>
-              </div>
+              )}
               {/* Period 2 & 3 Condensed Preview */}
               <div className="grid grid-cols-2 gap-space-sm pt-space-xs">
-                <div className="bg-surface-container-low p-space-sm rounded-DEFAULT flex flex-col justify-between">
-                  <div>
-                    <span className="font-label-sm text-label-sm text-outline">09:40 - 10:35 AM</span>
-                    <p className="font-label-lg text-label-lg text-on-surface font-semibold truncate mt-0.5">
-                      Mathematics II
-                    </p>
-                    <p className="font-body-sm text-body-sm text-on-surface-variant truncate">
-                      Calculus • Room 402
-                    </p>
+                {todayPeriods.slice(1, 3).map((p, idx) => (
+                  <div
+                    key={`${p.period}-${idx}`}
+                    className="bg-surface-container-low p-space-sm rounded-DEFAULT flex flex-col justify-between"
+                  >
+                    <div>
+                      <span className="font-label-sm text-label-sm text-outline">{p.time}</span>
+                      <p className="font-label-lg text-label-lg text-on-surface font-semibold truncate mt-0.5">
+                        {p.subject}
+                      </p>
+                      <p className="font-body-sm text-body-sm text-on-surface-variant truncate">
+                        {p.room} • {p.teacher}
+                      </p>
+                    </div>
+                    <span className="font-label-sm text-label-sm text-primary mt-2 flex items-center gap-1 font-bold">
+                      {p.period}
+                    </span>
                   </div>
-                  <span className="font-label-sm text-label-sm text-primary mt-2 flex items-center gap-1 font-bold">
-                    Period 2
-                  </span>
-                </div>
-                <div className="bg-surface-container-low p-space-sm rounded-DEFAULT flex flex-col justify-between">
-                  <div>
-                    <span className="font-label-sm text-label-sm text-outline">10:50 - 11:45 AM</span>
-                    <p className="font-label-lg text-label-lg text-on-surface font-semibold truncate mt-0.5">
-                      Chemistry Organic
-                    </p>
-                    <p className="font-body-sm text-body-sm text-on-surface-variant truncate">
-                      Seminar Hall B
-                    </p>
-                  </div>
-                  <span className="font-label-sm text-label-sm text-outline mt-2 flex items-center gap-1 font-bold">
-                    Period 3
-                  </span>
-                </div>
+                ))}
               </div>
             </div>
           </section>
@@ -249,7 +287,7 @@ export default function HomePage() {
                 className="group relative bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-sm rounded-lg flex flex-col items-center text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-2 right-2 bg-error text-on-error font-label-sm text-[9px] px-1.5 py-0.5 rounded-full font-bold shadow-sm">
-                  2 Due
+                  {pendingDiaryCount} Due
                 </span>
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary to-primary-container text-on-primary flex items-center justify-center shadow-[0_8px_16px_rgba(28,42,200,0.3)] mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[26px]">menu_book</span>
