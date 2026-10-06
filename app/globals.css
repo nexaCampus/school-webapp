@@ -56,6 +56,7 @@ html {
   overflow-x: hidden;
   scroll-behavior: smooth;
   font-family: var(--font-poppins), 'Poppins', sans-serif;
+  overscroll-behavior-y: contain;
 }
 
 body {
@@ -67,6 +68,7 @@ body {
   background: var(--color-bg, #faf8ff);
   color: var(--color-on-surface, #131b2e);
   overflow-x: hidden;
+  overscroll-behavior-y: contain;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 

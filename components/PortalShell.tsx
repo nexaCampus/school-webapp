@@ -152,6 +152,13 @@ export default function PortalShell({
     setMobileServicesOpen(false);
   }, [pathname]);
 
+  // Prefetch primary mobile tabs for instantaneous swipe navigation
+  useEffect(() => {
+    router.prefetch('/home');
+    router.prefetch('/academics');
+    router.prefetch('/notices');
+  }, [router]);
+
   useEffect(() => {
     const s = getSession();
     if (s?.student) {
@@ -166,6 +173,140 @@ export default function PortalShell({
   }, []);
 
   const currentPath = activePath || pathname.replace(/^\//, '') || 'home';
+
+  // Mobile Touch Gestures (< 768px):
+  // 1. Swipe Right-to-Left: Home -> Academics -> Notices
+  // 2. Swipe Left-to-Right: Notices -> Academics -> Home
+  // 3. Swipe Top-to-Bottom / Mid-to-Bottom: Open full-screen Hamburger drawer
+  // 4. Swipe Bottom-to-Top (inside Hamburger): Close Hamburger drawer
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    let scrollStartY = 0;
+    let isIgnoredTarget = false;
+
+    const isHorizontalScrollable = (target: EventTarget | null): boolean => {
+      let el = target as HTMLElement | null;
+      while (el && el !== document.body && el !== document.documentElement) {
+        const style = window.getComputedStyle(el);
+        const overflowX = style.overflowX;
+        if ((overflowX === 'auto' || overflowX === 'scroll') && el.scrollWidth > el.clientWidth + 5) {
+          return true;
+        }
+        el = el.parentElement;
+      }
+      return false;
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (window.innerWidth >= 768) return;
+      if (e.touches.length !== 1) return;
+
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchStartTime = Date.now();
+      scrollStartY = window.scrollY || document.documentElement.scrollTop || 0;
+
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+
+      // Do not intercept form inputs, buttons in bottom nav, or horizontal scrolling carousels
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || target?.closest('nav')) {
+        isIgnoredTarget = true;
+        return;
+      }
+
+      if (isHorizontalScrollable(target)) {
+        isIgnoredTarget = true;
+        return;
+      }
+
+      isIgnoredTarget = false;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (window.innerWidth >= 768) return;
+      if (e.changedTouches.length !== 1) return;
+
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      const duration = Date.now() - touchStartTime;
+
+      // Ignore micro-taps or prolonged holds
+      if (duration > 750 || duration < 40) return;
+
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
+
+      // If mobile hamburger menu is OPEN:
+      if (mobileServicesOpen) {
+        // Swiping UP (bottom to top, deltaY < -50) closes it
+        if (deltaY < -50 && absY > absX * 1.3) {
+          setMobileServicesOpen(false);
+        }
+        return;
+      }
+
+      // If auth modals are open, do not trigger gestures
+      if (showLogoutModal || showSwitchModal) return;
+
+      // 1. VERTICAL SWIPE DOWN (Top to Bottom / Mid to Bottom): Open Hamburger Menu
+      if (deltaY > 55 && absY > absX * 1.3) {
+        if ((scrollStartY <= 30 || touchStartY <= 65) && touchStartY <= window.innerHeight * 0.75) {
+          setMobileServicesOpen(true);
+          return;
+        }
+      }
+
+      // 2. HORIZONTAL SWIPE: Tab switching between Home <-> Academics <-> Notices
+      if (isIgnoredTarget) return;
+
+      if (absX > 55 && absX > absY * 1.35) {
+        const path = currentPath === '/' ? 'home' : currentPath;
+
+        // Swipe RIGHT-TO-LEFT (deltaX < 0): Move forward
+        // Home -> Academics -> Notices
+        if (deltaX < 0) {
+          if (path === 'home') {
+            router.push('/academics');
+          } else if (path === 'academics') {
+            router.push('/notices');
+          }
+        }
+        // Swipe LEFT-TO-RIGHT (deltaX > 0): Move backward
+        // Notices -> Academics -> Home
+        else if (deltaX > 0) {
+          if (path === 'notices') {
+            router.push('/academics');
+          } else if (path === 'academics') {
+            router.push('/home');
+          }
+        }
+      }
+    };
+
+    const handleTouchCancel = () => {
+      touchStartX = 0;
+      touchStartY = 0;
+      touchStartTime = 0;
+      isIgnoredTarget = false;
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('touchcancel', handleTouchCancel, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchcancel', handleTouchCancel);
+    };
+  }, [currentPath, mobileServicesOpen, showLogoutModal, showSwitchModal, router]);
 
   return (
     <div className="relative min-h-screen bg-surface flex flex-col max-w-full overflow-x-hidden">
