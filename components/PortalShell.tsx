@@ -175,17 +175,14 @@ export default function PortalShell({
   const currentPath = activePath || pathname.replace(/^\//, '') || 'home';
 
   // Mobile Touch Gestures (< 768px):
-  // 1. Swipe Right-to-Left: Home -> Academics -> Notices
-  // 2. Swipe Left-to-Right: Notices -> Academics -> Home
-  // 3. Swipe Top-to-Bottom / Mid-to-Bottom: Open full-screen Hamburger drawer
-  // 4. Swipe Bottom-to-Top (inside Hamburger): Close Hamburger drawer
+  // Strictly Horizontal Swipe: Home <-> Academics <-> Notices
+  // Vertical scrolling (scrolling up/down) is 100% untouched and unhindered.
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartTime = 0;
-    let scrollStartY = 0;
     let isIgnoredTarget = false;
 
     const isHorizontalScrollable = (target: EventTarget | null): boolean => {
@@ -209,12 +206,11 @@ export default function PortalShell({
       touchStartX = touch.clientX;
       touchStartY = touch.clientY;
       touchStartTime = Date.now();
-      scrollStartY = window.scrollY || document.documentElement.scrollTop || 0;
 
       const target = e.target as HTMLElement | null;
       const tag = target?.tagName?.toLowerCase();
 
-      // Do not intercept form inputs, buttons in bottom nav, or horizontal scrolling carousels
+      // Do not intercept inputs, bottom navigation, or horizontal scrollers
       if (tag === 'input' || tag === 'textarea' || tag === 'select' || target?.closest('nav')) {
         isIgnoredTarget = true;
         return;
@@ -231,42 +227,25 @@ export default function PortalShell({
     const handleTouchEnd = (e: TouchEvent) => {
       if (window.innerWidth >= 768) return;
       if (e.changedTouches.length !== 1) return;
+      if (isIgnoredTarget) return;
+
+      // Do not trigger page swipe if modals or mobile menu are active
+      if (mobileServicesOpen || showLogoutModal || showSwitchModal) return;
 
       const touch = e.changedTouches[0];
       const deltaX = touch.clientX - touchStartX;
       const deltaY = touch.clientY - touchStartY;
       const duration = Date.now() - touchStartTime;
 
-      // Ignore micro-taps or prolonged holds
-      if (duration > 750 || duration < 40) return;
-
       const absX = Math.abs(deltaX);
       const absY = Math.abs(deltaY);
 
-      // If mobile hamburger menu is OPEN:
-      if (mobileServicesOpen) {
-        // Swiping UP (bottom to top, deltaY < -50) closes it
-        if (deltaY < -50 && absY > absX * 1.3) {
-          setMobileServicesOpen(false);
-        }
-        return;
-      }
+      // CRITICAL: If vertical displacement exceeds 30px, the user is scrolling up/down the page.
+      // Immediately abort to preserve completely native, fluid vertical scrolling!
+      if (absY > 30) return;
 
-      // If auth modals are open, do not trigger gestures
-      if (showLogoutModal || showSwitchModal) return;
-
-      // 1. VERTICAL SWIPE DOWN (Top to Bottom / Mid to Bottom): Open Hamburger Menu
-      if (deltaY > 55 && absY > absX * 1.3) {
-        if ((scrollStartY <= 30 || touchStartY <= 65) && touchStartY <= window.innerHeight * 0.75) {
-          setMobileServicesOpen(true);
-          return;
-        }
-      }
-
-      // 2. HORIZONTAL SWIPE: Tab switching between Home <-> Academics <-> Notices
-      if (isIgnoredTarget) return;
-
-      if (absX > 55 && absX > absY * 1.35) {
+      // Must be a decisive horizontal swipe flick (>= 65px horizontally, within 500ms)
+      if (absX >= 65 && absX > absY * 2.0 && duration < 500) {
         const path = currentPath === '/' ? 'home' : currentPath;
 
         // Swipe RIGHT-TO-LEFT (deltaX < 0): Move forward
