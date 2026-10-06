@@ -3,13 +3,15 @@
 // Email + Google sign-in via Firebase Authentication (Clerk retired on web).
 // New Google/email registrations land on onboarding (phone asked there);
 // returning users go straight to the portal.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
+  completeGoogleRedirect,
   emailSignIn,
   emailSignUp,
   friendlyAuthError,
-  googleSignIn,
+  googleSignInRedirect,
+  type AuthAccount,
 } from '@/lib/firebase';
 import { setSession } from '@/lib/session';
 import { student as mockStudent } from '@/lib/data';
@@ -32,44 +34,70 @@ export default function EmailPage() {
     setError(null);
   }
 
+  function routeGoogleAccount(account: AuthAccount) {
+    if (account.isNewAccount) {
+      const q = new URLSearchParams({ name: account.displayName, email: account.email });
+      setSession({
+        uid: account.uid,
+        name: account.displayName,
+        email: account.email,
+        provider: 'google',
+        isNewAccount: true,
+        student: null,
+      });
+      router.push(`/onboarding?${q.toString()}`);
+    } else {
+      setSession({
+        uid: account.uid,
+        name: account.displayName || mockStudent.name,
+        email: account.email || mockStudent.guardianEmail,
+        provider: 'google',
+        isNewAccount: false,
+        // Same projection as before: Firebase owns identity, the seeded
+        // profile feeds every downstream screen until a Firebase-backed
+        // student record exists for this user.
+        student: {
+          ...mockStudent,
+          name: account.displayName || mockStudent.name,
+          displayName: account.displayName || mockStudent.displayName,
+          guardianEmail: account.email || mockStudent.guardianEmail,
+        },
+      });
+      router.replace('/home');
+    }
+  }
+
+  // Completes a returning Google redirect (the browser left for Google and
+  // came back here). No pending redirect → null → nothing happens.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const account = await completeGoogleRedirect();
+        if (!account || cancelled) return;
+        setGoogleBusy(true);
+        routeGoogleAccount(account);
+      } catch (e) {
+        if (!cancelled) setError(friendlyAuthError(e, 'signin'));
+      } finally {
+        if (!cancelled) setGoogleBusy(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function google() {
     setError(null);
     setGoogleBusy(true);
     try {
-      const account = await googleSignIn();
-      if (account.isNewAccount) {
-        const q = new URLSearchParams({ name: account.displayName, email: account.email });
-        setSession({
-          uid: account.uid,
-          name: account.displayName,
-          email: account.email,
-          provider: 'google',
-          isNewAccount: true,
-          student: null,
-        });
-        router.push(`/onboarding?${q.toString()}`);
-      } else {
-        setSession({
-          uid: account.uid,
-          name: account.displayName || mockStudent.name,
-          email: account.email || mockStudent.guardianEmail,
-          provider: 'google',
-          isNewAccount: false,
-          // Same projection as before: Firebase owns identity, the seeded
-          // profile feeds every downstream screen until a Firebase-backed
-          // student record exists for this user.
-          student: {
-            ...mockStudent,
-            name: account.displayName || mockStudent.name,
-            displayName: account.displayName || mockStudent.displayName,
-            guardianEmail: account.email || mockStudent.guardianEmail,
-          },
-        });
-        router.replace('/home');
-      }
+      // Redirect leaves this page; errors here are launch failures only
+      // (e.g. unauthorized-domain). The success path resumes above.
+      await googleSignInRedirect();
     } catch (e) {
       setError(friendlyAuthError(e, 'signin'));
-    } finally {
       setGoogleBusy(false);
     }
   }

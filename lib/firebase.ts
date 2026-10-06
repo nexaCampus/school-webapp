@@ -6,10 +6,11 @@ import {
   createUserWithEmailAndPassword,
   getAdditionalUserInfo,
   getAuth,
+  getRedirectResult,
   sendEmailVerification,
   signInAnonymously,
   signInWithEmailAndPassword,
-  signInWithPopup,
+  signInWithRedirect,
   signOut as firebaseSignOut,
   type Auth,
   type User,
@@ -126,12 +127,28 @@ export async function emailSignUp(email: string, password: string): Promise<Auth
 }
 
 /**
- * Google sign-in in a popup. getAdditionalUserInfo reports whether the
- * Google identity just created its Firebase account (new → onboarding).
+ * Google sign-in via full redirect (not popup). Popups trip
+ * Cross-Origin-Opener-Policy errors in Chrome (`window.closed` polling is
+ * blocked) and are routinely swallowed on mobile browsers; a redirect has
+ * neither problem. The browser leaves for Google and returns to whichever
+ * page started the flow — that page completes it with
+ * completeGoogleRedirect().
  */
-export async function googleSignIn(): Promise<AuthAccount> {
+export async function googleSignInRedirect(): Promise<void> {
   const { auth } = firebase();
-  const credential: UserCredential = await signInWithPopup(auth, new GoogleAuthProvider());
+  await signInWithRedirect(auth, new GoogleAuthProvider());
+}
+
+/**
+ * Completes a returning Google redirect. Resolves to the account, or null
+ * when this load is not a redirect return. getAdditionalUserInfo reports
+ * whether the Google identity just created its Firebase account
+ * (new → onboarding).
+ */
+export async function completeGoogleRedirect(): Promise<AuthAccount | null> {
+  const { auth } = firebase();
+  const credential = await getRedirectResult(auth);
+  if (!credential) return null;
   const isNewAccount = getAdditionalUserInfo(credential)?.isNewUser ?? false;
   return accountOf(credential.user, isNewAccount);
 }
@@ -160,9 +177,11 @@ export function friendlyAuthError(error: unknown, mode: 'signin' | 'signup'): st
     case 'auth/invalid-email':
       return 'Enter a valid email address.';
     case 'auth/popup-closed-by-user':
+    case 'auth/redirect-cancelled-by-user':
       return 'The Google window was closed before finishing. Try again.';
     case 'auth/cancelled-popup-request':
-      return 'Only one Google window at a time — finish it and try again.';
+    case 'auth/redirect-operation-pending':
+      return 'A Google sign-in is already in progress — finish it and try again.';
     case 'auth/operation-not-allowed':
       return 'This sign-in method is switched off in Firebase Console → Authentication → Sign-in method.';
     case 'auth/unauthorized-domain':
