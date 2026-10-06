@@ -76,7 +76,7 @@ export default function HomePage() {
       </div>
 
       {/* Student Welcome Banner Card (Elevated Frosted Hero Slab) */}
-      <section className="relative mt-space-sm bg-gradient-to-br from-white/95 via-surface-container-lowest/90 to-surface-container-low/80 backdrop-blur-xl rounded-lg p-space-lg shadow-[0_12px_28px_-6px_rgba(15,23,42,0.08),0_4px_12px_-2px_rgba(59,73,223,0.06)] overflow-hidden">
+      <section className="relative mt-space-sm bg-gradient-to-br from-white/95 via-surface-container-lowest/90 to-surface-container-low/80 backdrop-blur-xl rounded-[16px] border border-outline/10 p-space-lg shadow-[0_12px_28px_-6px_rgba(15,23,42,0.08),0_4px_12px_-2px_rgba(59,73,223,0.06)] overflow-hidden">
         {/* Ambient Accent Glow */}
         <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
         <div className="flex items-start justify-between gap-space-md relative z-10">
@@ -117,7 +117,7 @@ export default function HomePage() {
             </div>
           </div>
           {/* Quick Date Dial */}
-          <div className="flex flex-col items-center bg-surface-container-low px-3 py-2 rounded-DEFAULT text-center shadow-sm">
+          <div className="flex flex-col items-center bg-surface-container-low px-3 py-2 rounded-[10px] border border-outline/10 text-center shadow-sm">
             <span className="font-label-sm text-label-sm text-outline uppercase">Sep</span>
             <span className="font-headline-md text-headline-md text-primary leading-none">23</span>
           </div>
@@ -196,12 +196,14 @@ export default function HomePage() {
               </Link>
             </div>
             {/* Active Class Card Stream */}
-            <div className="bg-surface-container-lowest rounded-lg p-space-md shadow-[0_8px_20px_rgba(0,0,0,0.03)] space-y-space-sm">
+            <div className="bg-white dark:bg-[#121929] rounded-[14px] border border-outline/10 p-space-md shadow-sm space-y-space-sm">
               {/* Period 1: Live / First Period */}
               {todayPeriods[0] && (
                 <div
-                  className={`flex items-center justify-between p-space-sm rounded-DEFAULT transition-all ${
-                    todayPeriods[0].isLive ? 'bg-primary/5 ring-1 ring-tertiary/30' : 'bg-surface-container-low'
+                  className={`flex items-center justify-between p-space-sm rounded-[12px] border transition-all ${
+                    todayPeriods[0].isLive
+                      ? 'bg-primary/5 dark:bg-primary/10 border-primary/20'
+                      : 'bg-surface-container-low dark:bg-slate-800/60 border-outline/10'
                   }`}
                 >
                   <div className="flex items-center gap-space-sm min-w-0">
@@ -212,11 +214,11 @@ export default function HomePage() {
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-label-sm text-label-sm uppercase bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-bold">
+                        <span className="inline-flex items-center gap-1 whitespace-nowrap flex-shrink-0 text-[10px] uppercase bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold tracking-tight">
                           {todayPeriods[0].isLive ? 'Now • ' : ''}
                           {todayPeriods[0].period}
                         </span>
-                        <span className="font-label-sm text-label-sm text-outline">
+                        <span className="font-label-sm text-label-sm text-outline whitespace-nowrap">
                           {todayPeriods[0].time}
                         </span>
                       </div>
@@ -244,7 +246,7 @@ export default function HomePage() {
                 {todayPeriods.slice(1, 3).map((p, idx) => (
                   <div
                     key={`${p.period}-${idx}`}
-                    className="bg-surface-container-low p-space-sm rounded-DEFAULT flex flex-col justify-between"
+                    className="bg-surface-container-low dark:bg-slate-800/60 p-space-sm rounded-[12px] border border-outline/10 dark:border-white/5 flex flex-col justify-between"
                   >
                     <div>
                       <span className="font-label-sm text-label-sm text-outline">{p.time}</span>
@@ -275,7 +277,7 @@ export default function HomePage() {
                   Essential student tools, diaries, &amp; academics
                 </p>
               </div>
-              <span className="font-label-sm text-label-sm bg-surface-container px-2 py-1 rounded-full text-on-surface-variant">
+              <span className="whitespace-nowrap flex-shrink-0 inline-flex items-center text-[11px] font-bold tracking-tight bg-surface-container dark:bg-slate-800 px-2.5 py-0.5 rounded-full text-on-surface-variant">
                 9 Services
               </span>
             </div>
@@ -284,12 +286,12 @@ export default function HomePage() {
               {/* 1. Homework & Diary */}
               <Link
                 href="/diary"
-                className="group relative bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-sm rounded-lg flex flex-col items-center text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#121929] border border-outline/10 dark:border-white/10 p-space-sm rounded-[14px] flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-2 right-2 bg-error text-on-error font-label-sm text-[9px] px-1.5 py-0.5 rounded-full font-bold shadow-sm">
                   {pendingDiaryCount} Due
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary to-primary-container text-on-primary flex items-center justify-center shadow-[0_8px_16px_rgba(28,42,200,0.3)] mb-2 group-hover:-translate-y-1 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-primary to-primary-container text-on-primary flex items-center justify-center shadow-[0_8px_16px_rgba(28,42,200,0.3)] mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[26px]">menu_book</span>
                 </div>
                 <span className="font-label-md text-label-md text-on-surface leading-snug font-bold">
@@ -300,12 +302,12 @@ export default function HomePage() {
               {/* 2. Attendance Tracker */}
               <Link
                 href="/attendance"
-                className="group relative bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-sm rounded-lg flex flex-col items-center text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(0,80,54,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#121929] border border-outline/10 dark:border-white/10 p-space-sm rounded-[14px] flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(0,80,54,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-2 right-2 bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[9px] px-1.5 py-0.5 rounded-full font-bold">
                   100% Oct
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-tertiary to-tertiary-container text-on-tertiary flex items-center justify-center shadow-[0_8px_16px_rgba(0,80,54,0.25)] mb-2 group-hover:-translate-y-1 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-tertiary to-tertiary-container text-on-tertiary flex items-center justify-center shadow-[0_8px_16px_rgba(0,80,54,0.25)] mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[26px]">event_available</span>
                 </div>
                 <span className="font-label-md text-label-md text-on-surface leading-snug font-bold">
@@ -316,12 +318,12 @@ export default function HomePage() {
               {/* 3. Announcements */}
               <Link
                 href="/notices"
-                className="group relative bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-sm rounded-lg flex flex-col items-center text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(254,166,25,0.2)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#121929] border border-outline/10 dark:border-white/10 p-space-sm rounded-[14px] flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(254,166,25,0.2)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-2 right-2 bg-secondary-container text-on-secondary-container font-label-sm text-[9px] px-1.5 py-0.5 rounded-full font-bold">
                   3 New
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-secondary to-secondary-container text-on-secondary flex items-center justify-center shadow-[0_8px_16px_rgba(254,166,25,0.3)] mb-2 group-hover:-translate-y-1 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-secondary to-secondary-container text-on-secondary flex items-center justify-center shadow-[0_8px_16px_rgba(254,166,25,0.3)] mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[26px]">campaign</span>
                 </div>
                 <span className="font-label-md text-label-md text-on-surface leading-snug font-bold">
@@ -332,12 +334,12 @@ export default function HomePage() {
               {/* 4. Fees & Payment */}
               <Link
                 href="/academics"
-                className="group relative bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-sm rounded-lg flex flex-col items-center text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#121929] border border-outline/10 dark:border-white/10 p-space-sm rounded-[14px] flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-2 right-2 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[9px] px-1.5 py-0.5 rounded-full font-bold">
                   Due Sep
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-surface-tint to-primary text-on-primary flex items-center justify-center shadow-[0_8px_16px_rgba(60,74,224,0.25)] mb-2 group-hover:-translate-y-1 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-surface-tint to-primary text-on-primary flex items-center justify-center shadow-[0_8px_16px_rgba(60,74,224,0.25)] mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[26px]">
                     account_balance_wallet
                   </span>
@@ -350,12 +352,12 @@ export default function HomePage() {
               {/* 5. Exam Marks & Results */}
               <Link
                 href="/exams"
-                className="group relative bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-sm rounded-lg flex flex-col items-center text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#121929] border border-outline/10 dark:border-white/10 p-space-sm rounded-[14px] flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-2 right-2 bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-[9px] px-1.5 py-0.5 rounded-full font-bold">
                   Report Card
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-inverse-surface to-on-surface text-surface-bright flex items-center justify-center shadow-[0_8px_16px_rgba(19,27,46,0.25)] mb-2 group-hover:-translate-y-1 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-inverse-surface to-on-surface text-surface-bright flex items-center justify-center shadow-[0_8px_16px_rgba(19,27,46,0.25)] mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[26px]">workspace_premium</span>
                 </div>
                 <span className="font-label-md text-label-md text-on-surface leading-snug font-bold">
@@ -366,12 +368,12 @@ export default function HomePage() {
               {/* 6. E-Content & Notes */}
               <Link
                 href="/library"
-                className="group relative bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-sm rounded-lg flex flex-col items-center text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#121929] border border-outline/10 dark:border-white/10 p-space-sm rounded-[14px] flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-2 right-2 bg-surface-container-highest text-primary font-label-sm text-[9px] px-1.5 py-0.5 rounded-full font-bold">
                   12 Files
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary-container to-surface-variant text-on-primary flex items-center justify-center shadow-[0_8px_16px_rgba(59,73,223,0.25)] mb-2 group-hover:-translate-y-1 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-primary-container to-surface-variant text-on-primary flex items-center justify-center shadow-[0_8px_16px_rgba(59,73,223,0.25)] mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[26px]">folder_special</span>
                 </div>
                 <span className="font-label-md text-label-md text-on-surface leading-snug font-bold">
@@ -382,9 +384,9 @@ export default function HomePage() {
               {/* 7. Annual Calendar */}
               <Link
                 href="/timetable"
-                className="group relative bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-sm rounded-lg flex flex-col items-center text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#121929] border border-outline/10 dark:border-white/10 p-space-sm rounded-[14px] flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-surface-dim to-surface-container-high text-primary flex items-center justify-center shadow-sm mb-2 group-hover:-translate-y-1 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-surface-dim to-surface-container-high text-primary flex items-center justify-center shadow-sm mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[26px]">calendar_month</span>
                 </div>
                 <span className="font-label-md text-label-md text-on-surface leading-snug font-bold">
@@ -397,9 +399,9 @@ export default function HomePage() {
               {/* 8. Write to School / Helpdesk */}
               <Link
                 href="/helpdesk"
-                className="group relative bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-sm rounded-lg flex flex-col items-center text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#121929] border border-outline/10 dark:border-white/10 p-space-sm rounded-[14px] flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-secondary-fixed-dim to-secondary-container text-on-secondary-fixed flex items-center justify-center shadow-sm mb-2 group-hover:-translate-y-1 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-secondary-fixed-dim to-secondary-container text-on-secondary-fixed flex items-center justify-center shadow-sm mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[26px]">mark_chat_unread</span>
                 </div>
                 <span className="font-label-md text-label-md text-on-surface leading-snug font-bold">
@@ -410,13 +412,13 @@ export default function HomePage() {
               {/* 9. Live Class & Online Tests */}
               <Link
                 href="/exams"
-                className="group relative bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-sm rounded-lg flex flex-col items-center text-center shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#121929] border border-outline/10 dark:border-white/10 p-space-sm rounded-[14px] flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-2 right-2 flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-error"></span>
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary to-surface-tint text-on-primary flex items-center justify-center shadow-[0_8px_16px_rgba(28,42,200,0.3)] mb-2 group-hover:-translate-y-1 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-primary to-surface-tint text-on-primary flex items-center justify-center shadow-[0_8px_16px_rgba(28,42,200,0.3)] mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[26px]">laptop_chromebook</span>
                 </div>
                 <span className="font-label-md text-label-md text-on-surface leading-snug font-bold">
@@ -431,7 +433,7 @@ export default function HomePage() {
         {/* Side Column on Laptop (lg:col-span-4) */}
         <div className="lg:col-span-4 flex flex-col gap-space-lg mt-space-lg lg:mt-0">
           {/* Quick Progress & Performance Snapshot Banner */}
-          <section className="bg-surface-container-lowest rounded-lg p-space-md shadow-[0_8px_20px_rgba(0,0,0,0.03)] flex items-center justify-between">
+          <section className="bg-white dark:bg-[#121929] rounded-[14px] border border-outline/10 dark:border-white/10 p-space-md shadow-sm flex items-center justify-between">
             <div className="flex items-center gap-space-sm min-w-0">
               <div className="relative w-12 h-12 flex-shrink-0 flex items-center justify-center">
                 {/* Circular Progress Ring SVG */}
@@ -475,7 +477,7 @@ export default function HomePage() {
           </section>
 
           {/* Quick Academic Hub Shortcuts (Desktop View Enhancement) */}
-          <section className="bg-surface-container-lowest rounded-lg p-space-md shadow-[0_8px_20px_rgba(0,0,0,0.03)] hidden lg:flex flex-col gap-3">
+          <section className="bg-white dark:bg-[#121929] rounded-[14px] border border-outline/10 dark:border-white/10 p-space-md shadow-sm hidden lg:flex flex-col gap-3">
             <h3 className="font-label-lg text-label-lg text-on-surface font-bold">
               Quick Shortcuts
             </h3>
