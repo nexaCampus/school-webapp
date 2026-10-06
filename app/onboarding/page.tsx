@@ -365,7 +365,11 @@ function OnboardingForm() {
               placeholder="10-digit mobile number"
               value={phone}
               onChange={(e) => {
-                setPhone(e.target.value);
+                let val = e.target.value.replace(/\D/g, '');
+                if (val.length > 10 && val.startsWith('91')) {
+                  val = val.slice(2);
+                }
+                setPhone(val.slice(0, 10));
                 setError(null);
               }}
               className={`${inputCls} tracking-[1px] placeholder:tracking-normal`}
