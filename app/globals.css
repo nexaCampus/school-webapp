@@ -8,6 +8,9 @@ body {
   width: 100vw;
   margin: 0;
   padding: 0;
+  /* Ambient glows and the column shadow extend past the viewport edge;
+     clip instead of scrolling so the column never sits off-center. */
+  overflow-x: clip;
 }
 
 body {
@@ -47,5 +50,22 @@ body {
   .app-column {
     max-width: 430px;
     box-shadow: 0 0 64px rgba(28, 42, 200, 0.12);
+  }
+}
+
+/* Laptop and up: lift the column into a floating device card so the stage
+   reads intentional instead of empty. The app UI inside is untouched. */
+@media (min-width: 1024px) {
+  body {
+    padding-block: 28px;
+  }
+
+  .app-column {
+    border-radius: 36px;
+    overflow: clip;
+    min-height: calc(100vh - 56px);
+    box-shadow:
+      0 32px 80px -16px rgba(28, 42, 200, 0.28),
+      0 0 0 1px rgba(28, 42, 200, 0.08);
   }
 }
