@@ -6,15 +6,22 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  completeGoogleRedirect,
+  claimRedirectAccount,
   emailSignIn,
   emailSignUp,
   friendlyAuthError,
   googleSignInRedirect,
+  onAuthChange,
+  redirectOutcome,
+  reloadAuthUser,
+  resendVerificationMail,
+  signOutUser,
   type AuthAccount,
 } from '@/lib/firebase';
-import { setSession } from '@/lib/session';
+import { getSession, setSession } from '@/lib/session';
 import { student as mockStudent } from '@/lib/data';
+
+const PENDING_SIGNUP_KEY = 'pendingSignupEmail';
 
 type Mode = 'signin' | 'signup';
 
@@ -28,6 +35,13 @@ export default function EmailPage() {
   const [busy, setBusy] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Verification dialog: shown after email sign-up (and whenever a signed-in
+  // email is still unverified). The student-info page stays closed until the
+  // link in Gmail is clicked.
+  const [verifyEmail, setVerifyEmail] = useState<string | null>(null);
+  const [dialogBusy, setDialogBusy] = useState(false);
+  const [dialogError, setDialogError] = useState<string | null>(null);
+  const [dialogNote, setDialogNote] = useState<string | null>(null);
 
   function setMode(next: Mode) {
     setModeState(next);
@@ -67,16 +81,23 @@ export default function EmailPage() {
     }
   }
 
-  // Completes a returning Google redirect (the browser left for Google and
-  // came back here). No pending redirect → null → nothing happens.
+  // Completes a returning Google redirect via ONE shared outcome. Calling
+  // getRedirectResult separately per effect run discards the first retrieval
+  // (StrictMode double-mount in dev) and strands the user on Sign in with a
+  // completed sign-in nobody acted on — the account-chooser loop.
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const account = await completeGoogleRedirect();
-        if (!account || cancelled) return;
+        const outcome = await redirectOutcome();
+        if (cancelled) return;
+        if ('error' in outcome) {
+          setError(friendlyAuthError(outcome.error, 'signin'));
+          return;
+        }
+        if (!outcome.account || !claimRedirectAccount()) return;
         setGoogleBusy(true);
-        routeGoogleAccount(account);
+        routeGoogleAccount(outcome.account);
       } catch (e) {
         if (!cancelled) setError(friendlyAuthError(e, 'signin'));
       } finally {
@@ -88,6 +109,58 @@ export default function EmailPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Restores the dialog for a signed-in-but-unverified email (fresh reload,
+  // return visit, or bounce-back from the onboarding gate). Also heals users
+  // stranded by earlier looped attempts: a verified email with no local
+  // session is routed by pending-signup flag (onboarding) or as a returning
+  // user (home). Google identities are skipped — the redirect outcome effect
+  // above owns their routing to avoid double navigation.
+  useEffect(() => {
+    const unsub = onAuthChange((user) => {
+      if (!user?.email) return;
+      if (!user.emailVerified) {
+        setVerifyEmail(user.email);
+        return;
+      }
+      if (user.providerData.some((p) => p.providerId === 'google.com')) return;
+      if (getSession()?.student) return;
+      let pending: string | null = null;
+      try {
+        pending = localStorage.getItem(PENDING_SIGNUP_KEY);
+      } catch {
+        /* ignore */
+      }
+      if (pending && pending === user.email) {
+        try {
+          localStorage.removeItem(PENDING_SIGNUP_KEY);
+        } catch {
+          /* ignore */
+        }
+        setSession({
+          uid: user.uid,
+          name: '',
+          email: user.email ?? '',
+          provider: 'email',
+          isNewAccount: true,
+          student: null,
+        });
+        const q = new URLSearchParams({ email: user.email ?? '' });
+        router.push(`/onboarding?${q.toString()}`);
+      } else {
+        setSession({
+          uid: user.uid,
+          name: mockStudent.name,
+          email: user.email ?? mockStudent.guardianEmail,
+          provider: 'email',
+          isNewAccount: false,
+          student: { ...mockStudent, guardianEmail: user.email ?? mockStudent.guardianEmail },
+        });
+        router.replace('/home');
+      }
+    });
+    return unsub;
+  }, [router]);
 
   async function google() {
     setError(null);
@@ -102,8 +175,73 @@ export default function EmailPage() {
     }
   }
 
-  async function submitEmail() {
-    const cleanEmail = email.trim();
+  async function continueVerified() {
+    if (!verifyEmail) return;
+    setDialogError(null);
+    setDialogNote(null);
+    setDialogBusy(true);
+    try {
+      const user = await reloadAuthUser();
+      if (user?.emailVerified) {
+        try {
+          localStorage.removeItem(PENDING_SIGNUP_KEY);
+        } catch {
+          /* ignore */
+        }
+        const q = new URLSearchParams({ email: user.email ?? verifyEmail });
+        setSession({
+          uid: user.uid,
+          name: '',
+          email: user.email ?? verifyEmail,
+          provider: 'email',
+          isNewAccount: true,
+          student: null,
+        });
+        setVerifyEmail(null);
+        router.push(`/onboarding?${q.toString()}`);
+      } else {
+        setDialogError('Still not verified — open Gmail (check spam too), tap the link, then press Continue.');
+      }
+    } catch (e) {
+      setDialogError(e instanceof Error ? e.message : 'Could not check verification. Try again.');
+    } finally {
+      setDialogBusy(false);
+    }
+  }
+
+  async function resendLink() {
+    if (!verifyEmail) return;
+    setDialogError(null);
+    setDialogNote(null);
+    setDialogBusy(true);
+    try {
+      await resendVerificationMail();
+      setDialogNote('Verification link re-sent. Check Gmail (and spam).');
+    } catch (e) {
+      setDialogError(e instanceof Error ? e.message : 'Could not resend the link. Try again.');
+    } finally {
+      setDialogBusy(false);
+    }
+  }
+
+  async function startOver() {
+    setDialogError(null);
+    setDialogNote(null);
+    try {
+      await signOutUser();
+    } catch {
+      /* already signed out — just close */
+    }
+    try {
+      localStorage.removeItem(PENDING_SIGNUP_KEY);
+    } catch {
+      /* ignore */
+    }
+    setPassword('');
+    setVerifyEmail(null);
+  }
+
+  async function submitEmail() {    const cleanEmail = email.trim();
     if (!cleanEmail.includes('@')) return setError('Enter a valid email address');
     if (password.length < 6) return setError('Password must be at least 6 characters');
     setError(null);
@@ -122,16 +260,16 @@ export default function EmailPage() {
         router.replace('/home');
       } else {
         const account = await emailSignUp(cleanEmail, password);
-        const q = new URLSearchParams({ email: account.email });
-        setSession({
-          uid: account.uid,
-          name: '',
-          email: account.email,
-          provider: 'email',
-          isNewAccount: true,
-          student: null,
-        });
-        router.push(`/onboarding?${q.toString()}`);
+        // No session, no navigation: the account exists but the email is
+        // unverified, so the dialog takes over and onboarding stays closed.
+        try {
+          localStorage.setItem(PENDING_SIGNUP_KEY, account.email);
+        } catch {
+          /* storage unavailable — Continue still works in this tab */
+        }
+        setVerifyEmail(account.email);
+        setDialogError(null);
+        setDialogNote(null);
       }
     } catch (e) {
       setError(friendlyAuthError(e, mode));
@@ -255,8 +393,8 @@ export default function EmailPage() {
         </label>
         {mode === 'signup' && (
           <p className="font-body-sm text-body-sm text-on-surface-variant leading-[15px]">
-            We&apos;ll email you a verification link. Your account opens right away so you can
-            complete registration.
+            We&apos;ll email you a verification link. You&apos;ll verify it first — the student
+            form opens only after that.
           </p>
         )}
         <button
@@ -281,6 +419,78 @@ export default function EmailPage() {
           <p className="text-[12px] font-medium text-on-error-container">{error}</p>
         </div>
       )}
+      {verifyEmail && (
+        <div
+          className="fixed inset-0 z-[90] bg-on-surface/50 backdrop-blur-[2px] flex items-end sm:items-center justify-center sm:px-margin"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Verify your email"
+        >
+          <div className="w-full sm:max-w-[430px] bg-surface-container-lowest rounded-t-[28px] sm:rounded-[28px] shadow-[0_24px_64px_rgba(19,27,46,0.30)] p-5 flex flex-col gap-space-md max-h-[92dvh] overflow-y-auto">
+            <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary text-[28px]">mark_email_read</span>
+            </div>
+            <div>
+              <h2 className="font-headline-sm text-headline-sm text-on-surface">
+                Verify your email
+              </h2>
+              <p className="font-body-sm text-body-sm text-on-surface-variant leading-[18px] mt-1">
+                We sent a verification link to{' '}
+                <span className="font-bold text-on-surface">{verifyEmail}</span>. Open Gmail, tap
+                the link, then come back here and press Continue below. The student form opens
+                only after your email is verified.
+              </p>
+            </div>
+            {dialogError && (
+              <div className="w-full bg-error-container rounded-[10px] px-3 py-2 flex items-center gap-2">
+                <span className="material-symbols-outlined text-on-error-container text-[16px]">
+                  error
+                </span>
+                <p className="text-[12px] font-medium text-on-error-container">{dialogError}</p>
+              </div>
+            )}
+            {dialogNote && (
+              <div className="w-full bg-tertiary/10 rounded-[10px] px-3 py-2 flex items-center gap-2">
+                <span className="material-symbols-outlined text-tertiary text-[16px]">
+                  check_circle
+                </span>
+                <p className="text-[12px] font-medium text-tertiary">{dialogNote}</p>
+              </div>
+            )}
+            <button
+              onClick={continueVerified}
+              disabled={dialogBusy}
+              className="w-full h-[52px] rounded-full bg-gradient-to-r from-primary to-primary-container shadow-[0_10px_24px_rgba(28,42,200,0.35)] text-white text-[15px] font-bold flex items-center justify-center gap-2 active:scale-[0.99] transition-transform disabled:opacity-60"
+            >
+              {dialogBusy ? (
+                <span className="w-[18px] h-[18px] rounded-full border-2 border-white/40 border-t-white animate-spin" />
+              ) : (
+                <>
+                  I&apos;ve verified — Continue
+                  <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </>
+              )}
+            </button>
+            <div className="flex items-center justify-between">
+              <button
+                onClick={resendLink}
+                disabled={dialogBusy}
+                className="text-[13px] font-bold text-primary disabled:opacity-50"
+              >
+                Resend link
+              </button>
+              <button
+                onClick={startOver}
+                disabled={dialogBusy}
+                className="text-[13px] font-bold text-on-surface-variant disabled:opacity-50"
+              >
+                Use a different email
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex-1 min-h-4" />
     </div>
   );
