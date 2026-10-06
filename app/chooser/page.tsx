@@ -65,7 +65,7 @@ export default function ChooserPage() {
           href="/admission"
           title="Admission Number"
           subtitle="Issued on your ID card and fee receipt"
-          badge="Firebase"
+          badge="Registered"
           icon="badge"
           iconWell="bg-primary-fixed"
           accent="text-primary"

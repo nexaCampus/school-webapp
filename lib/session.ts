@@ -4,7 +4,7 @@
 import type { Student } from './data';
 
 export interface Session {
-  clerkUserId?: string;
+  uid?: string;
   name: string;
   email?: string;
   provider: 'google' | 'email' | 'admission';
