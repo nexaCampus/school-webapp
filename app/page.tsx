@@ -1,11 +1,12 @@
 'use client';
 
-// Splash route: staged loader mirroring Android SplashScreen, then chooser.
-// Tap anywhere to skip. Visuals come from the shared SplashView so the boot
-// overlay on reload looks pixel-identical.
+// Splash route: staged loader mirroring Android SplashScreen.
+// If the student has an active session (within 2-week inactivity window),
+// smoothly routes straight to /home. Otherwise, transitions to /chooser.
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SplashView from '@/components/SplashView';
+import { getSession } from '@/lib/session';
 
 const STAGES = [
   { pct: 64, label: 'Initializing secure portal...' },
@@ -21,6 +22,15 @@ export default function SplashPage() {
   const router = useRouter();
   const [stage, setStage] = useState(0);
 
+  const routeDestination = () => {
+    const s = getSession();
+    if (s?.student || s?.name) {
+      router.replace('/home');
+    } else {
+      router.replace('/chooser');
+    }
+  };
+
   useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout>;
@@ -28,7 +38,9 @@ export default function SplashPage() {
       if (cancelled) return;
       if (i >= STAGES.length) {
         timer = setTimeout(() => {
-          if (!cancelled) router.replace('/chooser');
+          if (!cancelled) {
+            routeDestination();
+          }
         }, WAITS[WAITS.length - 1]);
         return;
       }
@@ -45,6 +57,6 @@ export default function SplashPage() {
   const current = STAGES[Math.min(stage, STAGES.length - 1)];
 
   return (
-    <SplashView pct={current.pct} label={current.label} onClick={() => router.replace('/chooser')} />
+    <SplashView pct={current.pct} label={current.label} onClick={routeDestination} />
   );
 }

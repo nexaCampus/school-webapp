@@ -74,10 +74,18 @@ export default function PtmPage() {
   const [teachers, setTeachers] = useState(TEACHERS);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [bookingSuccess, setBookingSuccess] = useState<string | null>(null);
+  const [studentName, setStudentName] = useState('Student');
 
   useEffect(() => {
     const s = getSession();
-    if (!s?.student) window.location.replace('/chooser');
+    if (!s?.student) {
+      window.location.replace('/chooser');
+      return;
+    }
+    const name = s.student.displayName || s.student.name || s.name;
+    if (name) {
+      setStudentName(name.split(' ')[0]);
+    }
   }, []);
 
   const handleBook = (teacherName: string, time: string) => {
@@ -235,7 +243,7 @@ export default function PtmPage() {
                 <h3 className="font-headline-sm text-[14px] text-on-surface font-bold">Meeting Preparation</h3>
               </div>
               <p className="text-[12px] text-on-surface-variant mb-3">
-                Review Rajen&apos;s latest report cards and syllabus completion tracker before attending:
+                Review {studentName}&apos;s latest report cards and syllabus completion tracker before attending:
               </p>
               <div className="flex flex-col gap-2">
                 <Link
