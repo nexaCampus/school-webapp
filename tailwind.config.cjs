@@ -1,0 +1,104 @@
+/* Stitch Academic Fluidity tokens — extracted verbatim from the design
+   source (home_dashboard/code.html). Do not hand-edit values. */
+/** @type {import("tailwindcss").Config} */
+module.exports = {
+  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+  darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-bright": "#faf8ff",
+          "outline": "#757687",
+          "on-secondary-container": "#684000",
+          "on-tertiary-fixed-variant": "#005236",
+          "surface-dim": "#d2d9f4",
+          "inverse-surface": "#283044",
+          "on-primary": "#ffffff",
+          "primary-fixed": "#e0e0ff",
+          "secondary-container": "#fea619",
+          "inverse-on-surface": "#eef0ff",
+          "on-secondary-fixed": "#2a1700",
+          "on-tertiary": "#ffffff",
+          "secondary-fixed": "#ffddb8",
+          "surface": "#faf8ff",
+          "on-secondary": "#ffffff",
+          "on-tertiary-container": "#62efb3",
+          "secondary": "#855300",
+          "surface-tint": "#3c4ae0",
+          "surface-variant": "#dae2fd",
+          "on-tertiary-fixed": "#002113",
+          "primary-container": "#3b49df",
+          "error": "#ba1a1a",
+          "error-container": "#ffdad6",
+          "inverse-primary": "#bdc2ff",
+          "on-primary-fixed-variant": "#1d2cc9",
+          "tertiary": "#005036",
+          "on-secondary-fixed-variant": "#653e00",
+          "surface-container-low": "#f2f3ff",
+          "on-surface": "#131b2e",
+          "background": "#faf8ff",
+          "surface-container": "#eaedff",
+          "on-surface-variant": "#454655",
+          "secondary-fixed-dim": "#ffb95f",
+          "on-error": "#ffffff",
+          "surface-container-lowest": "#ffffff",
+          "outline-variant": "#c6c5d8",
+          "surface-container-highest": "#dae2fd",
+          "tertiary-fixed": "#6ffbbe",
+          "on-primary-container": "#d2d4ff",
+          "primary": "#1c2ac8",
+          "surface-container-high": "#e2e7ff",
+          "on-error-container": "#93000a",
+          "on-primary-fixed": "#000668",
+          "on-background": "#131b2e",
+          "primary-fixed-dim": "#bdc2ff",
+          "tertiary-container": "#006b49",
+          "tertiary-fixed-dim": "#4edea3"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem",
+          "lg": "2rem",
+          "xl": "3rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-lg": "1.5rem",
+          "gutter": "1rem",
+          "margin-tablet": "2rem",
+          "space-sm": "0.5rem",
+          "space-xl": "2.25rem",
+          "gutter-tablet": "1.5rem",
+          "margin": "1.25rem",
+          "margin-desktop": "3rem",
+          "space-xs": "0.25rem",
+          "space-md": "1rem"
+        },
+        "fontFamily": {
+          "headline-sm": ["Plus Jakarta Sans"],
+          "label-sm": ["Plus Jakarta Sans"],
+          "body-md": ["Plus Jakarta Sans"],
+          "body-lg": ["Plus Jakarta Sans"],
+          "label-md": ["Plus Jakarta Sans"],
+          "display-lg": ["Plus Jakarta Sans"],
+          "headline-lg": ["Plus Jakarta Sans"],
+          "display-lg-mobile": ["Plus Jakarta Sans"],
+          "label-lg": ["Plus Jakarta Sans"],
+          "body-sm": ["Plus Jakarta Sans"],
+          "headline-md": ["Plus Jakarta Sans"]
+        },
+        "fontSize": {
+          "headline-sm": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+          "label-sm": ["10px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700"}],
+          "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400"}],
+          "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400"}],
+          "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+          "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "800"}],
+          "headline-lg": ["26px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+          "display-lg-mobile": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "800"}],
+          "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+          "body-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+          "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700"}]
+        }
+      }
+    }
+};
