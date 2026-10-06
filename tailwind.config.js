@@ -58,9 +58,13 @@ module.exports = {
         'tertiary-fixed-dim': '#4edea3',
       },
       borderRadius: {
-        DEFAULT: '1rem',
-        lg: '2rem',
-        xl: '3rem',
+        DEFAULT: '0.5rem',
+        sm: '0.25rem',
+        md: '0.375rem',
+        lg: '0.5rem',
+        xl: '0.75rem',
+        '2xl': '1rem',
+        '3xl': '1.25rem',
         full: '9999px',
       },
       spacing: {
