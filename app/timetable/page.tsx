@@ -138,15 +138,15 @@ export default function TimetablePage() {
         </section>
 
         {/* Day Selector Bar & Live Tracker Indicator */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex gap-2 overflow-x-auto pb-1 max-w-full no-scrollbar">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3">
+          <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1 max-w-full no-scrollbar">
             {DAYS.map((d) => (
               <button
                 key={d.id}
                 onClick={() => setActiveDay(d.id)}
-                className={`px-4 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all cursor-pointer ${
+                className={`px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-full text-[11.5px] sm:text-[13px] font-bold whitespace-nowrap transition-all cursor-pointer ${
                   activeDay === d.id
-                    ? 'bg-primary text-white shadow-[0_8px_20px_-4px_rgba(28,42,200,0.4)] scale-[1.02]'
+                    ? 'bg-primary text-white shadow-sm sm:shadow-[0_8px_20px_-4px_rgba(28,42,200,0.4)] scale-[1.02]'
                     : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container active:scale-95'
                 }`}
               >
@@ -156,28 +156,28 @@ export default function TimetablePage() {
           </div>
 
           {/* Quick Metrics for Selected Day */}
-          <div className="flex items-center gap-2 text-outline text-[12px]">
-            <span className="bg-surface-container-high px-2.5 py-1 rounded-lg text-on-surface font-semibold text-[11px]">
+          <div className="flex items-center gap-2 text-outline text-[11px] sm:text-[12px]">
+            <span className="bg-surface-container-high px-2.5 py-1 rounded-lg text-on-surface font-semibold text-[10.5px] sm:text-[11px]">
               {activeDayMeta.full}: {periods.length} Periods ({labCount} Lab, {theoryCount} Theory)
             </span>
           </div>
         </div>
 
         {/* Schedule Cards Grid: 1 col on mobile, 2 col on tablet, 3 col on laptop */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-space-xs">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4 mt-space-xs">
           {periods.map((p, idx) => (
             <div
               key={`${activeDay}-${idx}-${p.period}`}
-              className={`rounded-[22px] p-5 transition-all shadow-sm flex flex-col justify-between border ${
+              className={`rounded-xl sm:rounded-[22px] p-3.5 sm:p-5 transition-all shadow-sm flex flex-col justify-between border ${
                 p.isLive
                   ? 'bg-gradient-to-br from-tertiary/10 via-surface-container-lowest to-surface-container-lowest border-tertiary/40 shadow-[0_8px_24px_-4px_rgba(0,80,54,0.18)] ring-1 ring-tertiary/20'
                   : 'bg-surface-container-lowest border-outline/10 hover:shadow-md hover:border-primary/20'
               }`}
             >
               <div>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-2 sm:mb-3">
                   <span
-                    className={`text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 ${
+                    className={`text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full flex items-center gap-1.5 ${
                       p.isLive
                         ? 'bg-tertiary text-white shadow-sm'
                         : p.accent === 'tertiary'
@@ -188,32 +188,32 @@ export default function TimetablePage() {
                     }`}
                   >
                     {p.isLive && (
-                      <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-ping" />
                     )}
                     {p.isLive ? `LIVE NOW · ${p.period}` : p.period}
                   </span>
-                  <span className="text-[12px] text-on-surface-variant font-medium flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[15px] text-outline">
+                  <span className="text-[11px] sm:text-[12px] text-on-surface-variant font-medium flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[13px] sm:text-[15px] text-outline">
                       schedule
                     </span>
                     {p.time}
                   </span>
                 </div>
 
-                <h3 className="text-[16px] font-bold text-on-surface leading-snug mt-1">
+                <h3 className="text-[14px] sm:text-[16px] font-bold text-on-surface leading-snug mt-0.5 sm:mt-1">
                   {p.subject}
                 </h3>
-                <p className="text-[13px] text-on-surface-variant mt-1.5 flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[16px] text-outline">
+                <p className="text-[11.5px] sm:text-[13px] text-on-surface-variant mt-1 sm:mt-1.5 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-[14px] sm:text-[16px] text-outline">
                     person
                   </span>
                   {p.teacher}
                 </p>
               </div>
 
-              <div className="flex items-center justify-between pt-4 mt-4 border-t border-outline/10">
-                <span className="text-[11px] font-semibold text-outline uppercase tracking-wider flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[16px] text-primary">
+              <div className="flex items-center justify-between pt-2.5 sm:pt-4 mt-2.5 sm:mt-4 border-t border-outline/10">
+                <span className="text-[10.5px] sm:text-[11px] font-semibold text-outline uppercase tracking-wider flex items-center gap-1">
+                  <span className="material-symbols-outlined text-[14px] sm:text-[16px] text-primary">
                     meeting_room
                   </span>
                   {p.room}
@@ -222,13 +222,13 @@ export default function TimetablePage() {
                 {p.isLive ? (
                   <button
                     onClick={() => handleJoinClass(p)}
-                    className="px-3.5 py-1.5 bg-tertiary hover:bg-tertiary/90 active:scale-95 text-white rounded-full text-[12px] font-bold shadow-md flex items-center gap-1.5 transition-all cursor-pointer"
+                    className="px-3 py-1 sm:px-3.5 sm:py-1.5 bg-tertiary hover:bg-tertiary/90 active:scale-95 text-white rounded-full text-[11px] sm:text-[12px] font-bold shadow-sm flex items-center gap-1 transition-all cursor-pointer"
                   >
-                    <span className="material-symbols-outlined text-[15px]">videocam</span>
+                    <span className="material-symbols-outlined text-[14px] sm:text-[15px]">videocam</span>
                     Join Class
                   </button>
                 ) : (
-                  <span className="text-[11px] text-outline font-medium">
+                  <span className="text-[10.5px] sm:text-[11px] text-outline font-medium">
                     {p.accent === 'tertiary' ? 'Laboratory' : p.accent === 'secondary' ? 'Elective' : 'Lecture'}
                   </span>
                 )}
@@ -238,26 +238,26 @@ export default function TimetablePage() {
         </section>
 
         {/* Institutional Academic Advisory Card */}
-        <section className="bg-surface-container-low rounded-2xl p-4 sm:p-5 border border-outline/10 mt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="material-symbols-outlined text-[20px]">event_note</span>
+        <section className="bg-surface-container-low rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-outline/10 mt-1 sm:mt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="flex items-start gap-2.5 sm:gap-3">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span className="material-symbols-outlined text-[18px] sm:text-[20px]">event_note</span>
             </div>
             <div>
-              <h4 className="text-[13px] font-bold text-on-surface">
+              <h4 className="text-[12.5px] sm:text-[13px] font-bold text-on-surface">
                 Institutional Timetable Policy
               </h4>
-              <p className="text-[12px] text-on-surface-variant mt-0.5 leading-relaxed">
+              <p className="text-[11px] sm:text-[12px] text-on-surface-variant mt-0.5 leading-relaxed">
                 Attendance is marked digitally at the beginning of each period. Laboratory sessions in Lab 3 require institutional safety coats and practical journals.
               </p>
             </div>
           </div>
           <Link
             href="/diary"
-            className="text-[12px] font-bold text-primary hover:underline flex items-center gap-1 whitespace-nowrap self-start sm:self-center"
+            className="text-[11.5px] sm:text-[12px] font-bold text-primary hover:underline flex items-center gap-1 whitespace-nowrap self-start sm:self-center"
           >
             <span>Open Diary Tasks</span>
-            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            <span className="material-symbols-outlined text-[15px] sm:text-[16px]">arrow_forward</span>
           </Link>
         </section>
       </div>
