@@ -7,11 +7,59 @@ if (!fs.existsSync(outDir)) {
   fs.mkdirSync(outDir, { recursive: true });
 }
 
-// 1. Standard SVG Icon (with subtle corner rounding and depth)
-function createSvg(size, isMaskable = false) {
-  const padding = isMaskable ? size * 0.22 : size * 0.14;
-  const iconSize = size - padding * 2;
-  const radius = isMaskable ? 0 : size * 0.22;
+// Proportional SVG generator for standard and LITE icons
+function createSvg(size, isMaskable = false, isLite = true) {
+  const radius = isMaskable ? 0 : Math.round(size * 0.22);
+  const shadowDy = Math.max(1, Number((size * 0.016).toFixed(1)));
+
+  // If standard icon (no LITE badge)
+  if (!isLite) {
+    const padding = isMaskable ? size * 0.22 : size * 0.14;
+    const iconSize = size - padding * 2;
+    const scale = iconSize / 24;
+    return `
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2a38e8" />
+          <stop offset="50%" stop-color="#1c2ac8" />
+          <stop offset="100%" stop-color="#0f198f" />
+        </linearGradient>
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fbbf24" />
+          <stop offset="100%" stop-color="#f59e0b" />
+        </linearGradient>
+        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="${shadowDy}" stdDeviation="${shadowDy}" flood-opacity="0.35"/>
+        </filter>
+      </defs>
+      <rect width="${size}" height="${size}" rx="${radius}" fill="url(#bgGrad)" />
+      <g transform="translate(${padding.toFixed(2)}, ${padding.toFixed(2)}) scale(${scale.toFixed(4)})" filter="url(#shadow)">
+        <path d="M12 2.5L1 8.5L12 14.5L21 9.59V16.5H23V8.5L12 2.5Z" fill="#ffffff" />
+        <path d="M5 12.68V16.68C5 19.34 8.13 21.5 12 21.5C15.87 21.5 19 19.34 19 16.68V12.68L12 16.5L5 12.68Z" fill="#ffffff" fill-opacity="0.9" />
+        <circle cx="21.5" cy="8.5" r="1.8" fill="url(#goldGrad)" />
+      </g>
+    </svg>
+    `.trim();
+  }
+
+  // LITE Icon: Emblem scaled proportionally to leave room for the LITE pill badge at the bottom
+  const emblemFraction = isMaskable ? 0.48 : 0.56;
+  const emblemSize = size * emblemFraction;
+  const scale = emblemSize / 24;
+  const emblemX = (size - 24 * scale) / 2;
+  const emblemY = size * (isMaskable ? 0.15 : 0.11);
+
+  const pillW = Math.round(size * (isMaskable ? 0.38 : 0.42));
+  const pillH = Math.round(size * (isMaskable ? 0.11 : 0.12));
+  const pillX = Math.round((size - pillW) / 2);
+  const pillY = Math.round(size * (isMaskable ? 0.72 : 0.75));
+  const pillRx = Math.round(pillH / 2);
+
+  const fontSize = Math.round(pillH * 0.60);
+  const letterSpacing = Math.max(1, Math.round(size * 0.012));
+  const strokeW = Math.max(1, Number((size * 0.005).toFixed(1)));
+  const textY = Math.round(pillY + pillH * 0.70);
 
   return `
   <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +74,7 @@ function createSvg(size, isMaskable = false) {
         <stop offset="100%" stop-color="#f59e0b" />
       </linearGradient>
       <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-        <feDropShadow dx="0" dy="${size * 0.02}" stdDeviation="${size * 0.02}" flood-opacity="0.35"/>
+        <feDropShadow dx="0" dy="${shadowDy}" stdDeviation="${shadowDy}" flood-opacity="0.35"/>
       </filter>
     </defs>
 
@@ -34,7 +82,7 @@ function createSvg(size, isMaskable = false) {
     <rect width="${size}" height="${size}" rx="${radius}" fill="url(#bgGrad)" />
 
     <!-- Center Academic Emblem (Graduation Cap + Shield) -->
-    <g transform="translate(${padding}, ${padding}) scale(${iconSize / 24})" filter="url(#shadow)">
+    <g transform="translate(${emblemX.toFixed(2)}, ${emblemY.toFixed(2)}) scale(${scale.toFixed(4)})" filter="url(#shadow)">
       <!-- Graduation Cap -->
       <path d="M12 2.5L1 8.5L12 14.5L21 9.59V16.5H23V8.5L12 2.5Z" fill="#ffffff" />
       <!-- Lower Shield / Ribbon -->
@@ -42,11 +90,27 @@ function createSvg(size, isMaskable = false) {
       <!-- Golden Accent Dot -->
       <circle cx="21.5" cy="8.5" r="1.8" fill="url(#goldGrad)" />
     </g>
+
+    <!-- LITE Badge Pill Container at Bottom -->
+    <g filter="url(#shadow)">
+      <rect x="${pillX}" y="${pillY}" width="${pillW}" height="${pillH}" rx="${pillRx}" fill="#ffffff" stroke="rgba(255,255,255,0.85)" stroke-width="${strokeW}" />
+      <text x="${(size / 2).toFixed(1)}" y="${textY}" text-anchor="middle" font-family="'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="${fontSize}" font-weight="900" letter-spacing="${letterSpacing}" fill="#1c2ac8">LITE</text>
+    </g>
   </svg>
-  `;
+  `.trim();
 }
 
 async function generateAll() {
+  // 1. Write the standalone LITE SVG file: public/icons/icon-lite.svg
+  const liteSvg512 = createSvg(512, false, true);
+  fs.writeFileSync(path.join(outDir, 'icon-lite.svg'), liteSvg512);
+  console.log('Saved: icon-lite.svg');
+
+  // Also update public/icons/icon.svg with lite branding
+  fs.writeFileSync(path.join(outDir, 'icon.svg'), liteSvg512);
+  console.log('Saved: icon.svg');
+
+  // 2. Generate all PNG icons from LITE SVG for PWA & home screen installation
   const sizes = [
     { name: 'icon-192x192.png', size: 192, maskable: false },
     { name: 'icon-512x512.png', size: 512, maskable: false },
@@ -59,7 +123,7 @@ async function generateAll() {
   ];
 
   for (const item of sizes) {
-    const svg = createSvg(item.size, item.maskable);
+    const svg = createSvg(item.size, item.maskable, true);
     const dest = path.join(outDir, item.name);
     await sharp(Buffer.from(svg))
       .png({ compressionLevel: 9 })
@@ -67,15 +131,14 @@ async function generateAll() {
     console.log(`Generated: ${item.name}`);
   }
 
-  // Also write favicon.ico / favicon.png
-  const favSvg = createSvg(64, false);
+  // 3. Favicon (64x64)
+  const favSvg = createSvg(64, false, true);
   await sharp(Buffer.from(favSvg))
     .png()
     .toFile(path.join(__dirname, '..', 'public', 'favicon.png'));
+  console.log('Generated: favicon.png');
 
-  // Also write SVG version in icons/icon.svg
-  fs.writeFileSync(path.join(outDir, 'icon.svg'), createSvg(512, false).trim());
-  console.log('All icons generated successfully!');
+  console.log('All LITE icons generated successfully!');
 }
 
 generateAll().catch((err) => {
