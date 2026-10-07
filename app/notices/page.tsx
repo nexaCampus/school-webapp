@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import { sendTestNotification } from '@/lib/firebaseNotifications';
 
 const CATEGORIES = [
   'All Notices',
@@ -159,10 +160,27 @@ export default function NoticesPage() {
               3 Recent
             </span>
           </div>
-          <button className="flex items-center gap-1 text-[11px] sm:text-label-sm text-primary hover:underline font-semibold">
-            <span className="material-symbols-outlined text-[15px] sm:text-[16px]">tune</span>
-            <span>Archive</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={async () => {
+                await sendTestNotification(
+                  'LCGVM School Circular Alert 📢',
+                  'Term 1 examination schedules and parent-teacher meeting slots are now published.',
+                  '/notices'
+                );
+              }}
+              className="flex items-center gap-1 text-[11px] sm:text-label-sm px-2.5 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all font-semibold active:scale-95 cursor-pointer shadow-sm"
+              title="Send a sample notification to your device"
+            >
+              <span className="material-symbols-outlined text-[14px]">notifications_active</span>
+              <span>Test Notification</span>
+            </button>
+            <button className="flex items-center gap-1 text-[11px] sm:text-label-sm text-primary hover:underline font-semibold cursor-pointer">
+              <span className="material-symbols-outlined text-[15px] sm:text-[16px]">tune</span>
+              <span>Archive</span>
+            </button>
+          </div>
         </div>
 
         {/* Timeline-style Feed: 2 columns on laptop (lg:), single col on phone */}
