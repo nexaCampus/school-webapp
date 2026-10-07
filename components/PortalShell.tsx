@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import LogoEmblem from './LogoEmblem';
 import PortalFooter from './PortalFooter';
 import DarkModeToggle from './DarkModeToggle';
+import NotificationPrompt from './NotificationPrompt';
 import { getSession, logoutUser, switchAccount } from '@/lib/session';
 
 interface PortalShellProps {
@@ -653,6 +654,9 @@ export default function PortalShell({
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 flex flex-col relative w-full pt-14 pb-14 md:pt-6 md:pb-12 bg-surface">
         <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 md:px-8 flex-1 flex flex-col">
+          <div className="mb-3.5">
+            <NotificationPrompt variant="banner" />
+          </div>
           {children}
         </div>
       </main>
