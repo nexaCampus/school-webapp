@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getSession, logoutUser, switchAccount } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import NotificationPrompt from '@/components/NotificationPrompt';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -488,24 +489,8 @@ export default function ProfilePage() {
                     chevron_right
                   </span>
                 </button>
-                <div className="w-full flex items-center justify-between p-space-sm rounded-DEFAULT hover:bg-surface-container transition-colors">
-                  <div className="flex items-center gap-space-sm min-w-0">
-                    <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
-                      <span className="material-symbols-outlined text-[20px]">mark_chat_unread</span>
-                    </div>
-                    <div>
-                      <p className="font-body-md text-body-md text-on-surface font-semibold">
-                        Push &amp; SMS Alerts
-                      </p>
-                      <p className="font-body-sm text-body-sm text-on-surface-variant">
-                        Homework and attendance notices
-                      </p>
-                    </div>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer ml-2 flex-shrink-0">
-                    <input defaultChecked className="sr-only peer" type="checkbox" />
-                    <div className="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                  </label>
+                <div className="pt-1">
+                  <NotificationPrompt variant="card" />
                 </div>
               </div>
             </div>

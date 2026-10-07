@@ -108,3 +108,60 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+// Push notification handling in PWA Service Worker
+self.addEventListener('push', (event) => {
+  if (!event.data) return;
+
+  try {
+    const data = event.data.json();
+    const title = data.notification?.title || data.title || 'NexaCampus School Alert';
+    const body = data.notification?.body || data.body || 'New campus circular or update available.';
+    const icon = data.notification?.icon || '/icons/icon-192x192.png';
+    const url = data.data?.url || data.url || '/notices';
+
+    const options = {
+      body,
+      icon,
+      badge: '/icons/icon-192x192.png',
+      tag: 'nexacampus-notice',
+      vibrate: [200, 100, 200],
+      data: { url },
+    };
+
+    event.waitUntil(self.registration.showNotification(title, options));
+  } catch (_e) {
+    const text = event.data.text();
+    event.waitUntil(
+      self.registration.showNotification('NexaCampus School Alert', {
+        body: text || 'New update from school administration.',
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/icon-192x192.png',
+        data: { url: '/notices' },
+      })
+    );
+  }
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data?.url || '/notices';
+
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if ('focus' in client) {
+            if (client.url.includes(self.location.origin)) {
+              client.navigate(targetUrl);
+              return client.focus();
+            }
+          }
+        }
+        if (self.clients.openWindow) {
+          return self.clients.openWindow(targetUrl);
+        }
+      })
+  );
+});
