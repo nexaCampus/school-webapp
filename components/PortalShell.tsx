@@ -139,12 +139,13 @@ export default function PortalShell({
     setMobileServicesOpen(true);
   };
 
-  const closeMobileServices = (e?: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  const closeMobileServices = () => {
     setMobileServicesOpen(false);
+  };
+
+  const navigateToService = (href: string) => {
+    setMobileServicesOpen(false);
+    router.push(href);
   };
 
   // Auto-close on route change
@@ -153,11 +154,15 @@ export default function PortalShell({
     setMobileServicesOpen(false);
   }, [pathname]);
 
-  // Prefetch primary mobile tabs for instantaneous swipe navigation
+  // Prefetch primary mobile tabs and services for instantaneous navigation
   useEffect(() => {
     router.prefetch('/home');
     router.prefetch('/academics');
     router.prefetch('/notices');
+    router.prefetch('/profile');
+    MORE_SERVICES.forEach((s) => {
+      router.prefetch(s.href);
+    });
   }, [router]);
 
   useEffect(() => {
@@ -201,6 +206,10 @@ export default function PortalShell({
 
     const handleTouchStart = (e: TouchEvent) => {
       if (window.innerWidth >= 768) return;
+      if (mobileServicesOpen || showLogoutModal || showSwitchModal) {
+        isIgnoredTarget = true;
+        return;
+      }
       if (e.touches.length !== 1) return;
 
       const touch = e.touches[0];
@@ -510,7 +519,10 @@ export default function PortalShell({
                     <Link
                       key={s.href}
                       href={s.href}
-                      onClick={closeMobileServices}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigateToService(s.href);
+                      }}
                       className={`p-2.5 sm:p-3 rounded-xl border transition-all duration-150 flex flex-col items-start gap-1.5 active:scale-95 shadow-sm cursor-pointer ${
                         isActive
                           ? 'bg-primary/10 border-primary text-primary'
@@ -543,7 +555,10 @@ export default function PortalShell({
               <div className="mt-6 pt-4 border-t border-outline/10 dark:border-[#3c3c3c] flex items-center justify-between text-[11px] text-outline px-1">
                 <Link
                   href="/profile"
-                  onClick={closeMobileServices}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateToService('/profile');
+                  }}
                   className="flex items-center gap-1.5 text-on-surface hover:text-primary font-semibold cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[16px]">account_circle</span>
@@ -553,7 +568,7 @@ export default function PortalShell({
                   <button
                     type="button"
                     onClick={() => {
-                      closeMobileServices();
+                      setMobileServicesOpen(false);
                       setShowSwitchModal(true);
                     }}
                     className="flex items-center gap-1 text-primary font-semibold cursor-pointer hover:opacity-85 transition-opacity"
@@ -564,7 +579,7 @@ export default function PortalShell({
                   <button
                     type="button"
                     onClick={() => {
-                      closeMobileServices();
+                      setMobileServicesOpen(false);
                       setShowLogoutModal(true);
                     }}
                     className="flex items-center gap-1 text-error font-semibold cursor-pointer hover:opacity-85 transition-opacity"
