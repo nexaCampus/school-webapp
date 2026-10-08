@@ -72,6 +72,12 @@ export function getSession(): Session | null {
     }
 
     store.setItem(KEY, JSON.stringify(session));
+    if (typeof document !== 'undefined') {
+      document.cookie = 'school_session_active=1; path=/; max-age=1209600; SameSite=Strict; Secure';
+      try {
+        localStorage.removeItem('nexacampus_jwt_token');
+      } catch {}
+    }
     return session;
   } catch {
     return null;
@@ -119,10 +125,23 @@ export function setSession(session: Session): void {
   };
 
   store.setItem(KEY, JSON.stringify(updatedSession));
+  if (typeof document !== 'undefined') {
+    document.cookie = 'school_session_active=1; path=/; max-age=1209600; SameSite=Strict; Secure';
+    try {
+      localStorage.removeItem('nexacampus_jwt_token');
+    } catch {}
+  }
 }
 
 export function clearSession(): void {
   storage()?.removeItem(KEY);
+  if (typeof document !== 'undefined') {
+    document.cookie = 'school_session_active=; path=/; max-age=0; SameSite=Strict; Secure';
+    document.cookie = 'school_auth_token=; path=/; max-age=0; SameSite=Strict; Secure';
+    try {
+      localStorage.removeItem('nexacampus_jwt_token');
+    } catch {}
+  }
 }
 
 /**
