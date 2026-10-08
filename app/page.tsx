@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import LogoEmblem from '@/components/LogoEmblem';
@@ -182,6 +182,14 @@ const MODULES_DATA: ModuleItem[] = [
   },
 ];
 
+const MODULE_FILTER_TABS: Array<{ id: 'all' | 'academics' | 'logistics' | 'studentlife' | 'admin'; label: string }> = [
+  { id: 'all', label: 'All (16)' },
+  { id: 'academics', label: 'Academics' },
+  { id: 'logistics', label: 'Logistics' },
+  { id: 'studentlife', label: 'Student Life' },
+  { id: 'admin', label: 'Admin & PTM' },
+];
+
 export default function ExecutiveHomePage() {
   const router = useRouter();
   const [activeModuleTab, setActiveModuleTab] = useState<'all' | 'academics' | 'logistics' | 'studentlife' | 'admin'>('all');
@@ -189,6 +197,65 @@ export default function ExecutiveHomePage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [hallPassSeconds, setHallPassSeconds] = useState<number>(765); // 12m 45s
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  // Ref and scroll states for the module tabs
+  const moduleTabsRef = useRef<HTMLDivElement>(null);
+  const [canScrollTabsLeft, setCanScrollTabsLeft] = useState(false);
+  const [canScrollTabsRight, setCanScrollTabsRight] = useState(true);
+
+  // Check scroll boundary for category tabs
+  const updateTabsScrollState = () => {
+    if (!moduleTabsRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = moduleTabsRef.current;
+    setCanScrollTabsLeft(scrollLeft > 6);
+    setCanScrollTabsRight(scrollLeft < scrollWidth - clientWidth - 6);
+  };
+
+  useEffect(() => {
+    const el = moduleTabsRef.current;
+    if (!el) return;
+    updateTabsScrollState();
+    el.addEventListener('scroll', updateTabsScrollState, { passive: true });
+    window.addEventListener('resize', updateTabsScrollState, { passive: true });
+    return () => {
+      el.removeEventListener('scroll', updateTabsScrollState);
+      window.removeEventListener('resize', updateTabsScrollState);
+    };
+  }, []);
+
+  const scrollModuleTabs = (direction: 'left' | 'right') => {
+    if (!moduleTabsRef.current) return;
+    const container = moduleTabsRef.current;
+    const scrollStep = container.clientWidth * 0.67;
+    container.scrollBy({
+      left: direction === 'left' ? -scrollStep : scrollStep,
+      behavior: 'smooth',
+    });
+  };
+
+  // Drag-to-scroll for mouse / desktop responsiveness
+  const isDraggingTabsRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragScrollLeftRef = useRef(0);
+
+  const handleTabsMouseDown = (e: React.MouseEvent) => {
+    if (!moduleTabsRef.current) return;
+    isDraggingTabsRef.current = true;
+    dragStartXRef.current = e.pageX - moduleTabsRef.current.offsetLeft;
+    dragScrollLeftRef.current = moduleTabsRef.current.scrollLeft;
+  };
+
+  const handleTabsMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingTabsRef.current || !moduleTabsRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - moduleTabsRef.current.offsetLeft;
+    const walk = (x - dragStartXRef.current) * 1.5;
+    moduleTabsRef.current.scrollLeft = dragScrollLeftRef.current - walk;
+  };
+
+  const handleTabsMouseUp = () => {
+    isDraggingTabsRef.current = false;
+  };
 
   useEffect(() => {
     // Check if session exists and extract ONLY the first name
@@ -587,58 +654,69 @@ export default function ExecutiveHomePage() {
             </p>
           </div>
 
-          {/* Module Filter Chips */}
-          <div className="flex flex-nowrap items-center gap-1.5 p-1 rounded-full bg-[#eaedff] dark:bg-[#1a1c2b] border border-[#c6c5d8]/40 dark:border-[#2c3048] overflow-x-auto scrollbar-hide">
-            <button
-              onClick={() => setActiveModuleTab('all')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                activeModuleTab === 'all'
-                  ? 'bg-[#1c2ac8] text-white shadow-sm'
-                  : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
-              }`}
+          {/* Module Filter Chips - Responsive: Exactly 3 visible on small screens with horizontal scroll */}
+          <div className="w-full sm:w-auto">
+            <div
+              ref={moduleTabsRef}
+              onScroll={updateTabsScrollState}
+              onMouseDown={handleTabsMouseDown}
+              onMouseMove={handleTabsMouseMove}
+              onMouseUp={handleTabsMouseUp}
+              onMouseLeave={handleTabsMouseUp}
+              className="w-full sm:w-auto flex flex-nowrap items-center gap-1.5 p-1 rounded-full bg-[#eaedff] dark:bg-[#1a1c2b] border border-[#c6c5d8]/40 dark:border-[#2c3048] overflow-x-auto scroll-smooth snap-x snap-mandatory select-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
-              All (16)
-            </button>
-            <button
-              onClick={() => setActiveModuleTab('academics')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                activeModuleTab === 'academics'
-                  ? 'bg-[#1c2ac8] text-white shadow-sm'
-                  : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
-              }`}
-            >
-              Academics
-            </button>
-            <button
-              onClick={() => setActiveModuleTab('logistics')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                activeModuleTab === 'logistics'
-                  ? 'bg-[#1c2ac8] text-white shadow-sm'
-                  : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
-              }`}
-            >
-              Logistics
-            </button>
-            <button
-              onClick={() => setActiveModuleTab('studentlife')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                activeModuleTab === 'studentlife'
-                  ? 'bg-[#1c2ac8] text-white shadow-sm'
-                  : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
-              }`}
-            >
-              Student Life
-            </button>
-            <button
-              onClick={() => setActiveModuleTab('admin')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                activeModuleTab === 'admin'
-                  ? 'bg-[#1c2ac8] text-white shadow-sm'
-                  : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
-              }`}
-            >
-              Admin & PTM
-            </button>
+              {MODULE_FILTER_TABS.map((tab) => {
+                const isActive = activeModuleTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={(e) => {
+                      setActiveModuleTab(tab.id);
+                      e.currentTarget.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'center',
+                      });
+                    }}
+                    className={`shrink-0 snap-start w-[calc((100%-12px)/3)] sm:w-auto px-2.5 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all text-center whitespace-nowrap ${
+                      isActive
+                        ? 'bg-[#1c2ac8] text-white shadow-sm'
+                        : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Mobile Horizontal Scroll Controls & Helper Indicator */}
+            <div className="flex sm:hidden items-center justify-between px-2 pt-2 text-xs text-[#454655] dark:text-[#a0a4c0]">
+              <div className="flex items-center gap-1.5 text-[11px]">
+                <span className="material-symbols-outlined text-sm text-[#1c2ac8] dark:text-[#bdc2ff]">swap_horiz</span>
+                <span className="font-medium text-[#454655] dark:text-[#a0a4c0]">Swipe to explore (3 of 5 visible)</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => scrollModuleTabs('left')}
+                  disabled={!canScrollTabsLeft}
+                  aria-label="Scroll categories left"
+                  className="w-6 h-6 rounded-full flex items-center justify-center bg-[#eaedff] dark:bg-[#1a1c2b] text-[#1c2ac8] dark:text-[#bdc2ff] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1c2ac8] hover:text-white transition-all shadow-xs border border-[#c6c5d8]/40 dark:border-[#2c3048]"
+                >
+                  <span className="material-symbols-outlined text-xs">chevron_left</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollModuleTabs('right')}
+                  disabled={!canScrollTabsRight}
+                  aria-label="Scroll categories right"
+                  className="w-6 h-6 rounded-full flex items-center justify-center bg-[#eaedff] dark:bg-[#1a1c2b] text-[#1c2ac8] dark:text-[#bdc2ff] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#1c2ac8] hover:text-white transition-all shadow-xs border border-[#c6c5d8]/40 dark:border-[#2c3048]"
+                >
+                  <span className="material-symbols-outlined text-xs">chevron_right</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
