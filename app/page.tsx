@@ -1909,13 +1909,33 @@ export default function ExecutiveHomePage() {
 
         {/* =========================================================================
             INSPIRUX-STYLE FULL-BLEED DISPLAY BRAND BANNER (BLUE & WHITE)
-            Edge-to-edge vibrant Royal Blue block with giant White 'nexaCampus' typography
+            Edge-to-edge vibrant Royal Blue block with crystal-clear, fully visible 'nexaCampus' display
             ========================================================================= */}
-        <div className="w-full bg-[#1c2ac8] dark:bg-[#1622a5] text-white pt-10 sm:pt-16 md:pt-20 lg:pt-24 pb-0 overflow-hidden select-none border-t border-[#1c2ac8]">
-          <div className="w-full flex items-end justify-center px-1 sm:px-2 md:px-4 overflow-hidden">
-            <span className="text-[14.6vw] sm:text-[14.8vw] md:text-[14.3vw] font-black tracking-tighter leading-[0.76] text-white text-center whitespace-nowrap select-none drop-shadow-md pointer-events-none block translate-y-[2%]">
-              nexaCampus
-            </span>
+        <div className="w-full bg-[#1c2ac8] dark:bg-[#1622a5] text-white pt-10 sm:pt-14 md:pt-18 lg:pt-24 pb-8 sm:pb-12 md:pb-16 lg:pb-20 px-3 sm:px-6 md:px-10 select-none border-t border-[#1c2ac8] overflow-hidden">
+          <div className="w-full max-w-[1400px] mx-auto flex items-center justify-center">
+            <svg
+              viewBox="0 0 1000 155"
+              className="w-full h-auto select-none pointer-events-none drop-shadow-md"
+              preserveAspectRatio="xMidYMid meet"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-label="nexaCampus"
+              role="img"
+            >
+              <text
+                x="500"
+                y="120"
+                textAnchor="middle"
+                textLength="920"
+                lengthAdjust="spacing"
+                fill="#ffffff"
+                fontFamily="var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif"
+                fontSize="136"
+                fontWeight="900"
+                letterSpacing="-2"
+              >
+                nexaCampus
+              </text>
+            </svg>
           </div>
         </div>
       </footer>
