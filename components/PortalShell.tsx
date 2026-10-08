@@ -40,6 +40,7 @@ const MORE_SERVICES = [
   { label: 'Lost & Found', href: '/lostfound', icon: 'search', desc: 'Reported campus items' },
   { label: 'Merits & Badges', href: '/merits', icon: 'military_tech', desc: 'Honors & points' },
   { label: 'PTM Meetings', href: '/ptm', icon: 'groups_2', desc: 'Teacher conference slots' },
+  { label: 'Campus Homepage', href: '/', icon: 'domain', desc: 'Executive 15-section portal' },
   { label: 'Timetable', href: '/timetable', icon: 'calendar_month', desc: 'Class period schedule' },
 ];
 

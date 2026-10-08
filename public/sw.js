@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nexacampus-pwa-v2.5.3';
+const CACHE_NAME = 'nexacampus-pwa-v2.6.0';
 const PRECACHE_ASSETS = [
   '/',
   '/manifest.json',
