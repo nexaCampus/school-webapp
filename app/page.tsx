@@ -800,112 +800,127 @@ export default function ExecutiveHomePage() {
       {/* =========================================================================
           DIV 5: LIVE ACADEMIC TIMETABLE & CONNECTED PERIOD NODE STREAM
           ========================================================================= */}
-      <div id="timetable-stream" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1c2ac8]/10 text-[#1c2ac8] dark:text-[#bdc2ff] text-[11px] font-bold uppercase tracking-wider mb-2">
-            Dynamic Schedule
-          </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
-            Live Period Timetable Stream
-          </h2>
-          <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-1 font-normal">
-            Real-time status of today&apos;s academic schedule with connected room locations and teacher assignments.
-          </p>
-        </div>
+      <div id="timetable-stream" className="py-16 sm:py-24 bg-[#faf8ff] dark:bg-[#12131d] border-b border-[#e2e7ff] dark:border-[#222538] relative overflow-hidden">
+        
+        {/* Subtle decorative grid boxes (box-box) pattern in the background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e7ff_1px,transparent_1px),linear-gradient(to_bottom,#e2e7ff_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#262a40_1px,transparent_1px),linear-gradient(to_bottom,#262a40_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] [mask-image:radial-gradient(ellipse_65%_55%_at_50%_50%,#000_70%,transparent_100%)] opacity-50 pointer-events-none" />
 
-        {/* Connected Vertical Timeline */}
-        <div className="max-w-3xl mx-auto relative pl-6 sm:pl-8 border-l-2 border-[#1c2ac8]/30 dark:border-[#3b49df]/40 space-y-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
           
-          {/* Period 1 */}
-          {/* Period 1 */}
-          <div className="relative">
-            <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-[#12131a]" />
-            <div className="levitate-card-sm p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/50 hover:shadow-xl hover:shadow-[#1c2ac8]/10 cursor-pointer shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span className="font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 1 • 08:30 AM – 09:15 AM</span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold text-[10px]">COMPLETED</span>
-              </div>
-              <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
-                Mathematics: Differential Calculus
-              </div>
-              <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
-                Room 402 • Dr. Mukherjee • Senior Wing
-              </div>
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1c2ac8]/10 text-[#1c2ac8] dark:text-[#bdc2ff] text-[11px] font-bold uppercase tracking-wider mb-2">
+              Dynamic Schedule
             </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+              Live Period Timetable Stream
+            </h2>
+            <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-1 font-normal">
+              Real-time status of today&apos;s academic schedule with connected room locations and teacher assignments.
+            </p>
           </div>
 
-          {/* Period 2 */}
-          <div className="relative">
-            <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-[#12131a]" />
-            <div className="levitate-card-sm p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/50 hover:shadow-xl hover:shadow-[#1c2ac8]/10 cursor-pointer shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span className="font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 2 • 09:15 AM – 10:00 AM</span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold text-[10px]">COMPLETED</span>
-              </div>
-              <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
-                English Literature: Shakespeare&apos;s The Tempest
-              </div>
-              <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
-                Room 402 • Mrs. Roy • Act III Scene II Analysis
-              </div>
-            </div>
-          </div>
+          {/* White Box Container Card in Background */}
+          <div className="max-w-4xl mx-auto p-6 sm:p-10 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#2a2e45] shadow-xl shadow-[#1c2ac8]/5 relative overflow-hidden">
+            
+            {/* Ambient subtle decorative glow */}
+            <div className="absolute -top-16 -right-16 w-60 h-60 rounded-full bg-[#1c2ac8]/5 dark:bg-[#3b49df]/10 blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-16 -left-16 w-60 h-60 rounded-full bg-[#fea619]/5 dark:bg-[#fea619]/10 blur-3xl pointer-events-none" />
 
-          {/* Period 3 (LIVE PRACTICAL NOW) */}
-          <div className="relative">
-            <div className="absolute -left-[35px] sm:-left-[43px] top-1 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white ring-4 ring-emerald-300/40 dark:ring-emerald-900/60 animate-bounce">
-              <span className="material-symbols-outlined text-[14px]">bolt</span>
-            </div>
-            <div className="levitate-card-sm p-5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-[#1b213b] dark:to-[#171d33] border-2 border-[#1c2ac8] dark:border-[#3b49df] hover:border-[#3b49df] hover:shadow-2xl hover:shadow-[#1c2ac8]/20 cursor-pointer shadow-md">
-              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span className="font-extrabold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 4 • 11:15 AM – 12:15 PM</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-extrabold text-[10px] animate-pulse">
-                  ⚡ LIVE PRACTICAL NOW
-                </span>
+            {/* Connected Vertical Timeline */}
+            <div className="relative pl-6 sm:pl-8 border-l-2 border-[#1c2ac8]/30 dark:border-[#3b49df]/40 space-y-8">
+              
+              {/* Period 1 */}
+              <div className="relative">
+                <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-[#12131a]" />
+                <div className="levitate-card-sm p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/50 hover:shadow-xl hover:shadow-[#1c2ac8]/10 cursor-pointer shadow-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span className="font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 1 • 08:30 AM – 09:15 AM</span>
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold text-[10px]">COMPLETED</span>
+                  </div>
+                  <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
+                    Mathematics: Differential Calculus
+                  </div>
+                  <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
+                    Room 402 • Dr. Mukherjee • Senior Wing
+                  </div>
+                </div>
               </div>
-              <div className="text-lg font-extrabold text-[#131b2e] dark:text-white mt-1">
-                Computer Science: Java Object-Oriented Frameworks
-              </div>
-              <div className="text-xs text-[#454655] dark:text-[#c4c7e0] mt-0.5">
-                CS Lab B-204 • Mrs. Sen • Polymorphism & Data Structures
-              </div>
-              <div className="font-virgil text-sm text-[#fea619] dark:text-[#ffb95f] mt-2 font-bold">
-                *Practical file submission due by 12:10 PM!
-              </div>
-            </div>
-          </div>
 
-          {/* Period 4 (Recess) */}
-          <div className="relative">
-            <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-amber-400 ring-4 ring-white dark:ring-[#12131a]" />
-            <div className="levitate-card-sm p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/10 cursor-pointer shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span className="font-bold text-amber-600 dark:text-amber-400">Recess • 12:15 PM – 12:55 PM</span>
-                <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 font-bold text-[10px]">UPCOMING</span>
+              {/* Period 2 */}
+              <div className="relative">
+                <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-[#12131a]" />
+                <div className="levitate-card-sm p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/50 hover:shadow-xl hover:shadow-[#1c2ac8]/10 cursor-pointer shadow-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span className="font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 2 • 09:15 AM – 10:00 AM</span>
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold text-[10px]">COMPLETED</span>
+                  </div>
+                  <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
+                    English Literature: Shakespeare&apos;s The Tempest
+                  </div>
+                  <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
+                    Room 402 • Mrs. Roy • Act III Scene II Analysis
+                  </div>
+                </div>
               </div>
-              <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
-                Campus Dining & Social Recess
-              </div>
-              <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
-                Main Cafeteria • RFID Fast-Checkout Active
-              </div>
-            </div>
-          </div>
 
-          {/* Period 5 */}
-          <div className="relative">
-            <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-slate-400 ring-4 ring-white dark:ring-[#12131a]" />
-            <div className="levitate-card-sm p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10 cursor-pointer shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span className="font-bold text-[#454655] dark:text-[#a0a4c0]">Period 5 • 12:55 PM – 01:40 PM</span>
-                <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 font-bold text-[10px]">UPCOMING</span>
+              {/* Period 3 (LIVE PRACTICAL NOW) */}
+              <div className="relative">
+                <div className="absolute -left-[35px] sm:-left-[43px] top-1 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white ring-4 ring-emerald-300/40 dark:ring-emerald-900/60 animate-bounce">
+                  <span className="material-symbols-outlined text-[14px]">bolt</span>
+                </div>
+                <div className="levitate-card-sm p-5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-[#1b213b] dark:to-[#171d33] border-2 border-[#1c2ac8] dark:border-[#3b49df] hover:border-[#3b49df] hover:shadow-2xl hover:shadow-[#1c2ac8]/20 cursor-pointer shadow-md">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span className="font-extrabold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 4 • 11:15 AM – 12:15 PM</span>
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-extrabold text-[10px] animate-pulse">
+                      ⚡ LIVE PRACTICAL NOW
+                    </span>
+                  </div>
+                  <div className="text-lg font-extrabold text-[#131b2e] dark:text-white mt-1">
+                    Computer Science: Java Object-Oriented Frameworks
+                  </div>
+                  <div className="text-xs text-[#454655] dark:text-[#c4c7e0] mt-0.5">
+                    CS Lab B-204 • Mrs. Sen • Polymorphism & Data Structures
+                  </div>
+                  <div className="font-virgil text-sm text-[#fea619] dark:text-[#ffb95f] mt-2 font-bold">
+                    *Practical file submission due by 12:10 PM!
+                  </div>
+                </div>
               </div>
-              <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
-                Chemistry: Organic Reaction Mechanisms
+
+              {/* Period 4 (Recess) */}
+              <div className="relative">
+                <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-amber-400 ring-4 ring-white dark:ring-[#12131a]" />
+                <div className="levitate-card-sm p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/10 cursor-pointer shadow-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span className="font-bold text-amber-600 dark:text-amber-400">Recess • 12:15 PM – 12:55 PM</span>
+                    <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 font-bold text-[10px]">UPCOMING</span>
+                  </div>
+                  <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
+                    Campus Dining & Social Recess
+                  </div>
+                  <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
+                    Main Cafeteria • RFID Fast-Checkout Active
+                  </div>
+                </div>
               </div>
-              <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
-                Chemistry Lab 2 • Dr. S. Ghosh
+
+              {/* Period 5 */}
+              <div className="relative">
+                <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-slate-400 ring-4 ring-white dark:ring-[#12131a]" />
+                <div className="levitate-card-sm p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10 cursor-pointer shadow-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span className="font-bold text-[#454655] dark:text-[#a0a4c0]">Period 5 • 12:55 PM – 01:40 PM</span>
+                    <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 font-bold text-[10px]">UPCOMING</span>
+                  </div>
+                  <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
+                    Chemistry: Organic Reaction Mechanisms
+                  </div>
+                  <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
+                    Chemistry Lab 2 • Dr. S. Ghosh
+                  </div>
+                </div>
               </div>
+
             </div>
           </div>
 
