@@ -179,6 +179,7 @@ export default function PortalShell({
   }, []);
 
   const currentPath = activePath || pathname.replace(/^\//, '') || 'home';
+  const firstName = studentName ? studentName.trim().split(/\s+/)[0] : 'Student';
 
   // Mobile Touch Gestures (< 768px):
   // Strictly Horizontal Swipe: Home <-> Academics <-> Notices
@@ -387,7 +388,7 @@ export default function PortalShell({
             {/* Profile Pill: Clicking opens /profile */}
             <Link
               href="/profile"
-              title="View Student Profile"
+              title={`View Student Profile (${studentName})`}
               className={`flex items-center gap-2.5 pl-2.5 pr-4 py-1.5 rounded-full border transition-all ${
                 pathname === '/profile'
                   ? 'bg-primary/10 border-primary text-primary'
@@ -399,7 +400,7 @@ export default function PortalShell({
               </div>
               <div className="flex flex-col text-left">
                 <span className="text-[12px] font-bold text-on-surface leading-tight">
-                  {studentName}
+                  {firstName}
                 </span>
                 <span className="text-[10px] text-primary font-semibold leading-none">
                   {gradeSection}
