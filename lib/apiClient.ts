@@ -6,7 +6,7 @@ import { getCsrfHeaders } from './security';
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_GO_API_URL ||
   process.env.NEXT_PUBLIC_API_BASE_URL ||
-  (typeof window !== 'undefined' ? '' : 'http://localhost:8080');
+  (typeof window !== 'undefined' ? '' : 'https://backend-school-go.onrender.com');
 
 export interface ApiClientResponse<T> {
   data: T;
