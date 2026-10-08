@@ -5,8 +5,11 @@ import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
 import { goApi } from '@/lib/goApiClient';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/query-keys';
 
 export default function AcademicsPage() {
+  const queryClient = useQueryClient();
   const [student, setStudent] = useState<any>(null);
   const [isPaying, setIsPaying] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
@@ -41,6 +44,11 @@ export default function AcademicsPage() {
         paymentId: `PAY-${Date.now()}`,
         signature: `hmac_${Math.random().toString(36).substring(2, 12)}`,
       });
+
+      // Invalidate fees, canteen wallet, and student caches
+      queryClient.invalidateQueries({ queryKey: queryKeys.fees.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.canteen.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.student.all });
 
       setPaymentNotice(`Payment successful! Receipt ${receipt.invoiceNo} issued via 256-Bit SSL verification.`);
       setTimeout(() => setPaymentNotice(null), 6000);

@@ -16,8 +16,11 @@ import {
 import { student as fallbackStudent } from '@/lib/data';
 import { goApi } from '@/lib/goApiClient';
 import { validateUploadFile } from '@/lib/security';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/query-keys';
 
 export default function DiaryPage() {
+  const queryClient = useQueryClient();
   const [activeFilter, setActiveFilter] = useState<'All' | 'Pending' | 'Submitted'>('All');
   const [studentId, setStudentId] = useState<string>('');
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -87,6 +90,10 @@ export default function DiaryPage() {
 
     // Submit to Go backend
     goApi.submitHomework({ homeworkId: taskId, notes: resolvedFileName, submissionDate: new Date().toISOString() });
+
+    // Invalidate client query cache for homework and student dashboard
+    queryClient.invalidateQueries({ queryKey: queryKeys.homework.all });
+    queryClient.invalidateQueries({ queryKey: queryKeys.student.all });
 
     setDiaryTasks((prev) =>
       prev.map((t) =>
