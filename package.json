@@ -1,7 +1,7 @@
 {
   "name": "nexacampus-school-webapp",
   "private": true,
-  "version": "2.5.3",
+  "version": "2.6.0",
   "description": "NexaCampus School web twin — Next.js App Router, mobile-first, pixel-faithful to the Android app (Stitch Academic Fluidity system).",
   "scripts": {
     "dev": "next dev",
