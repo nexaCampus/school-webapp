@@ -23,9 +23,9 @@ const nextConfig = {
       // Scripts: self, inline/eval (needed for Next.js in dev/hydration), Google & Razorpay SDKs
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com https://checkout.razorpay.com https://*.razorpay.com",
       // Styles: self, inline (Tailwind & Next.js CSS), Google Fonts
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      // Fonts: self, Google Fonts, data URIs
-      "font-src 'self' https://fonts.gstatic.com data:",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com",
+      // Fonts: self, Google Fonts, Unpkg, data URIs
+      "font-src 'self' https://fonts.gstatic.com https://unpkg.com data:",
       // Images: self, data:, blob:, and external HTTPS domains (Unsplash, Firebase, avatars)
       "img-src 'self' data: blob: https:",
       // Connect: self, Go backend API, Firebase, Razorpay, WebSockets

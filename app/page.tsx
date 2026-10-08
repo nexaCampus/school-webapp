@@ -1,62 +1,1914 @@
 'use client';
 
-// Splash route: staged loader mirroring Android SplashScreen.
-// If the student has an active session (within 2-week inactivity window),
-// smoothly routes straight to /home. Otherwise, transitions to /chooser.
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import SplashView from '@/components/SplashView';
+import LogoEmblem from '@/components/LogoEmblem';
+import DarkModeToggle from '@/components/DarkModeToggle';
 import { getSession } from '@/lib/session';
 
-const STAGES = [
-  { pct: 64, label: 'Initializing secure portal...' },
-  { pct: 72, label: 'Syncing academic timetable...' },
-  { pct: 89, label: 'Decrypting attendance logs...' },
-  { pct: 98, label: 'Readying dashboard experience...' },
-  { pct: 100, label: 'Welcome to Lions Portal' },
+// 16 Institutional Modules with categories and direct routes
+interface ModuleItem {
+  id: string;
+  name: string;
+  category: 'academics' | 'logistics' | 'studentlife' | 'admin';
+  icon: string;
+  badge: string;
+  desc: string;
+  href: string;
+  accent: string;
+}
+
+const MODULES_DATA: ModuleItem[] = [
+  {
+    id: 'attendance',
+    name: 'Attendance Tracker',
+    category: 'academics',
+    icon: 'event_available',
+    badge: 'Daily & Monthly Log',
+    desc: 'Real-time biometric & period-wise attendance records with 75% CISCE compliance tracking.',
+    href: '/attendance',
+    accent: 'from-blue-600 to-indigo-600',
+  },
+  {
+    id: 'diary',
+    name: 'Homework & Diary',
+    category: 'academics',
+    icon: 'auto_stories',
+    badge: 'Class Assignments',
+    desc: 'Daily subject diary, teacher remarks, homework deadlines, and digital submission receipts.',
+    href: '/diary',
+    accent: 'from-indigo-600 to-purple-600',
+  },
+  {
+    id: 'exams',
+    name: 'Exams & Results',
+    category: 'academics',
+    icon: 'workspace_premium',
+    badge: 'Report Cards & Marks',
+    desc: 'CISCE terminal grade sheets, digital admit cards, answer key previews, and score radar.',
+    href: '/exams',
+    accent: 'from-amber-500 to-orange-600',
+  },
+  {
+    id: 'library',
+    name: 'Digital Library',
+    category: 'academics',
+    icon: 'local_library',
+    badge: 'Book Issues & Catalog',
+    desc: 'Search 12,000+ school volumes, check return dates, reserve bestsellers, and access e-books.',
+    href: '/library',
+    accent: 'from-emerald-600 to-teal-600',
+  },
+  {
+    id: 'canteen',
+    name: 'Smart Canteen & RFID',
+    category: 'logistics',
+    icon: 'restaurant',
+    badge: 'Cashless Dining',
+    desc: 'RFID contactless wallet, daily spending ceilings, healthy menu orders, and instant pickup slips.',
+    href: '/canteen',
+    accent: 'from-amber-600 to-red-500',
+  },
+  {
+    id: 'bus',
+    name: 'School Bus GPS Radar',
+    category: 'logistics',
+    icon: 'directions_bus',
+    badge: 'Live Route Tracking',
+    desc: 'Live telemetry, geofenced proximity alerts, driver SOS channel, and real-time transit ETA.',
+    href: '/bus',
+    accent: 'from-blue-500 to-cyan-600',
+  },
+  {
+    id: 'hallpass',
+    name: 'Digital Hall Pass',
+    category: 'logistics',
+    icon: 'badge',
+    badge: 'Dynamic QR Security',
+    desc: 'Encrypted time-limited transit permissions with staff approval and security turnstile validation.',
+    href: '/hallpass',
+    accent: 'from-purple-600 to-pink-600',
+  },
+  {
+    id: 'clinic',
+    name: 'Campus Health Clinic',
+    category: 'logistics',
+    icon: 'local_hospital',
+    badge: 'Infirmary Profile',
+    desc: 'Confidential allergy alerts, doctor visitation logs, vital telemetry, and emergency guardian dispatch.',
+    href: '/health',
+    accent: 'from-rose-500 to-red-600',
+  },
+  {
+    id: 'store',
+    name: 'Campus Store & Uniforms',
+    category: 'logistics',
+    icon: 'storefront',
+    badge: 'Books & Apparel',
+    desc: 'Order prescribed ICSE textbook bundles, house jerseys, lab coats, and official school supplies.',
+    href: '/store',
+    accent: 'from-teal-600 to-emerald-700',
+  },
+  {
+    id: 'clubs',
+    name: 'School Clubs & Societies',
+    category: 'studentlife',
+    icon: 'groups',
+    badge: 'Extracurriculars',
+    desc: 'Robotics, Debate, MUN, Eco-Warriors, Drama, and Chess club rosters with tournament notices.',
+    href: '/clubs',
+    accent: 'from-violet-600 to-purple-600',
+  },
+  {
+    id: 'merits',
+    name: 'Inter-House Merits',
+    category: 'studentlife',
+    icon: 'military_tech',
+    badge: 'Shield Standings',
+    desc: 'Phoenix, Falcon, Hercules, and Orion house points, badge accolades, and academic honor roll.',
+    href: '/merits',
+    accent: 'from-amber-500 to-yellow-600',
+  },
+  {
+    id: 'lostfound',
+    name: 'Lost & Found Desk',
+    category: 'studentlife',
+    icon: 'search',
+    badge: 'Property Recovery',
+    desc: 'Image-verified repository for misplaced calculators, water bottles, identity cards, and blazer pins.',
+    href: '/lostfound',
+    accent: 'from-slate-600 to-zinc-700',
+  },
+  {
+    id: 'gallery',
+    name: 'Campus Event Gallery',
+    category: 'studentlife',
+    icon: 'photo_library',
+    badge: 'Annual Day & Sports',
+    desc: 'High-definition photo archives of Investiture Ceremony, Sports Meet, and Cultural Exhibitions.',
+    href: '/gallery',
+    accent: 'from-pink-500 to-rose-600',
+  },
+  {
+    id: 'helpdesk',
+    name: 'Parent Helpdesk & PTM',
+    category: 'admin',
+    icon: 'support_agent',
+    badge: 'Direct Resolution',
+    desc: 'Direct guardian-to-teacher communication threads, grievance tickets, and conference reservations.',
+    href: '/helpdesk',
+    accent: 'from-blue-600 to-indigo-700',
+  },
+  {
+    id: 'timetable',
+    name: 'Academic Timetable',
+    category: 'admin',
+    icon: 'calendar_month',
+    badge: 'Live Period Nodes',
+    desc: 'Interactive 8-period schedule with subject teacher rooms, lab practical slots, and recess flags.',
+    href: '/timetable',
+    accent: 'from-cyan-600 to-blue-700',
+  },
+  {
+    id: 'notices',
+    name: 'Notice Board & Circulars',
+    category: 'admin',
+    icon: 'campaign',
+    badge: 'Official Bulletins',
+    desc: 'Signed administrative notices, holiday schedules, fee reminders, and CISCE council directives.',
+    href: '/notices',
+    accent: 'from-indigo-600 to-blue-800',
+  },
 ];
 
-const WAITS = [80, 80, 80, 80, 80];
-
-export default function SplashPage() {
+export default function ExecutiveHomePage() {
   const router = useRouter();
-  const [stage, setStage] = useState(0);
-
-  const routeDestination = () => {
-    const s = getSession();
-    if (s?.student || s?.name) {
-      router.replace('/home');
-    } else {
-      router.replace('/chooser');
-    }
-  };
+  const [activeModuleTab, setActiveModuleTab] = useState<'all' | 'academics' | 'logistics' | 'studentlife' | 'admin'>('all');
+  const [studentFirstName, setStudentFirstName] = useState<string>('Student');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [hallPassSeconds, setHallPassSeconds] = useState<number>(765); // 12m 45s
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    let cancelled = false;
-    let timer: ReturnType<typeof setTimeout>;
-    const advance = (i: number) => {
-      if (cancelled) return;
-      if (i >= STAGES.length) {
-        timer = setTimeout(() => {
-          if (!cancelled) {
-            routeDestination();
-          }
-        }, WAITS[WAITS.length - 1]);
-        return;
+    // Check if session exists and extract ONLY the first name
+    const session = getSession();
+    if (session) {
+      setIsAuthenticated(true);
+      const rawName = session.student?.name || session.name || '';
+      if (rawName.trim()) {
+        const first = rawName.trim().split(/\s+/)[0];
+        setStudentFirstName(first);
       }
-      setStage(i);
-      timer = setTimeout(() => advance(i + 1), WAITS[i]);
-    };
-    advance(0);
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-    };
-  }, [router]);
+    }
+  }, []);
 
-  const current = STAGES[Math.min(stage, STAGES.length - 1)];
+  // Countdown timer for Hall Pass simulation
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setHallPassSeconds((prev) => (prev > 0 ? prev - 1 : 900));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Format countdown
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  // Filtered modules
+  const filteredModules = useMemo(() => {
+    if (activeModuleTab === 'all') return MODULES_DATA;
+    return MODULES_DATA.filter((m) => m.category === activeModuleTab);
+  }, [activeModuleTab]);
+
+  // Subtle 3D tilt tracking for hero card
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMousePosition({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setMousePosition({ x: 0, y: 0 });
+  };
 
   return (
-    <SplashView pct={current.pct} label={current.label} onClick={routeDestination} />
+    <div className="min-h-screen bg-[#faf8ff] dark:bg-[#12131a] text-[#131b2e] dark:text-[#eaedff] selection:bg-[#3b49df] selection:text-white transition-colors duration-200">
+      
+      {/* =========================================================================
+          DIV 1: EXECUTIVE 3D INTERACTIVE HERO SECTION
+          ========================================================================= */}
+      <div id="hero" className="relative overflow-hidden border-b border-[#e2e7ff] dark:border-[#222538] bg-gradient-to-b from-white via-[#faf8ff] to-[#f2f3ff] dark:from-[#151622] dark:via-[#13141f] dark:to-[#0e0f17]">
+        {/* Ambient colored lighting glows */}
+        <div className="absolute top-[-10%] left-[-5%] w-[45vw] h-[45vw] rounded-full bg-[#3b49df]/10 dark:bg-[#3b49df]/15 blur-[120px] pointer-events-none" />
+        <div className="absolute top-[20%] right-[-5%] w-[40vw] h-[40vw] rounded-full bg-[#fea619]/10 dark:bg-[#fea619]/10 blur-[140px] pointer-events-none" />
+
+        {/* Global Executive Top Bar */}
+        <header className="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-[#151622]/85 border-b border-[#e2e7ff]/70 dark:border-[#222538]/70 px-4 sm:px-6 lg:px-12 py-3 transition-colors">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            {/* Logo Emblem & School Identity */}
+            <Link href="/" className="flex items-center gap-3 group focus:outline-none">
+              <LogoEmblem className="h-10 w-10 drop-shadow-sm" />
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-[17px] tracking-tight text-[#1c2ac8] dark:text-[#bdc2ff] group-hover:text-[#3b49df] transition-colors">
+                    NexaCampus
+                  </span>
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#fea619]/15 text-[#855300] dark:text-[#ffb95f] border border-[#fea619]/30">
+                    LITE
+                  </span>
+                </div>
+                <span className="text-[11px] text-[#454655] dark:text-[#a0a4c0] font-medium hidden sm:inline-block">
+                  Lions Calcutta Greater Vidya Mandir • CISCE
+                </span>
+              </div>
+            </Link>
+
+            {/* Quick Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-[#454655] dark:text-[#c4c7e0]">
+              <a href="#modules" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">16 Modules</a>
+              <a href="#backend-architecture" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">Architecture</a>
+              <a href="#timetable-stream" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">Timetable</a>
+              <a href="#canteen-wallet" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">Canteen</a>
+              <a href="#bus-radar" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">Bus Radar</a>
+              <a href="#exam-radar" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">Examinations</a>
+            </nav>
+
+            {/* Actions: Theme Toggle + Role Entry */}
+            <div className="flex items-center gap-3">
+              <DarkModeToggle />
+              {isAuthenticated ? (
+                <Link
+                  href="/home"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white text-[13px] font-bold shadow-sm shadow-[#1c2ac8]/25 active:scale-95 transition-all"
+                >
+                  <span className="material-symbols-outlined text-[18px]">dashboard</span>
+                  <span>{studentFirstName}&apos;s Portal</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/chooser"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white text-[13px] font-bold shadow-sm shadow-[#1c2ac8]/25 active:scale-95 transition-all"
+                >
+                  <span className="material-symbols-outlined text-[18px]">login</span>
+                  <span>Enter Portal</span>
+                </Link>
+              )}
+            </div>
+          </div>
+        </header>
+
+        {/* Hero Banner Grid with 3D Perspective Model */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-10 sm:pt-16 pb-16 sm:pb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            
+            {/* Left Column: Headlines & High-Impact Copy */}
+            <div className="lg:col-span-7 flex flex-col items-start space-y-6">
+              
+              {/* Institutional Pill Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3b49df]/10 dark:bg-[#3b49df]/20 border border-[#3b49df]/20 text-[#1c2ac8] dark:text-[#bdc2ff] text-[12px] font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Go Engine v1.23 Online • CISCE Affiliation WB243</span>
+              </div>
+
+              {/* Primary Poppins Headline with Excalidraw Virgil Stylish Annotation */}
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.12] text-[#131b2e] dark:text-white">
+                Empowering Campus <br />
+                <span className="bg-gradient-to-r from-[#1c2ac8] via-[#3b49df] to-[#6366f1] dark:from-[#bdc2ff] dark:via-[#9398ff] dark:to-[#6ffbbe] bg-clip-text text-transparent">
+                  Connected Intelligence
+                </span>
+              </h1>
+
+              {/* Hand-drawn Virgil stylish text accent */}
+              <div className="font-virgil text-lg sm:text-xl text-[#fea619] dark:text-[#ffb95f] rotate-[-1.5deg] font-bold select-none">
+                ✦ Handcrafted for LCGVM Students, Teachers & Parents with &lt;1ms response!
+              </div>
+
+              {/* Subtitle Description */}
+              <p className="text-base sm:text-lg text-[#454655] dark:text-[#c4c7e0] leading-relaxed max-w-2xl font-normal">
+                Welcome to the official digital twin of Lions Calcutta Greater Vidya Mandir.
+                Access 16 integrated modules, live transit telemetry, RFID smart dining, and
+                encrypted academic performance trackers within a lightweight 3MB progressive web app.
+              </p>
+
+              {/* CTAs */}
+              <div className="flex flex-wrap items-center gap-3.5 pt-2 w-full sm:w-auto">
+                <Link
+                  href="/chooser"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white font-bold text-[14px] shadow-lg shadow-[#1c2ac8]/30 hover:shadow-xl hover:shadow-[#1c2ac8]/40 active:scale-95 transition-all"
+                >
+                  <span className="material-symbols-outlined text-[20px]">badge</span>
+                  <span>Student & Parent Chooser</span>
+                </Link>
+                <a
+                  href="#modules"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-full bg-white dark:bg-[#1e202f] hover:bg-[#eaedff] dark:hover:bg-[#25283d] text-[#1c2ac8] dark:text-[#bdc2ff] font-bold text-[14px] border border-[#c6c5d8]/40 dark:border-[#343852] shadow-sm active:scale-95 transition-all"
+                >
+                  <span className="material-symbols-outlined text-[20px]">grid_view</span>
+                  <span>Explore 16 Services</span>
+                </a>
+                <a
+                  href="#backend-architecture"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-full text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] font-semibold text-[13px] transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px]">security</span>
+                  <span>Security Blueprint</span>
+                </a>
+              </div>
+
+              {/* Fast Features Ticker Row */}
+              <div className="pt-4 flex flex-wrap items-center gap-4 text-[12px] font-semibold text-[#454655] dark:text-[#a0a4c0]">
+                <div className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px] text-emerald-600">verified</span>
+                  <span>100% Mobile Responsive</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px] text-blue-600">bolt</span>
+                  <span>TinyLFU In-Memory Caching</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px] text-amber-500">lock</span>
+                  <span>HttpOnly OWASP-20 Shield</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: 3D Perspective Visual Model */}
+            <div
+              className="lg:col-span-5 relative flex items-center justify-center"
+              style={{ perspective: 1200 }}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div
+                className="relative w-full max-w-[390px] transition-transform duration-300 ease-out"
+                style={{
+                  transform: `rotateX(${-mousePosition.y * 14}deg) rotateY(${mousePosition.x * 18}deg)`,
+                  transformStyle: 'preserve-3d',
+                }}
+              >
+                {/* 3D Primary Card: Holographic Student Smart Credential */}
+                <div className="relative rounded-[2rem] p-6 bg-gradient-to-br from-[#1c2ac8] via-[#2a38db] to-[#121c87] text-white shadow-2xl shadow-[#1c2ac8]/35 border border-white/20 overflow-hidden">
+                  
+                  {/* Hologram metallic reflection gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-transparent pointer-events-none" />
+
+                  {/* Top Row: School Crest & RFID Wave */}
+                  <div className="flex items-center justify-between pb-4 border-b border-white/15">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-sm flex items-center justify-center font-black text-amber-300 text-xs">
+                        LC
+                      </div>
+                      <div>
+                        <div className="text-[11px] font-extrabold uppercase tracking-wider text-amber-300">
+                          Lions Calcutta Greater Vidya Mandir
+                        </div>
+                        <div className="text-[9px] text-white/70 font-mono">
+                          CISCE AFFILIATED WB-243 • SENIOR WING
+                        </div>
+                      </div>
+                    </div>
+                    <span className="material-symbols-outlined text-[22px] text-white/80">contactless</span>
+                  </div>
+
+                  {/* Student Persona Showcase */}
+                  <div className="mt-5 flex items-center gap-4">
+                    <div className="relative w-16 h-16 rounded-2xl bg-white/20 p-1 border border-white/30 flex-shrink-0 overflow-hidden shadow-inner">
+                      <div className="w-full h-full rounded-xl bg-gradient-to-tr from-indigo-300 to-amber-200 flex items-center justify-center text-indigo-900 font-extrabold text-xl">
+                        {studentFirstName[0] || 'A'}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[11px] font-semibold text-amber-300 uppercase tracking-wide">
+                        Verified Student
+                      </div>
+                      <div className="text-xl font-bold tracking-tight">
+                        {studentFirstName}
+                      </div>
+                      <div className="text-[12px] text-white/80">
+                        Class XI-A • Science Stream
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Telemetry Chips */}
+                  <div className="mt-5 grid grid-cols-3 gap-2 py-3 px-3.5 rounded-xl bg-black/20 backdrop-blur-md border border-white/10 text-center">
+                    <div>
+                      <div className="text-[9px] uppercase tracking-wider text-white/60">Roll No</div>
+                      <div className="text-[14px] font-extrabold text-white">24</div>
+                    </div>
+                    <div className="border-x border-white/10">
+                      <div className="text-[9px] uppercase tracking-wider text-white/60">House</div>
+                      <div className="text-[14px] font-extrabold text-amber-300">Phoenix</div>
+                    </div>
+                    <div>
+                      <div className="text-[9px] uppercase tracking-wider text-white/60">Attendance</div>
+                      <div className="text-[14px] font-extrabold text-emerald-400">98.4%</div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Strip: Barcode & Digital Security Chip */}
+                  <div className="mt-5 flex items-center justify-between pt-2">
+                    <div className="flex flex-col">
+                      <span className="text-[8px] uppercase tracking-wider text-white/60 font-mono">RFID ENCRYPTED ID</span>
+                      <span className="text-[11px] font-mono tracking-widest text-white/90">LCGVM-2026-XI-0492</span>
+                    </div>
+                    <div className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-bold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                      ACTIVE GATE PASS
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating 3D Layer 2: Live Period Micro-Card */}
+                <div
+                  className="absolute -bottom-6 -left-6 sm:-left-8 bg-white/90 dark:bg-[#1a1b28]/90 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-[#e2e7ff] dark:border-[#2a2e45] text-[#131b2e] dark:text-white max-w-[210px] hidden sm:block"
+                  style={{ transform: 'translateZ(40px)' }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                      Live Period
+                    </span>
+                  </div>
+                  <div className="font-bold text-[13px] mt-1">Computer Science</div>
+                  <div className="text-[11px] text-[#454655] dark:text-[#a0a4c0]">Lab B-204 • Mrs. Sen</div>
+                </div>
+
+                {/* Floating 3D Layer 3: Canteen RFID Balance Orb */}
+                <div
+                  className="absolute -top-5 -right-5 bg-gradient-to-tr from-[#fea619] to-amber-300 text-stone-900 p-3.5 rounded-2xl shadow-xl border border-amber-200/50 max-w-[170px] hidden sm:block"
+                  style={{ transform: 'translateZ(50px)' }}
+                >
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-stone-800">
+                    RFID Wallet
+                  </div>
+                  <div className="font-black text-[17px] tracking-tight">₹850.00</div>
+                  <div className="text-[10px] text-stone-800/80 font-medium">Daily Limit: ₹250</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 2: LIVE ACADEMIC TELEMETRY & PERFORMANCE METRICS TICKER
+          ========================================================================= */}
+      <div id="telemetry-ticker" className="py-10 bg-white dark:bg-[#151622] border-b border-[#e2e7ff] dark:border-[#222538]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
+            
+            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between">
+              <div className="flex items-center justify-between text-[#1c2ac8] dark:text-[#bdc2ff]">
+                <span className="text-[11px] font-bold uppercase tracking-wider">Attendance Rate</span>
+                <span className="material-symbols-outlined text-[20px]">event_available</span>
+              </div>
+              <div className="mt-3">
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] dark:text-white">99.2%</div>
+                <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
+                  Above CISCE 75% Rule
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between">
+              <div className="flex items-center justify-between text-indigo-600 dark:text-indigo-400">
+                <span className="text-[11px] font-bold uppercase tracking-wider">Digital Modules</span>
+                <span className="material-symbols-outlined text-[20px]">widgets</span>
+              </div>
+              <div className="mt-3">
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] dark:text-white">16 Active</div>
+                <div className="text-[11px] text-[#454655] dark:text-[#a0a4c0] font-semibold mt-0.5">
+                  Zero Redirection Lag
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between">
+              <div className="flex items-center justify-between text-amber-500">
+                <span className="text-[11px] font-bold uppercase tracking-wider">L1 Cache Latency</span>
+                <span className="material-symbols-outlined text-[20px]">speed</span>
+              </div>
+              <div className="mt-3">
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] dark:text-white">&lt;0.8ms</div>
+                <div className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold mt-0.5">
+                  TinyLFU SingleFlight
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between">
+              <div className="flex items-center justify-between text-rose-500">
+                <span className="text-[11px] font-bold uppercase tracking-wider">House Shield</span>
+                <span className="material-symbols-outlined text-[20px]">military_tech</span>
+              </div>
+              <div className="mt-3">
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] dark:text-white">1,240 pts</div>
+                <div className="text-[11px] text-rose-600 dark:text-rose-400 font-semibold mt-0.5">
+                  Phoenix House Leads
+                </div>
+              </div>
+            </div>
+
+            <div className="col-span-2 md:col-span-1 p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between">
+              <div className="flex items-center justify-between text-teal-600 dark:text-teal-400">
+                <span className="text-[11px] font-bold uppercase tracking-wider">OWASP Shield</span>
+                <span className="material-symbols-outlined text-[20px]">shield</span>
+              </div>
+              <div className="mt-3">
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] dark:text-white">20-Point</div>
+                <div className="text-[11px] text-teal-600 dark:text-teal-400 font-semibold mt-0.5">
+                  HttpOnly Strictly Bound
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 3: INTERACTIVE 16-MODULE CAMPUS ECOSYSTEM DIRECTORY
+          ========================================================================= */}
+      <div id="modules" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1c2ac8]/10 text-[#1c2ac8] dark:text-[#bdc2ff] text-[11px] font-bold uppercase tracking-wider mb-2">
+              Integrated Campus Services
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+              16 Institutional Micro-Modules
+            </h2>
+            <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-1 max-w-2xl font-normal">
+              Click any module to jump directly into the live feature screen. Fully unified across mobile and desktop.
+            </p>
+          </div>
+
+          {/* Module Filter Chips */}
+          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-full bg-[#eaedff] dark:bg-[#1a1c2b] border border-[#c6c5d8]/40 dark:border-[#2c3048]">
+            <button
+              onClick={() => setActiveModuleTab('all')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                activeModuleTab === 'all'
+                  ? 'bg-[#1c2ac8] text-white shadow-sm'
+                  : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
+              }`}
+            >
+              All (16)
+            </button>
+            <button
+              onClick={() => setActiveModuleTab('academics')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                activeModuleTab === 'academics'
+                  ? 'bg-[#1c2ac8] text-white shadow-sm'
+                  : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
+              }`}
+            >
+              Academics
+            </button>
+            <button
+              onClick={() => setActiveModuleTab('logistics')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                activeModuleTab === 'logistics'
+                  ? 'bg-[#1c2ac8] text-white shadow-sm'
+                  : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
+              }`}
+            >
+              Logistics
+            </button>
+            <button
+              onClick={() => setActiveModuleTab('studentlife')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                activeModuleTab === 'studentlife'
+                  ? 'bg-[#1c2ac8] text-white shadow-sm'
+                  : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
+              }`}
+            >
+              Student Life
+            </button>
+            <button
+              onClick={() => setActiveModuleTab('admin')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                activeModuleTab === 'admin'
+                  ? 'bg-[#1c2ac8] text-white shadow-sm'
+                  : 'text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]'
+              }`}
+            >
+              Admin & PTM
+            </button>
+          </div>
+        </div>
+
+        {/* 16-Module Responsive Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {filteredModules.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              className="group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/50 hover:shadow-xl hover:shadow-[#1c2ac8]/10 transition-all duration-200 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-11 h-11 rounded-xl bg-gradient-to-tr ${item.accent} flex items-center justify-center text-white shadow-md`}>
+                    <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#f2f3ff] dark:bg-[#23263b] text-[#1c2ac8] dark:text-[#bdc2ff] border border-[#e2e7ff] dark:border-[#333752]">
+                    {item.badge}
+                  </span>
+                </div>
+                <h3 className="text-base font-extrabold text-[#131b2e] dark:text-white group-hover:text-[#1c2ac8] dark:group-hover:text-[#bdc2ff] transition-colors">
+                  {item.name}
+                </h3>
+                <p className="text-[12px] text-[#454655] dark:text-[#a0a4c0] mt-1.5 leading-relaxed font-normal">
+                  {item.desc}
+                </p>
+              </div>
+
+              <div className="mt-5 pt-3 border-t border-[#f2f3ff] dark:border-[#24283d] flex items-center justify-between text-[12px] font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">
+                <span>Launch Screen</span>
+                <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                  arrow_forward
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 4: GO MICROSERVICES & 20-POINT SECURITY HARDENING BLUEPRINT
+          ========================================================================= */}
+      <div id="backend-architecture" className="py-16 sm:py-24 bg-[#f2f3ff] dark:bg-[#151622] border-y border-[#e2e7ff] dark:border-[#222538]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1c2ac8]/10 text-[#1c2ac8] dark:text-[#bdc2ff] text-[11px] font-bold uppercase tracking-wider mb-2">
+              High-Concurreny Infrastructure
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+              Go Engine Architecture & Security Fortress
+            </h2>
+            <div className="font-virgil text-base sm:text-lg text-[#fea619] dark:text-[#ffb95f] mt-1 font-bold">
+              *Zero localStorage secrets + TinyLFU In-Memory Cache = Unbreakable Speed
+            </div>
+            <p className="text-sm sm:text-base text-[#454655] dark:text-[#c4c7e0] mt-2 font-normal">
+              Designed to handle 1,000+ simultaneous requests on a lean 1 vCPU VPS with zero database saturation.
+            </p>
+          </div>
+
+          {/* Visual Architecture Flow Diagram */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#2a2e45] shadow-lg mb-12">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-6 text-center">
+              End-to-End Pipeline: Client to Database
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-7 gap-3 items-center text-center font-mono text-xs">
+              
+              <div className="p-3.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42]">
+                <div className="font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">Next.js Client</div>
+                <div className="text-[10px] text-[#454655] dark:text-[#a0a4c0] mt-1">3MB Chrome PWA</div>
+              </div>
+
+              <div className="hidden md:flex justify-center text-[#1c2ac8]">
+                <span className="material-symbols-outlined">trending_flat</span>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42]">
+                <div className="font-bold text-amber-600 dark:text-amber-400">HttpOnly Cookie</div>
+                <div className="text-[10px] text-[#454655] dark:text-[#a0a4c0] mt-1">school_auth_token</div>
+              </div>
+
+              <div className="hidden md:flex justify-center text-[#1c2ac8]">
+                <span className="material-symbols-outlined">trending_flat</span>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800">
+                <div className="font-bold text-blue-700 dark:text-blue-300">Go v1.23 Engine</div>
+                <div className="text-[10px] text-blue-600 dark:text-blue-400 mt-1">TinyLFU &lt;0.8ms</div>
+              </div>
+
+              <div className="hidden md:flex justify-center text-[#1c2ac8]">
+                <span className="material-symbols-outlined">trending_flat</span>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42]">
+                <div className="font-bold text-emerald-600 dark:text-emerald-400">Postgres / SQLite</div>
+                <div className="text-[10px] text-[#454655] dark:text-[#a0a4c0] mt-1">SingleFlight Coalesced</div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* 20-Point Security Compliance Matrix */}
+          <div className="bg-white dark:bg-[#1a1c2b] rounded-3xl p-6 sm:p-8 border border-[#e2e7ff] dark:border-[#2a2e45]">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#e2e7ff] dark:border-[#24283d]">
+              <div>
+                <h3 className="text-lg font-extrabold text-[#131b2e] dark:text-white">
+                  20-Point Security Audit Alignment
+                </h3>
+                <p className="text-xs text-[#454655] dark:text-[#a0a4c0]">
+                  Full compliance across OWASP Top 10, cryptographic HMAC webhooks, and session isolation.
+                </p>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/30">
+                20 / 20 PASS
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              {[
+                '1. SQL Injection: Parameterized pgx',
+                '2. XSS: Strict CSP + React Escape',
+                '3. CSRF: SameSite=Strict Cookies',
+                '4. Insecure Uploads: MIME Whitelist',
+                '5. IDOR: Tenant Ownership Guards',
+                '6. Rate Limiting: 20 req/s IP Window',
+                '7. Secure JWT: 256-Bit HS256 Secret',
+                '8. Zero Secret Leakage: env-only keys',
+                '9. Password Hashing: Argon2id salt',
+                '10. MFA: SMS OTP & Session Tokens',
+                '11. CORS: Strict Allowed Origins',
+                '12. Storage: Zero localStorage JWTs',
+                '13. Authorization: Backend Verified',
+                '14. Row-Level Security: Active Tenants',
+                '15. Webhooks: HMAC-SHA256 Signatures',
+                '16. SSRF: Private IP Filtered',
+                '17. Source Maps: Excluded in Prod',
+                '18. Default Creds: Purged & Blocked',
+                '19. Logs: PII & Auth Token Stripped',
+                '20. Dependencies: Automated Snyk Pass',
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40]"
+                >
+                  <span className="material-symbols-outlined text-emerald-500 text-[16px] flex-shrink-0">
+                    check_circle
+                  </span>
+                  <span className="font-medium text-[#131b2e] dark:text-[#eaedff]">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 5: LIVE ACADEMIC TIMETABLE & CONNECTED PERIOD NODE STREAM
+          ========================================================================= */}
+      <div id="timetable-stream" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1c2ac8]/10 text-[#1c2ac8] dark:text-[#bdc2ff] text-[11px] font-bold uppercase tracking-wider mb-2">
+            Dynamic Schedule
+          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+            Live Period Timetable Stream
+          </h2>
+          <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-1 font-normal">
+            Real-time status of today&apos;s academic schedule with connected room locations and teacher assignments.
+          </p>
+        </div>
+
+        {/* Connected Vertical Timeline */}
+        <div className="max-w-3xl mx-auto relative pl-6 sm:pl-8 border-l-2 border-[#1c2ac8]/30 dark:border-[#3b49df]/40 space-y-8">
+          
+          {/* Period 1 */}
+          <div className="relative">
+            <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-[#12131a]" />
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                <span className="font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 1 • 08:30 AM – 09:15 AM</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold text-[10px]">COMPLETED</span>
+              </div>
+              <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
+                Mathematics: Differential Calculus
+              </div>
+              <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
+                Room 402 • Dr. Mukherjee • Senior Wing
+              </div>
+            </div>
+          </div>
+
+          {/* Period 2 */}
+          <div className="relative">
+            <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-[#12131a]" />
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                <span className="font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 2 • 09:15 AM – 10:00 AM</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold text-[10px]">COMPLETED</span>
+              </div>
+              <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
+                English Literature: Shakespeare&apos;s The Tempest
+              </div>
+              <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
+                Room 402 • Mrs. Roy • Act III Scene II Analysis
+              </div>
+            </div>
+          </div>
+
+          {/* Period 3 (LIVE PRACTICAL NOW) */}
+          <div className="relative">
+            <div className="absolute -left-[35px] sm:-left-[43px] top-1 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white ring-4 ring-emerald-300/40 dark:ring-emerald-900/60 animate-bounce">
+              <span className="material-symbols-outlined text-[14px]">bolt</span>
+            </div>
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-[#1b213b] dark:to-[#171d33] border-2 border-[#1c2ac8] dark:border-[#3b49df] shadow-md">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                <span className="font-extrabold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 4 • 11:15 AM – 12:15 PM</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-extrabold text-[10px] animate-pulse">
+                  ⚡ LIVE PRACTICAL NOW
+                </span>
+              </div>
+              <div className="text-lg font-extrabold text-[#131b2e] dark:text-white mt-1">
+                Computer Science: Java Object-Oriented Frameworks
+              </div>
+              <div className="text-xs text-[#454655] dark:text-[#c4c7e0] mt-0.5">
+                CS Lab B-204 • Mrs. Sen • Polymorphism & Data Structures
+              </div>
+              <div className="font-virgil text-sm text-[#fea619] dark:text-[#ffb95f] mt-2 font-bold">
+                *Practical file submission due by 12:10 PM!
+              </div>
+            </div>
+          </div>
+
+          {/* Period 4 (Recess) */}
+          <div className="relative">
+            <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-amber-400 ring-4 ring-white dark:ring-[#12131a]" />
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                <span className="font-bold text-amber-600 dark:text-amber-400">Recess • 12:15 PM – 12:55 PM</span>
+                <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 font-bold text-[10px]">UPCOMING</span>
+              </div>
+              <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
+                Campus Dining & Social Recess
+              </div>
+              <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
+                Main Cafeteria • RFID Fast-Checkout Active
+              </div>
+            </div>
+          </div>
+
+          {/* Period 5 */}
+          <div className="relative">
+            <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-slate-400 ring-4 ring-white dark:ring-[#12131a]" />
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                <span className="font-bold text-[#454655] dark:text-[#a0a4c0]">Period 5 • 12:55 PM – 01:40 PM</span>
+                <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 font-bold text-[10px]">UPCOMING</span>
+              </div>
+              <div className="text-base font-extrabold text-[#131b2e] dark:text-white mt-1">
+                Chemistry: Organic Reaction Mechanisms
+              </div>
+              <div className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-0.5">
+                Chemistry Lab 2 • Dr. S. Ghosh
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 6: SMART CANTEEN RFID WALLET & DIGITAL CARD SIMULATION
+          ========================================================================= */}
+      <div id="canteen-wallet" className="py-16 sm:py-24 bg-[#faf8ff] dark:bg-[#151622] border-t border-[#e2e7ff] dark:border-[#222538]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            
+            {/* Left: 3D Smart Card Preview */}
+            <div className="lg:col-span-5">
+              <div className="rounded-3xl p-6 sm:p-7 bg-gradient-to-tr from-[#131b2e] via-[#1a233d] to-[#252847] text-white shadow-2xl border border-white/10 relative overflow-hidden">
+                <div className="flex items-center justify-between pb-6 border-b border-white/10">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-amber-400 text-2xl">lunch_dining</span>
+                    <span className="font-black text-sm tracking-wide">NexaPay RFID DINING</span>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                    CONTACTLESS ACTIVE
+                  </span>
+                </div>
+
+                <div className="my-6">
+                  <div className="text-xs text-white/60 uppercase font-mono">Available Balance</div>
+                  <div className="text-4xl font-black text-amber-300 tracking-tight mt-1">₹850.00</div>
+                  <div className="text-xs text-white/70 mt-1">Daily Cap: ₹250.00 / ₹250.00 remaining</div>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-white/10 text-xs">
+                  <div>
+                    <div className="text-white/50 text-[10px]">CARD HOLDER</div>
+                    <div className="font-bold text-white tracking-wide">{studentFirstName}</div>
+                  </div>
+                  <div>
+                    <div className="text-white/50 text-[10px]">CAMPUS UID</div>
+                    <div className="font-mono text-white/80">WB243-7721</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="mt-4 flex gap-3">
+                <Link
+                  href="/canteen"
+                  className="flex-1 py-3 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white font-bold text-xs text-center shadow-md transition-all"
+                >
+                  View Today&apos;s Menu & Order
+                </Link>
+              </div>
+            </div>
+
+            {/* Right: Live Cafeteria Specials Table */}
+            <div className="lg:col-span-7">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-extrabold text-[#131b2e] dark:text-white">
+                  Today&apos;s Fresh Cafeteria Menu
+                </h3>
+                <span className="text-xs text-[#454655] dark:text-[#a0a4c0] font-semibold">
+                  Live Stock • Kitchen Counter 1 & 2
+                </span>
+              </div>
+
+              <div className="overflow-x-auto rounded-2xl border border-[#e2e7ff] dark:border-[#262a40] bg-white dark:bg-[#1a1c2b]">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-[#f2f3ff] dark:bg-[#202337] text-[#454655] dark:text-[#a0a4c0] font-bold uppercase border-b border-[#e2e7ff] dark:border-[#262a40]">
+                    <tr>
+                      <th className="py-3 px-4">Item Name</th>
+                      <th className="py-3 px-4">Category</th>
+                      <th className="py-3 px-4">Nutrition</th>
+                      <th className="py-3 px-4">Price</th>
+                      <th className="py-3 px-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#e2e7ff] dark:divide-[#262a40] font-medium">
+                    <tr>
+                      <td className="py-3 px-4 font-bold text-[#131b2e] dark:text-white">Steamed Paneer Roll</td>
+                      <td className="py-3 px-4 text-emerald-600 font-semibold">Veg</td>
+                      <td className="py-3 px-4 text-[#454655] dark:text-[#a0a4c0]">14g Protein • 320 Cal</td>
+                      <td className="py-3 px-4 font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">₹65.00</td>
+                      <td className="py-3 px-4"><span className="text-emerald-600 font-bold">In Stock</span></td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 px-4 font-bold text-[#131b2e] dark:text-white">Fresh Fruit Bowl & Sprouts</td>
+                      <td className="py-3 px-4 text-emerald-600 font-semibold">Veg Healthy</td>
+                      <td className="py-3 px-4 text-[#454655] dark:text-[#a0a4c0]">Vitamin Rich • 180 Cal</td>
+                      <td className="py-3 px-4 font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">₹45.00</td>
+                      <td className="py-3 px-4"><span className="text-emerald-600 font-bold">In Stock</span></td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 px-4 font-bold text-[#131b2e] dark:text-white">Grilled Chicken Club Sandwich</td>
+                      <td className="py-3 px-4 text-rose-600 font-semibold">Non-Veg</td>
+                      <td className="py-3 px-4 text-[#454655] dark:text-[#a0a4c0]">22g Protein • 380 Cal</td>
+                      <td className="py-3 px-4 font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">₹85.00</td>
+                      <td className="py-3 px-4"><span className="text-amber-500 font-bold">Few Left</span></td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 px-4 font-bold text-[#131b2e] dark:text-white">Fresh Tender Coconut Shake</td>
+                      <td className="py-3 px-4 text-cyan-600 font-semibold">Beverage</td>
+                      <td className="py-3 px-4 text-[#454655] dark:text-[#a0a4c0]">Natural Electrolytes</td>
+                      <td className="py-3 px-4 font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">₹35.00</td>
+                      <td className="py-3 px-4"><span className="text-emerald-600 font-bold">In Stock</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 7: LIVE GPS BUS TELEMETRY & FLEET ROUTE RADAR
+          ========================================================================= */}
+      <div id="bus-radar" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/10 text-blue-600 dark:text-blue-400 text-[11px] font-bold uppercase tracking-wider mb-2">
+              Fleet Radar & Safety
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+              Live Transit Telemetry: Bus 14-A
+            </h2>
+            <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-1 font-normal">
+              Active GPS radar pinging vehicle speed, driver contact, and arrival estimates along EM Bypass.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold text-xs border border-emerald-500/30">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            <span>Telemetry Ping: 2s ago</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Telemetry Stats Card */}
+          <div className="lg:col-span-5 space-y-4">
+            <div className="p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-[#454655] dark:text-[#a0a4c0] font-bold uppercase">Bus Registration</span>
+                <span className="font-mono font-extrabold text-sm text-[#1c2ac8] dark:text-[#bdc2ff]">WB-02-AK-9042</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-[#454655] dark:text-[#a0a4c0] font-bold uppercase">Current Speed</span>
+                <span className="font-bold text-sm text-emerald-600">28.4 km/h (Safe Zone)</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-[#454655] dark:text-[#a0a4c0] font-bold uppercase">Assigned Driver</span>
+                <span className="font-bold text-sm text-[#131b2e] dark:text-white">Rajesh Sharma (Verified)</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-[#454655] dark:text-[#a0a4c0] font-bold uppercase">Next Scheduled Stop</span>
+                <span className="font-bold text-sm text-amber-500">Ruby Crossing (ETA 6m)</span>
+              </div>
+            </div>
+
+            <Link
+              href="/bus"
+              className="w-full py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs text-center flex items-center justify-center gap-2 shadow-md transition-all"
+            >
+              <span className="material-symbols-outlined text-[18px]">satellite_alt</span>
+              <span>Open Full Fleet Map</span>
+            </Link>
+          </div>
+
+          {/* Route Radar Visual SVG Graphic */}
+          <div className="lg:col-span-7 p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40]">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-4">
+              EM Bypass Corridors (Route 14-A Active Tracking)
+            </h4>
+
+            {/* SVG Visual Track */}
+            <div className="relative py-4">
+              <div className="h-2 w-full bg-[#e2e7ff] dark:bg-[#2c3048] rounded-full relative">
+                {/* Active progress */}
+                <div className="h-full bg-blue-600 rounded-full w-[65%]" />
+                {/* Bus marker */}
+                <div className="absolute top-1/2 left-[65%] -translate-y-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg ring-4 ring-blue-300 dark:ring-blue-900 animate-pulse">
+                  <span className="material-symbols-outlined text-[16px]">directions_bus</span>
+                </div>
+              </div>
+
+              {/* 5 Stops Along the Line */}
+              <div className="grid grid-cols-5 gap-1 mt-6 text-center text-[10px] font-semibold">
+                <div>
+                  <div className="text-emerald-600 dark:text-emerald-400">Gariahat</div>
+                  <div className="text-[#454655] dark:text-[#a0a4c0] text-[9px]">07:15 AM (Passed)</div>
+                </div>
+                <div>
+                  <div className="text-emerald-600 dark:text-emerald-400">Ballygunge</div>
+                  <div className="text-[#454655] dark:text-[#a0a4c0] text-[9px]">07:30 AM (Passed)</div>
+                </div>
+                <div>
+                  <div className="text-blue-600 dark:text-blue-400 font-extrabold">Ruby Crossing</div>
+                  <div className="text-blue-600 dark:text-blue-400 text-[9px]">ETA 6 mins</div>
+                </div>
+                <div>
+                  <div className="text-[#454655] dark:text-[#a0a4c0]">Chingrighata</div>
+                  <div className="text-[#454655] dark:text-[#a0a4c0] text-[9px]">08:05 AM</div>
+                </div>
+                <div>
+                  <div className="text-[#454655] dark:text-[#a0a4c0]">School Gate</div>
+                  <div className="text-[#454655] dark:text-[#a0a4c0] text-[9px]">08:20 AM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* =========================================================================
+          DIV 8: EXAMINATION, ADMIT CARD & GRADE ANALYTICS RADAR
+          ========================================================================= */}
+      <div id="exam-radar" className="py-16 sm:py-24 bg-[#faf8ff] dark:bg-[#151622] border-t border-[#e2e7ff] dark:border-[#222538]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-bold uppercase tracking-wider mb-2">
+              Performance & Certification
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+              Terminal Examination & Grade Analytics
+            </h2>
+            <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-1 font-normal">
+              Official CISCE board preparation assessments, admit card digital verifications, and percentile breakdowns.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* Admit Card Preview */}
+            <div className="lg:col-span-5 p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+              <div className="flex items-center justify-between pb-4 border-b border-[#e2e7ff] dark:border-[#262a40]">
+                <div>
+                  <div className="text-[10px] font-bold uppercase text-amber-600">Official Admit Card</div>
+                  <div className="text-base font-extrabold text-[#131b2e] dark:text-white">ICSE Mid-Term Assessment</div>
+                </div>
+                <span className="material-symbols-outlined text-2xl text-amber-500">verified</span>
+              </div>
+
+              <div className="my-4 space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-[#454655] dark:text-[#a0a4c0]">Candidate Name:</span>
+                  <span className="font-bold text-[#131b2e] dark:text-white">{studentFirstName}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#454655] dark:text-[#a0a4c0]">Roll Number:</span>
+                  <span className="font-mono font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">24-SCI-019</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#454655] dark:text-[#a0a4c0]">Exam Centre:</span>
+                  <span className="font-bold text-[#131b2e] dark:text-white">LCGVM Senior Hall A</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#454655] dark:text-[#a0a4c0]">Reporting Time:</span>
+                  <span className="font-bold text-emerald-600">08:15 AM Sharp</span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#24283d] flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[20px] text-[#1c2ac8]">qr_code_2</span>
+                  <span className="text-[10px] text-[#454655] dark:text-[#a0a4c0]">HMAC Digital Seal Attached</span>
+                </div>
+                <Link
+                  href="/exams"
+                  className="px-3 py-1 rounded-full bg-[#1c2ac8] text-white text-[11px] font-bold hover:bg-[#3b49df] transition-colors"
+                >
+                  Download PDF
+                </Link>
+              </div>
+            </div>
+
+            {/* Subject Performance Graph */}
+            <div className="lg:col-span-7 p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-base font-extrabold text-[#131b2e] dark:text-white">
+                    Subject Performance Distribution
+                  </h3>
+                  <span className="text-xs text-emerald-600 font-bold">Aggregate: 92.4% (Grade A1)</span>
+                </div>
+                <div className="font-virgil text-sm text-[#fea619] dark:text-[#ffb95f] font-bold">
+                  *Top 2% in Computer Science!
+                </div>
+              </div>
+
+              {/* Progress Bars for Subjects */}
+              <div className="space-y-4 text-xs font-semibold">
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span>Computer Science (Java)</span>
+                    <span className="text-[#1c2ac8] dark:text-[#bdc2ff] font-bold">98%</span>
+                  </div>
+                  <div className="h-2.5 w-full bg-[#eaedff] dark:bg-[#262a40] rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full" style={{ width: '98%' }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span>Mathematics</span>
+                    <span className="text-indigo-600 font-bold">96%</span>
+                  </div>
+                  <div className="h-2.5 w-full bg-[#eaedff] dark:bg-[#262a40] rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full" style={{ width: '96%' }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span>Physics (Theory & Practical)</span>
+                    <span className="text-emerald-600 font-bold">91%</span>
+                  </div>
+                  <div className="h-2.5 w-full bg-[#eaedff] dark:bg-[#262a40] rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full" style={{ width: '91%' }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span>Chemistry</span>
+                    <span className="text-amber-500 font-bold">89%</span>
+                  </div>
+                  <div className="h-2.5 w-full bg-[#eaedff] dark:bg-[#262a40] rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" style={{ width: '89%' }} />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span>English Literature</span>
+                    <span className="text-rose-500 font-bold">88%</span>
+                  </div>
+                  <div className="h-2.5 w-full bg-[#eaedff] dark:bg-[#262a40] rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-rose-500 to-pink-500 rounded-full" style={{ width: '88%' }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 9: STRUCTURED ACADEMIC MINDMAP & CISCE CURRICULUM TREE
+          ========================================================================= */}
+      <div id="curriculum-mindmap" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-600/10 text-teal-600 dark:text-teal-400 text-[11px] font-bold uppercase tracking-wider mb-2">
+            Pedagogical Structure
+          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+            CISCE Curriculum Mindmap & Learning Trees
+          </h2>
+          <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-1 font-normal">
+            Modular pedagogical trees connecting laboratory practicals, theoretical foundations, and board competencies.
+          </p>
+        </div>
+
+        {/* Tree Container */}
+        <div className="p-6 sm:p-10 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+          
+          {/* Root Node */}
+          <div className="flex justify-center mb-8">
+            <div className="px-6 py-3 rounded-2xl bg-gradient-to-r from-[#1c2ac8] to-[#3b49df] text-white font-extrabold text-sm sm:text-base shadow-lg shadow-[#1c2ac8]/25 text-center">
+              <div>Senior Secondary CISCE Framework (Classes XI & XII)</div>
+              <div className="text-[11px] font-normal text-white/80 mt-0.5">Lions Calcutta Greater Vidya Mandir</div>
+            </div>
+          </div>
+
+          {/* 4 Pillars of the Mindmap */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            {/* Branch 1 */}
+            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42]">
+              <div className="text-xs font-bold uppercase text-blue-600 dark:text-blue-400 mb-2 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px]">biotech</span>
+                <span>STEM Laboratory Core</span>
+              </div>
+              <ul className="text-xs space-y-2 text-[#454655] dark:text-[#c4c7e0]">
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  <span>Physics: Electrodynamics</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  <span>Chemistry: Organic Synthesis</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  <span>Biology: Genetics & Botany</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Branch 2 */}
+            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42]">
+              <div className="text-xs font-bold uppercase text-indigo-600 dark:text-indigo-400 mb-2 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px]">terminal</span>
+                <span>Computing & Logic</span>
+              </div>
+              <ul className="text-xs space-y-2 text-[#454655] dark:text-[#c4c7e0]">
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                  <span>Java OOP Paradigms</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                  <span>Data Structures & Trees</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                  <span>Boolean Algebra & Logic Gates</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Branch 3 */}
+            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42]">
+              <div className="text-xs font-bold uppercase text-emerald-600 dark:text-emerald-400 mb-2 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px]">calculate</span>
+                <span>Mathematical Analysis</span>
+              </div>
+              <ul className="text-xs space-y-2 text-[#454655] dark:text-[#c4c7e0]">
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <span>Differential & Integral Calculus</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <span>Probability Distributions</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <span>Vectors & 3D Geometry</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Branch 4 */}
+            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42]">
+              <div className="text-xs font-bold uppercase text-amber-600 dark:text-amber-400 mb-2 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px]">menu_book</span>
+                <span>Humanities & Global Arts</span>
+              </div>
+              <ul className="text-xs space-y-2 text-[#454655] dark:text-[#c4c7e0]">
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span>Shakespearean Dramatic Literature</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span>Analytical Essay Writing</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span>Environmental Geopolitics</span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div className="mt-8 pt-4 border-t border-[#e2e7ff] dark:border-[#24283d] text-center font-virgil text-sm text-[#fea619] dark:text-[#ffb95f] font-bold">
+            ✦ All curricular nodes synced daily with the academic calendar and homework diary!
+          </div>
+        </div>
+
+      </div>
+
+      {/* =========================================================================
+          DIV 10: INTERACTIVE ATTENDANCE HEATMAP & 30-DAY STREAK GRID
+          ========================================================================= */}
+      <div id="attendance-streak" className="py-16 sm:py-24 bg-[#faf8ff] dark:bg-[#151622] border-t border-[#e2e7ff] dark:border-[#222538]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div className="lg:col-span-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold uppercase tracking-wider mb-2">
+                Biometric & Session Heatmap
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                30-Day Attendance Streak
+              </h2>
+              <div className="mt-4 p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] space-y-2">
+                <div className="flex items-center gap-2 text-2xl font-black text-emerald-600">
+                  <span>🔥 18 Consecutive Days</span>
+                </div>
+                <div className="text-xs text-[#454655] dark:text-[#a0a4c0]">
+                  Overall Term Attendance: <strong className="text-[#131b2e] dark:text-white">98.4%</strong> (88 of 90 days logged)
+                </div>
+              </div>
+              <div className="font-virgil text-xs text-[#fea619] dark:text-[#ffb95f] mt-3 font-bold">
+                *Keep above 85% to receive the Annual Gold Star pin!
+              </div>
+            </div>
+
+            {/* 30-Day Grid */}
+            <div className="lg:col-span-8 p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40]">
+              <div className="flex items-center justify-between mb-4 text-xs font-bold text-[#454655] dark:text-[#a0a4c0]">
+                <span>Daily Log (Recent 30 Days)</span>
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-emerald-500" /> Present</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-amber-400" /> Leave</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-slate-300 dark:bg-slate-700" /> Holiday</span>
+                </div>
+              </div>
+
+              {/* 30 Day Heatmap Blocks */}
+              <div className="grid grid-cols-6 sm:grid-cols-10 gap-2">
+                {Array.from({ length: 30 }).map((_, i) => {
+                  const isHoliday = i % 7 === 5 || i % 7 === 6;
+                  const isMedical = i === 11;
+                  const isPresent = !isHoliday && !isMedical;
+
+                  return (
+                    <div
+                      key={i}
+                      title={`Day ${i + 1}: ${isPresent ? 'Present' : isMedical ? 'Approved Leave' : 'Weekend / Holiday'}`}
+                      className={`h-9 rounded-lg flex items-center justify-center font-mono text-[10px] font-bold transition-transform hover:scale-105 cursor-pointer ${
+                        isPresent
+                          ? 'bg-emerald-500 text-white shadow-sm'
+                          : isMedical
+                          ? 'bg-amber-400 text-amber-950'
+                          : 'bg-slate-200 dark:bg-[#25283d] text-slate-500'
+                      }`}
+                    >
+                      {i + 1}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-[#e2e7ff] dark:border-[#24283d] flex justify-between items-center text-xs">
+                <span className="text-[#454655] dark:text-[#a0a4c0]">Morning gate biometric check synced with Go L1 Cache.</span>
+                <Link href="/attendance" className="text-[#1c2ac8] dark:text-[#bdc2ff] font-bold hover:underline">
+                  View Detailed Monthly Sheet →
+                </Link>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 11: INTER-HOUSE CHAMPIONSHIP STANDINGS & SHIELD LEADERBOARD
+          ========================================================================= */}
+      <div id="house-shield" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-bold uppercase tracking-wider mb-2">
+            Inter-House Championship 2026
+          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+            House Points & Shield Standings
+          </h2>
+          <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-1 font-normal">
+            Four proud houses competing across Athletics, Debate, Science Olympiads, and Cultural Arts.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          {/* Phoenix */}
+          <div className="p-6 rounded-3xl bg-gradient-to-b from-red-500/10 to-transparent dark:from-red-950/20 border-2 border-red-500/40 relative overflow-hidden flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="material-symbols-outlined text-3xl text-red-600">local_fire_department</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-red-600 text-white font-extrabold text-[10px]">
+                  1ST PLACE 🏆
+                </span>
+              </div>
+              <h3 className="text-xl font-black text-red-600 dark:text-red-400">Phoenix House</h3>
+              <div className="text-3xl font-black text-[#131b2e] dark:text-white mt-1">1,240 pts</div>
+              <p className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-2">
+                +100 pts from Senior Football League Champions & Science Fair.
+              </p>
+            </div>
+            <div className="mt-6 pt-3 border-t border-red-500/20 text-[11px] font-bold text-red-600">
+              House Captain: Aarav Sharma
+            </div>
+          </div>
+
+          {/* Falcon */}
+          <div className="p-6 rounded-3xl bg-gradient-to-b from-blue-500/10 to-transparent dark:from-blue-950/20 border border-blue-500/30 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="material-symbols-outlined text-3xl text-blue-600">flight</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold text-[10px]">
+                  2ND PLACE
+                </span>
+              </div>
+              <h3 className="text-xl font-black text-blue-600 dark:text-blue-400">Falcon House</h3>
+              <div className="text-3xl font-black text-[#131b2e] dark:text-white mt-1">1,180 pts</div>
+              <p className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-2">
+                +60 pts from CISCE Debate Championships.
+              </p>
+            </div>
+            <div className="mt-6 pt-3 border-t border-blue-500/20 text-[11px] font-bold text-blue-600">
+              House Captain: Riya Sen
+            </div>
+          </div>
+
+          {/* Hercules */}
+          <div className="p-6 rounded-3xl bg-gradient-to-b from-emerald-500/10 to-transparent dark:from-emerald-950/20 border border-emerald-500/30 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="material-symbols-outlined text-3xl text-emerald-600">fitness_center</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-bold text-[10px]">
+                  3RD PLACE
+                </span>
+              </div>
+              <h3 className="text-xl font-black text-emerald-600 dark:text-emerald-400">Hercules House</h3>
+              <div className="text-3xl font-black text-[#131b2e] dark:text-white mt-1">1,110 pts</div>
+              <p className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-2">
+                +40 pts from Mathematics Olympiad Runners-up.
+              </p>
+            </div>
+            <div className="mt-6 pt-3 border-t border-emerald-500/20 text-[11px] font-bold text-emerald-600">
+              House Captain: Rohan Das
+            </div>
+          </div>
+
+          {/* Orion */}
+          <div className="p-6 rounded-3xl bg-gradient-to-b from-amber-500/10 to-transparent dark:from-amber-950/20 border border-amber-500/30 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="material-symbols-outlined text-3xl text-amber-500">stars</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 font-bold text-[10px]">
+                  4TH PLACE
+                </span>
+              </div>
+              <h3 className="text-xl font-black text-amber-500 dark:text-amber-400">Orion House</h3>
+              <div className="text-3xl font-black text-[#131b2e] dark:text-white mt-1">1,050 pts</div>
+              <p className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-2">
+                +50 pts from Drama & Classical Music Troupe.
+              </p>
+            </div>
+            <div className="mt-6 pt-3 border-t border-amber-500/20 text-[11px] font-bold text-amber-600">
+              House Captain: Ananya Bose
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 12: STUDENT DIGITAL HALL PASS & DYNAMIC QR SAFETY ENGINE
+          ========================================================================= */}
+      <div id="hallpass-engine" className="py-16 sm:py-24 bg-[#faf8ff] dark:bg-[#151622] border-t border-[#e2e7ff] dark:border-[#222538]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div className="lg:col-span-5">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-600/10 text-purple-600 dark:text-purple-400 text-[11px] font-bold uppercase tracking-wider mb-2">
+                Campus Safety Protocol
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Digital Hall Pass & Gate Security
+              </h2>
+              <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-2 font-normal">
+                Encrypted corridor passes eliminate paper slips with dynamic security QR codes that expire automatically to prevent spoofing.
+              </p>
+              <div className="mt-6">
+                <Link
+                  href="/hallpass"
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition-all"
+                >
+                  <span className="material-symbols-outlined text-[18px]">badge</span>
+                  <span>Request Instant Corridor Pass</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Active Simulation Card */}
+            <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#1a1c2b] border-2 border-purple-500/40 shadow-xl">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#e2e7ff] dark:border-[#262a40]">
+                <div>
+                  <div className="text-[10px] font-mono uppercase text-purple-600 dark:text-purple-400 font-bold">
+                    PASS REF: HP-2026-0492
+                  </div>
+                  <div className="text-lg font-black text-[#131b2e] dark:text-white">Computer Science Laboratory</div>
+                </div>
+                <div className="px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 font-extrabold text-xs flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-purple-600 animate-ping" />
+                  <span>ACTIVE PASS</span>
+                </div>
+              </div>
+
+              <div className="my-6 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <div className="text-center p-4 rounded-2xl bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900">
+                  <div className="text-xs uppercase text-purple-600 font-bold tracking-wider">Remaining Time</div>
+                  <div className="text-4xl font-mono font-black text-purple-700 dark:text-purple-300 mt-1">
+                    {formatTime(hallPassSeconds)}
+                  </div>
+                  <div className="text-[11px] text-[#454655] dark:text-[#a0a4c0] mt-1">Authorized for 15 minutes</div>
+                </div>
+
+                <div className="text-xs space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-[#454655] dark:text-[#a0a4c0]">Student:</span>
+                    <span className="font-bold text-[#131b2e] dark:text-white">{studentFirstName}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#454655] dark:text-[#a0a4c0]">Authorized By:</span>
+                    <span className="font-bold text-[#131b2e] dark:text-white">Mrs. Sen (Dept Head)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#454655] dark:text-[#a0a4c0]">Issued At:</span>
+                    <span className="font-mono">11:15 AM</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] flex items-center justify-between text-[11px]">
+                <div className="flex items-center gap-2 text-purple-600 font-bold">
+                  <span className="material-symbols-outlined text-[18px]">verified_user</span>
+                  <span>Dynamic Rotating QR Active</span>
+                </div>
+                <span className="text-emerald-600 font-bold">Corridor Sensors Clear</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 13: CAMPUS INFIRMARY & EMERGENCY HEALTH PROFILE
+          ========================================================================= */}
+      <div id="clinic-profile" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[11px] font-bold uppercase tracking-wider mb-2">
+            Student Medical Safety
+          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+            Campus Infirmary & Emergency Health Cards
+          </h2>
+          <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-1 font-normal">
+            Secure vital medical directives accessible by authorized school nurses during campus emergencies.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] space-y-4">
+            <div className="flex items-center gap-3 text-rose-600">
+              <span className="material-symbols-outlined text-3xl">bloodtype</span>
+              <h3 className="text-base font-extrabold text-[#131b2e] dark:text-white">Emergency Vitals</h3>
+            </div>
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between py-1 border-b border-[#e2e7ff] dark:border-[#262a40]">
+                <span className="text-[#454655] dark:text-[#a0a4c0]">Blood Group</span>
+                <span className="font-extrabold text-rose-600 text-sm">O Positive (O+)</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-[#e2e7ff] dark:border-[#262a40]">
+                <span className="text-[#454655] dark:text-[#a0a4c0]">Blood Pressure</span>
+                <span className="font-bold">118 / 78 mmHg</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="text-[#454655] dark:text-[#a0a4c0]">Resting Pulse</span>
+                <span className="font-bold">72 bpm</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] space-y-4">
+            <div className="flex items-center gap-3 text-amber-500">
+              <span className="material-symbols-outlined text-3xl">warning</span>
+              <h3 className="text-base font-extrabold text-[#131b2e] dark:text-white">Allergy Alerts</h3>
+            </div>
+            <div className="space-y-2 text-xs">
+              <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300 font-semibold">
+                ⚠️ Penicillin Sensitivity (High Alert)
+              </div>
+              <p className="text-[#454655] dark:text-[#a0a4c0] text-[11px]">
+                Inhaler locker located at Infirmary Room 102. Authorized for self-administration during physical education.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] space-y-4">
+            <div className="flex items-center gap-3 text-emerald-600">
+              <span className="material-symbols-outlined text-3xl">medical_services</span>
+              <h3 className="text-base font-extrabold text-[#131b2e] dark:text-white">Doctor on Campus</h3>
+            </div>
+            <div className="space-y-2 text-xs">
+              <div className="font-bold text-[#131b2e] dark:text-white">Dr. Ananya Sen, MD (Pediatrics)</div>
+              <div className="text-[#454655] dark:text-[#a0a4c0]">Resident School Physician • Wing 1</div>
+              <div className="pt-2">
+                <Link
+                  href="/health"
+                  className="w-full py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs text-center block transition-all"
+                >
+                  View Complete Medical File
+                </Link>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 14: DIRECT PARENT-TEACHER PORTAL & HELPDESK RESOLUTION THREAD
+          ========================================================================= */}
+      <div id="parent-ptm" className="py-16 sm:py-24 bg-[#faf8ff] dark:bg-[#151622] border-t border-[#e2e7ff] dark:border-[#222538]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div className="lg:col-span-5">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/10 text-blue-600 dark:text-blue-400 text-[11px] font-bold uppercase tracking-wider mb-2">
+                Guardian Collaboration
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Parent-Teacher Helpdesk & PTM Booking
+              </h2>
+              <p className="text-sm sm:text-base text-[#454655] dark:text-[#a0a4c0] mt-2 font-normal">
+                Direct asynchronous communication threads between guardians and subject faculties. Book one-on-one conference slots with zero friction.
+              </p>
+              <div className="mt-6 flex gap-3">
+                <Link
+                  href="/helpdesk"
+                  className="px-5 py-3 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white font-bold text-xs shadow-md transition-all"
+                >
+                  Write to School / Helpdesk
+                </Link>
+                <Link
+                  href="/ptm"
+                  className="px-5 py-3 rounded-full bg-white dark:bg-[#1a1c2b] text-[#1c2ac8] dark:text-[#bdc2ff] border border-[#e2e7ff] dark:border-[#262a40] font-bold text-xs transition-all"
+                >
+                  Reserve PTM Slot
+                </Link>
+              </div>
+            </div>
+
+            {/* Communication Thread Preview */}
+            <div className="lg:col-span-7 p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] space-y-4">
+              <div className="text-xs font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0]">
+                Live Helpdesk Resolution Log #TKT-8812
+              </div>
+
+              {/* Message 1 */}
+              <div className="p-3.5 rounded-2xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] text-xs">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="font-bold text-[#131b2e] dark:text-white">Guardian (Mrs. Sharma)</span>
+                  <span className="text-[#454655] dark:text-[#a0a4c0] text-[10px]">Today, 09:12 AM</span>
+                </div>
+                <p className="text-[#454655] dark:text-[#c4c7e0]">
+                  &ldquo;Kindly confirm the submission deadline for the Computer Science ICSE laboratory records.&rdquo;
+                </p>
+              </div>
+
+              {/* Message 2 */}
+              <div className="p-3.5 rounded-2xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 text-xs ml-4 sm:ml-8">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="font-bold text-blue-700 dark:text-blue-300">Class Faculty (Mrs. Sen)</span>
+                  <span className="text-blue-600 dark:text-blue-400 text-[10px]">Today, 09:30 AM (18m response)</span>
+                </div>
+                <p className="text-[#131b2e] dark:text-[#eaedff]">
+                  &ldquo;Dear Mrs. Sharma, the hardcopy project evaluation is scheduled for next Thursday. Digital receipts are already logged on the portal.&rdquo;
+                </p>
+              </div>
+
+              <div className="pt-2 flex items-center justify-between text-xs text-emerald-600 font-bold">
+                <span className="flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                  <span>Resolution Completed</span>
+                </span>
+                <span className="text-[#454655] dark:text-[#a0a4c0] text-[11px]">Satisfaction Rating: 5/5 ★</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DIV 15: GRAND INSTITUTIONAL CTA, LEADERSHIP MESSAGE & CAMPUS FOOTER
+          ========================================================================= */}
+      <footer id="institutional-footer" className="bg-white dark:bg-[#0e0f17] border-t border-[#e2e7ff] dark:border-[#222538] pt-16 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          
+          {/* Institutional Grand Banner */}
+          <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-[#1c2ac8] via-[#2a38db] to-[#121c87] text-white shadow-2xl relative overflow-hidden mb-16">
+            <div className="relative z-10 max-w-3xl">
+              <span className="text-amber-300 text-xs font-extrabold uppercase tracking-widest">
+                Lions Calcutta Greater Vidya Mandir
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight mt-2 text-white">
+                Shaping Ethical Leadership, Academic Rigor & Technological Agility
+              </h2>
+              <p className="text-white/80 text-sm sm:text-base mt-3 leading-relaxed">
+                Affiliated to the Council for the Indian School Certificate Examinations (CISCE), New Delhi.
+                School Affiliation Code: WB-243. Empowering over 2,400 students across Primary, Middle, and Senior wings.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link
+                  href="/chooser"
+                  className="px-6 py-3.5 rounded-full bg-white text-[#1c2ac8] font-black text-sm shadow-lg hover:bg-slate-100 transition-all active:scale-95"
+                >
+                  Enter Portal Chooser
+                </Link>
+                <a
+                  href="#hero"
+                  className="px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 transition-all"
+                >
+                  Back to Top
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Sitemaps & Links */}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 pb-12 border-b border-[#e2e7ff] dark:border-[#222538] text-xs">
+            
+            <div className="col-span-2">
+              <div className="flex items-center gap-2.5 mb-3">
+                <LogoEmblem className="h-8 w-8" />
+                <span className="font-extrabold text-base text-[#1c2ac8] dark:text-[#bdc2ff]">
+                  NexaCampus Lite
+                </span>
+              </div>
+              <p className="text-[#454655] dark:text-[#a0a4c0] text-xs leading-relaxed max-w-sm">
+                Official high-speed web application for Lions Calcutta Greater Vidya Mandir.
+                Operates at &lt;3MB storage with instant cache warming and zero background battery drain.
+              </p>
+              <div className="mt-4 flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold font-mono">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Go Engine Latency: 0.74ms</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Academics</h4>
+              <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
+                <li><Link href="/attendance" className="hover:text-[#1c2ac8]">Attendance Tracker</Link></li>
+                <li><Link href="/diary" className="hover:text-[#1c2ac8]">Homework & Diary</Link></li>
+                <li><Link href="/exams" className="hover:text-[#1c2ac8]">Exams & Results</Link></li>
+                <li><Link href="/library" className="hover:text-[#1c2ac8]">Digital Library</Link></li>
+                <li><Link href="/timetable" className="hover:text-[#1c2ac8]">Class Timetable</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Campus Life</h4>
+              <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
+                <li><Link href="/canteen" className="hover:text-[#1c2ac8]">Smart Canteen RFID</Link></li>
+                <li><Link href="/bus" className="hover:text-[#1c2ac8]">Bus GPS Radar</Link></li>
+                <li><Link href="/clubs" className="hover:text-[#1c2ac8]">Clubs & Societies</Link></li>
+                <li><Link href="/merits" className="hover:text-[#1c2ac8]">House Merits</Link></li>
+                <li><Link href="/gallery" className="hover:text-[#1c2ac8]">Photo Gallery</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Institutional</h4>
+              <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
+                <li><Link href="/health" className="hover:text-[#1c2ac8]">Clinic & Vitals</Link></li>
+                <li><Link href="/helpdesk" className="hover:text-[#1c2ac8]">Parent Desk & PTM</Link></li>
+                <li><Link href="/notices" className="hover:text-[#1c2ac8]">Circulars & Notices</Link></li>
+                <li><Link href="/store" className="hover:text-[#1c2ac8]">Campus Store</Link></li>
+                <li><Link href="/chooser" className="hover:text-[#1c2ac8]">Role Switcher</Link></li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/* Copyright & Technical Signature */}
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#454655] dark:text-[#a0a4c0]">
+            <div>
+              © 2026 Lions Calcutta Greater Vidya Mandir • All Rights Reserved.
+            </div>
+            <div className="flex items-center gap-4">
+              <span>CISCE School Code #WB-243</span>
+              <span>•</span>
+              <span>OWASP Top 20 Verified</span>
+              <span>•</span>
+              <span className="font-mono">v2.5.3 (Lite Build)</span>
+            </div>
+          </div>
+
+        </div>
+      </footer>
+
+    </div>
   );
 }
