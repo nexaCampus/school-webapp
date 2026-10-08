@@ -15,10 +15,12 @@ import {
 } from '@/lib/studentCache';
 import { student as fallbackStudent } from '@/lib/data';
 import { goApi } from '@/lib/goApiClient';
+import { validateUploadFile } from '@/lib/security';
 
 export default function DiaryPage() {
   const [activeFilter, setActiveFilter] = useState<'All' | 'Pending' | 'Submitted'>('All');
   const [studentId, setStudentId] = useState<string>('');
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [student, setStudent] = useState({
     name: 'Student',
     section: 'Sec E',
@@ -62,17 +64,29 @@ export default function DiaryPage() {
     setImportantDates(cache.importantDates);
   }, []);
 
-  const handleTaskSubmit = (taskId: string, unit: string) => {
-    const cleanName = student.name.replace(/[^a-zA-Z0-9]/g, '_');
-    const generatedFileName = `${cleanName}_${unit.replace(/[^a-zA-Z0-9]/g, '_')}_Completed.pdf`;
+  const handleTaskSubmit = (taskId: string, unit: string, file?: File) => {
+    setUploadError(null);
+    let resolvedFileName = '';
+
+    if (file) {
+      const validation = validateUploadFile(file);
+      if (!validation.valid) {
+        setUploadError(validation.error || 'Invalid file format or size exceeds 10 MB limit.');
+        return;
+      }
+      resolvedFileName = file.name;
+    } else {
+      const cleanName = student.name.replace(/[^a-zA-Z0-9]/g, '_');
+      resolvedFileName = `${cleanName}_${unit.replace(/[^a-zA-Z0-9]/g, '_')}_Completed.pdf`;
+    }
 
     // Persist to local student cache
     if (studentId) {
-      updateCachedDiaryTaskStatus(studentId, taskId, 'Submitted', generatedFileName);
+      updateCachedDiaryTaskStatus(studentId, taskId, 'Submitted', resolvedFileName);
     }
 
     // Submit to Go backend
-    goApi.submitHomework({ homeworkId: taskId, notes: generatedFileName, submissionDate: new Date().toISOString() });
+    goApi.submitHomework({ homeworkId: taskId, notes: resolvedFileName, submissionDate: new Date().toISOString() });
 
     setDiaryTasks((prev) =>
       prev.map((t) =>
@@ -80,14 +94,14 @@ export default function DiaryPage() {
           ? {
               ...t,
               status: 'Submitted',
-              fileName: generatedFileName,
+              fileName: resolvedFileName,
               submissionDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
             }
           : t
       )
     );
 
-    setUploadNotice(`Coursework file "${generatedFileName}" submitted successfully and cached on this device.`);
+    setUploadNotice(`Coursework file "${resolvedFileName}" submitted successfully and cached on this device.`);
     setTimeout(() => setUploadNotice(null), 5000);
   };
 
@@ -142,6 +156,14 @@ export default function DiaryPage() {
           <div className="bg-tertiary-container/30 border border-tertiary/20 text-on-surface p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-2.5 animate-in fade-in">
             <span className="material-symbols-outlined text-tertiary text-[18px] sm:text-[20px]">check_circle</span>
             <span className="text-[11.5px] sm:text-[13px] font-medium">{uploadNotice}</span>
+          </div>
+        )}
+
+        {/* Upload Error Alert */}
+        {uploadError && (
+          <div className="bg-error-container/40 border border-error/30 text-on-error-container p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-2.5 animate-in fade-in">
+            <span className="material-symbols-outlined text-error text-[18px] sm:text-[20px]">warning</span>
+            <span className="text-[11.5px] sm:text-[13px] font-medium">{uploadError}</span>
           </div>
         )}
 

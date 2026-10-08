@@ -68,10 +68,7 @@ import {
   clubs as mockClubs,
 } from './data';
 import { getSession } from './session';
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_GO_API_URL ||
-  (typeof window !== 'undefined' ? '' : 'http://localhost:8080');
+import { secureFetch } from './apiClient';
 
 function generateAuditRef(): string {
   const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -79,44 +76,17 @@ function generateAuditRef(): string {
   return `NEXA-${dateStr}-${rand}`;
 }
 
-function getAuthHeader(): Record<string, string> {
-  if (typeof window === 'undefined') return {};
-  const token = localStorage.getItem('nexacampus_jwt_token');
-  if (token) return { Authorization: `Bearer ${token}` };
-  return {};
-}
-
 async function request<T>(
   endpoint: string,
   options: RequestInit = {},
   fallbackData: T
 ): Promise<{ data: T; isLive: boolean; error?: string }> {
-  const url = `${API_BASE_URL}${endpoint}`;
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3500); // 3.5s timeout
-
-    const res = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...getAuthHeader(),
-        ...(options.headers || {}),
-      },
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-
-    if (res.ok) {
-      const json = await res.json();
-      return { data: json as T, isLive: true };
-    }
-    console.warn(`[Go API] ${res.status} from ${endpoint}, using resilient local cache`);
-    return { data: fallbackData, isLive: false, error: `HTTP ${res.status}` };
-  } catch (err: unknown) {
-    // Go backend offline or unreachable — seamlessly use local sample/cache
-    return { data: fallbackData, isLive: false };
-  }
+  const result = await secureFetch<T>(endpoint, options, fallbackData);
+  return {
+    data: result.data,
+    isLive: result.isLive,
+    error: result.error,
+  };
 }
 
 // =========================================================================
@@ -144,9 +114,12 @@ export const goApi = {
       { method: 'POST', body: JSON.stringify(req) },
       fallback
     );
-    if (res.isLive && res.data.jwt) {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('nexacampus_jwt_token', res.data.jwt);
+    if (res.isLive) {
+      if (typeof document !== 'undefined') {
+        document.cookie = 'school_session_active=1; path=/; max-age=1209600; SameSite=Strict; Secure';
+        try {
+          localStorage.removeItem('nexacampus_jwt_token');
+        } catch {}
       }
     }
     return res.data;
