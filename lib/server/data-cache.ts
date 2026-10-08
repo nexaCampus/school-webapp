@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
 const API_BASE_URL =
   process.env.GO_BACKEND_URL ||
   process.env.NEXT_PUBLIC_GO_API_URL ||
-  'http://localhost:8080';
+  'https://backend-school-go.onrender.com';
 
 /**
  * Deduplicated Server Component fetch for Student Profile (5-minute TTL)
