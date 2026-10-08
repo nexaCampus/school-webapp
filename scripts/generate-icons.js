@@ -101,16 +101,13 @@ function createSvg(size, isMaskable = false, isLite = true) {
 }
 
 async function generateAll() {
-  // 1. Write the standalone LITE SVG file: public/icons/icon-lite.svg
-  const liteSvg512 = createSvg(512, false, true);
-  fs.writeFileSync(path.join(outDir, 'icon-lite.svg'), liteSvg512);
-  console.log('Saved: icon-lite.svg');
+  // 1. Write the clean standard SVG files: public/icons/icon.svg and icon-lite.svg
+  const cleanSvg512 = createSvg(512, false, false);
+  fs.writeFileSync(path.join(outDir, 'icon.svg'), cleanSvg512);
+  fs.writeFileSync(path.join(outDir, 'icon-lite.svg'), cleanSvg512);
+  console.log('Saved clean: icon.svg & icon-lite.svg');
 
-  // Also update public/icons/icon.svg with lite branding
-  fs.writeFileSync(path.join(outDir, 'icon.svg'), liteSvg512);
-  console.log('Saved: icon.svg');
-
-  // 2. Generate all PNG icons from LITE SVG for PWA & home screen installation
+  // 2. Generate all PNG icons for PWA & home screen installation
   const sizes = [
     { name: 'icon-192x192.png', size: 192, maskable: false },
     { name: 'icon-512x512.png', size: 512, maskable: false },
@@ -123,7 +120,7 @@ async function generateAll() {
   ];
 
   for (const item of sizes) {
-    const svg = createSvg(item.size, item.maskable, true);
+    const svg = createSvg(item.size, item.maskable, false);
     const dest = path.join(outDir, item.name);
     await sharp(Buffer.from(svg))
       .png({ compressionLevel: 9 })
@@ -132,13 +129,13 @@ async function generateAll() {
   }
 
   // 3. Favicon (64x64)
-  const favSvg = createSvg(64, false, true);
+  const favSvg = createSvg(64, false, false);
   await sharp(Buffer.from(favSvg))
     .png()
     .toFile(path.join(__dirname, '..', 'public', 'favicon.png'));
   console.log('Generated: favicon.png');
 
-  console.log('All LITE icons generated successfully!');
+  console.log('All NexaCampus icons generated successfully!');
 }
 
 generateAll().catch((err) => {
