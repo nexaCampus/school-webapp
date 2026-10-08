@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
 import { sendTestNotification } from '@/lib/firebaseNotifications';
+import { goApi } from '@/lib/goApiClient';
+import type { NoticeItemData } from '@/lib/goApiTypes';
 
 const CATEGORIES = [
   'All Notices',
@@ -17,6 +19,7 @@ const CATEGORIES = [
 export default function NoticesPage() {
   const [activeCategory, setActiveCategory] = useState('All Notices');
   const [heroExpanded, setHeroExpanded] = useState(false);
+  const [liveNotices, setLiveNotices] = useState<NoticeItemData[]>([]);
   const [student, setStudent] = useState({
     name: 'Student',
     gradeSection: 'Class 12-E',
@@ -41,6 +44,8 @@ export default function NoticesPage() {
       .map((w: string) => w[0].toUpperCase())
       .join('') || 'ST';
     setStudent({ name, gradeSection, rollNo, initials });
+
+    goApi.getNotices().then(setLiveNotices);
   }, []);
 
   return (

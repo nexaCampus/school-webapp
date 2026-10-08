@@ -1,15 +1,31 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import { goApi } from '@/lib/goApiClient';
+import type { AttendanceResponseData } from '@/lib/goApiTypes';
 
 export default function AttendancePage() {
+  const [data, setData] = useState<AttendanceResponseData | null>(null);
+
   useEffect(() => {
     const s = getSession();
-    if (!s?.student) window.location.replace('/chooser');
+    if (!s?.student) {
+      window.location.replace('/chooser');
+      return;
+    }
+    goApi.getAttendance().then(setData);
   }, []);
+
+  const overall = data?.overallPercentage ?? 95.8;
+  const present = data?.daysPresent ?? 22;
+  const total = data?.totalWorkingDays ?? 24;
+  const absent = data?.daysAbsent ?? 1;
+  const late = data?.daysLate ?? 1;
+  const streak = data?.currentStreak ?? 14;
+  const holidays = data?.officialHolidays ?? 5;
 
   return (
     <PortalShell title="Attendance" activePath="attendance">
@@ -20,17 +36,17 @@ export default function AttendancePage() {
           <section className="relative bg-gradient-to-br from-white/95 via-surface-container-lowest to-surface-container-low/80 dark:from-[#252526] dark:via-[#252526] dark:to-[#252526] dark:border dark:border-[#3c3c3c] rounded-xl sm:rounded-lg p-3.5 sm:p-space-lg shadow-[0_8px_24px_-6px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
             <div className="flex items-center gap-3 sm:gap-space-md">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary/10 flex flex-col items-center justify-center flex-shrink-0">
-                <span className="text-[18px] sm:text-[22px] font-extrabold text-primary leading-none">95.8%</span>
+                <span className="text-[18px] sm:text-[22px] font-extrabold text-primary leading-none">{overall}%</span>
                 <span className="text-[10px] sm:text-body-sm text-on-surface-variant font-medium">present</span>
               </div>
               <div className="flex-1">
-                <p className="text-[14px] sm:text-headline-sm font-bold text-on-surface">22 / 24 days</p>
+                <p className="text-[14px] sm:text-headline-sm font-bold text-on-surface">{present} / {total} days</p>
                 <p className="text-[11px] sm:text-body-sm text-on-surface-variant mt-0.5">
-                  1 absent · 1 late · 5 holidays
+                  {absent} absent · {late} late · {holidays} holidays
                 </p>
                 <span className="inline-flex items-center gap-1 mt-1 sm:mt-space-xs text-[10px] sm:text-[11px] font-bold text-tertiary bg-tertiary/10 rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1">
                   <span className="material-symbols-outlined text-[13px] sm:text-[14px]">local_fire_department</span>
-                  14-day streak
+                  {streak}-day streak
                 </span>
               </div>
             </div>
@@ -78,22 +94,22 @@ export default function AttendancePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
             <div className="p-2.5 sm:p-4 rounded-xl sm:rounded-[14px] bg-surface-container-low dark:bg-[#1e1e1e] border border-outline/10 dark:border-[#3c3c3c] flex flex-col">
               <span className="text-[10px] sm:text-label-sm text-outline uppercase tracking-wider font-semibold">Total Days</span>
-              <span className="text-[18px] sm:text-headline-md text-on-surface font-bold mt-0.5 sm:mt-1">24</span>
+              <span className="text-[18px] sm:text-headline-md text-on-surface font-bold mt-0.5 sm:mt-1">{total}</span>
               <span className="text-[10px] sm:text-[11px] text-on-surface-variant">Academic working</span>
             </div>
             <div className="p-2.5 sm:p-4 rounded-xl sm:rounded-[14px] bg-tertiary/10 border border-tertiary/20 flex flex-col">
               <span className="text-[10px] sm:text-label-sm text-tertiary uppercase tracking-wider font-semibold">Present</span>
-              <span className="text-[18px] sm:text-headline-md text-tertiary font-bold mt-0.5 sm:mt-1">22</span>
+              <span className="text-[18px] sm:text-headline-md text-tertiary font-bold mt-0.5 sm:mt-1">{present}</span>
               <span className="text-[10px] sm:text-[11px] text-tertiary">Morning &amp; Lab</span>
             </div>
             <div className="p-2.5 sm:p-4 rounded-xl sm:rounded-[14px] bg-error/10 border border-error/20 flex flex-col">
               <span className="text-[10px] sm:text-label-sm text-error uppercase tracking-wider font-semibold">Absent</span>
-              <span className="text-[18px] sm:text-headline-md text-error font-bold mt-0.5 sm:mt-1">1</span>
+              <span className="text-[18px] sm:text-headline-md text-error font-bold mt-0.5 sm:mt-1">{absent}</span>
               <span className="text-[10px] sm:text-[11px] text-error">Sick leave approved</span>
             </div>
             <div className="p-2.5 sm:p-4 rounded-xl sm:rounded-[14px] bg-secondary-container/15 border border-secondary/20 flex flex-col">
               <span className="text-[10px] sm:text-label-sm text-secondary uppercase tracking-wider font-semibold">Late Marks</span>
-              <span className="text-[18px] sm:text-headline-md text-secondary font-bold mt-0.5 sm:mt-1">1</span>
+              <span className="text-[18px] sm:text-headline-md text-secondary font-bold mt-0.5 sm:mt-1">{late}</span>
               <span className="text-[10px] sm:text-[11px] text-secondary">Bus route delayed</span>
             </div>
           </div>

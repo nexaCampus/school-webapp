@@ -4,13 +4,19 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import { goApi } from '@/lib/goApiClient';
+import type { ExamResultsData, AdmitCardPayload } from '@/lib/goApiTypes';
 
 export default function ExamsPage() {
+  const [results, setResults] = useState<ExamResultsData | null>(null);
+  const [admitCard, setAdmitCard] = useState<AdmitCardPayload | null>(null);
   const [student, setStudent] = useState({
     name: 'Student',
     gradeSection: 'Grade 12 · E',
     rollAdmNo: '24 / 10211125',
     hallTicketNo: 'HALL-MID-2026-10211125',
+    centerCode: 'LCGVM-EX-004',
+    seatNumber: 'BLOCK C / SEAT #18',
   });
 
   useEffect(() => {
@@ -24,8 +30,31 @@ export default function ExamsPage() {
     const gradeSection = `${st.grade || 'Grade 12'} · ${st.section || 'E'}`;
     const rollAdmNo = `${String(st.rollNo || (st as Record<string, unknown>).rollNumber || '24')} / ${String(st.id || '10211125')}`;
     const hallTicketNo = `HALL-MID-2026-${String(st.id || '10211125')}`;
-    setStudent({ name, gradeSection, rollAdmNo, hallTicketNo });
+    setStudent((prev) => ({ ...prev, name, gradeSection, rollAdmNo, hallTicketNo }));
+
+    goApi.getResults().then(setResults);
+    goApi.getExamAdmitCard().then((card) => {
+      setAdmitCard(card);
+      if (card) {
+        setStudent((prev) => ({
+          ...prev,
+          centerCode: card.centerCode || prev.centerCode,
+          seatNumber: card.seatNumber || prev.seatNumber,
+          hallTicketNo: card.qrToken || prev.hallTicketNo,
+        }));
+      }
+    });
   }, []);
+
+  const aggregate = results?.aggregatePct ?? 94.4;
+  const totalMarks = results?.totalMarks ?? 472;
+  const maxMarks = results?.maxTotalMarks ?? 500;
+  const rank = results?.rankInClass ?? 2;
+  const subjects = results?.subjects || [
+    { subject: 'Physics', marksObtained: 96, maxMarks: 100 },
+    { subject: 'Maths', marksObtained: 98, maxMarks: 100 },
+    { subject: 'Chemistry', marksObtained: 92, maxMarks: 100 },
+  ];
 
   return (
     <PortalShell title="Exams & Results" activePath="exams">
@@ -101,28 +130,24 @@ export default function ExamsPage() {
               </div>
               <div className="mt-space-md p-4 rounded-xl bg-surface-container-low">
                 <div className="flex items-baseline justify-between">
-                  <span className="text-[28px] font-extrabold text-primary">94.4%</span>
+                  <span className="text-[28px] font-extrabold text-primary">{aggregate}%</span>
                   <span className="text-[12px] font-bold px-2.5 py-1 bg-tertiary-fixed text-on-tertiary-fixed rounded-full">
                     Grade A+
                   </span>
                 </div>
                 <p className="text-body-sm text-on-surface-variant mt-1 font-medium">
-                  Aggregate Score: 472 / 500 • Rank #2 in Cohort
+                  Aggregate Score: {totalMarks} / {maxMarks} • Rank #{rank} in Cohort
                 </p>
               </div>
               <div className="grid grid-cols-3 gap-2 mt-4 text-center">
-                <div className="p-2.5 rounded-lg bg-surface-container-low">
-                  <span className="text-[11px] text-outline">Physics</span>
-                  <p className="font-bold text-[14px] text-on-surface">96/100</p>
-                </div>
-                <div className="p-2.5 rounded-lg bg-surface-container-low">
-                  <span className="text-[11px] text-outline">Maths</span>
-                  <p className="font-bold text-[14px] text-on-surface">98/100</p>
-                </div>
-                <div className="p-2.5 rounded-lg bg-surface-container-low">
-                  <span className="text-[11px] text-outline">Chemistry</span>
-                  <p className="font-bold text-[14px] text-on-surface">91/100</p>
-                </div>
+                {subjects.slice(0, 3).map((sub) => (
+                  <div key={sub.subject} className="p-2.5 rounded-lg bg-surface-container-low">
+                    <span className="text-[11px] text-outline truncate block">{sub.subject}</span>
+                    <p className="font-bold text-[14px] text-on-surface mt-0.5">
+                      {sub.marksObtained}/{sub.maxMarks}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
             <button className="mt-space-md w-full h-[48px] rounded-full bg-primary/10 text-primary text-[14px] font-bold hover:bg-primary/15 transition-all">

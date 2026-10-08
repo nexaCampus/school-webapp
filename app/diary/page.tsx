@@ -14,6 +14,7 @@ import {
   getStudentIdentifier,
 } from '@/lib/studentCache';
 import { student as fallbackStudent } from '@/lib/data';
+import { goApi } from '@/lib/goApiClient';
 
 export default function DiaryPage() {
   const [activeFilter, setActiveFilter] = useState<'All' | 'Pending' | 'Submitted'>('All');
@@ -69,6 +70,9 @@ export default function DiaryPage() {
     if (studentId) {
       updateCachedDiaryTaskStatus(studentId, taskId, 'Submitted', generatedFileName);
     }
+
+    // Submit to Go backend
+    goApi.submitHomework({ homeworkId: taskId, notes: generatedFileName, submissionDate: new Date().toISOString() });
 
     setDiaryTasks((prev) =>
       prev.map((t) =>
