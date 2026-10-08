@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { normalizeAdmissionNumber, onAuthChange, saveStudent } from '@/lib/firebase';
 import { getSession, setSession } from '@/lib/session';
 import { student as mockStudent } from '@/lib/data';
+import { validateDateFormatYYYYMMDD, sanitizeHtml } from '@/lib/security';
 import AuthFooter from '@/components/AuthFooter';
 
 export const dynamic = 'force-dynamic';
@@ -147,25 +148,32 @@ function OnboardingForm() {
     if (!section) return setError('Enter the section (e.g. E)');
     if (!gender) return setError("Select the student's gender");
     if (cleanPhone.length !== 10) return setError('Enter a valid 10-digit contact number');
+
+    const isoDob = dobToISO(dob);
+    if (dob && !validateDateFormatYYYYMMDD(isoDob)) {
+      return setError('Please enter a valid Date of Birth (calendar date YYYY-MM-DD)');
+    }
+
     setError(null);
     setBusy(true);
     try {
+      const sanitizedName = sanitizeHtml(name.trim());
       const saved = await saveStudent({
         ...mockStudent,
         id: adm,
-        name: name.trim(),
-        displayName: name.trim(),
-        grade,
-        section,
+        name: sanitizedName,
+        displayName: sanitizedName,
+        grade: sanitizeHtml(grade.trim()),
+        section: sanitizeHtml(section.trim()),
         rollNo: roll.replace(/[^a-zA-Z0-9]/g, '').slice(0, 8) || mockStudent.rollNo,
         dob: dob.slice(0, 10) || mockStudent.dob,
         gender,
         contactPhone: `+91 ${cleanPhone}`,
         emergencyPhone: `+91 ${cleanPhone}`,
-        fatherName: father.trim().slice(0, 60) || mockStudent.fatherName,
-        motherName: mother.trim().slice(0, 60) || mockStudent.motherName,
+        fatherName: sanitizeHtml(father.trim().slice(0, 60)) || mockStudent.fatherName,
+        motherName: sanitizeHtml(mother.trim().slice(0, 60)) || mockStudent.motherName,
         guardianEmail: guardianEmail.trim().slice(0, 80) || mockStudent.guardianEmail,
-        residentialAddress: address.trim().slice(0, 140) || mockStudent.residentialAddress,
+        residentialAddress: sanitizeHtml(address.trim().slice(0, 140)) || mockStudent.residentialAddress,
         qrToken: `STU-LCGVM-${adm}-2026`,
       });
       const prev = getSession() ?? {
