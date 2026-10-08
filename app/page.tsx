@@ -1902,7 +1902,7 @@ export default function ExecutiveHomePage() {
               <span>•</span>
               <span>OWASP Top 20 Verified</span>
               <span>•</span>
-              <span className="font-mono">v2.5.3 (Lite Build)</span>
+              <span className="font-mono">v2.6.0 (Lite Build)</span>
             </div>
           </div>
 
