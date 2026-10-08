@@ -1,15 +1,32 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import { goApi } from '@/lib/goApiClient';
+import type { BusTravelData } from '@/lib/goApiTypes';
 
 export default function BusPage() {
+  const [bus, setBus] = useState<BusTravelData | null>(null);
+
   useEffect(() => {
     const s = getSession();
-    if (!s?.student) window.location.replace('/chooser');
+    if (!s?.student) {
+      window.location.replace('/chooser');
+      return;
+    }
+    goApi.getBusTravel().then(setBus);
   }, []);
+
+  const routeNo = bus?.routeNumber || 'ROUTE 14-A';
+  const plate = bus?.vehiclePlate || 'WB-02-AK-9821';
+  const eta = bus?.etaMinutes ?? 7;
+  const nextStop = bus?.nextStopName || 'Ultadanga Crossing';
+  const driver = bus?.driverName || 'Rajeshwar Singh';
+  const phone = bus?.driverPhone || '+91 98312 45890';
+  const myStop = bus?.studentStopName || 'Ultadanga Junction';
+  const pickupTime = bus?.studentScheduledTime || '07:35 AM';
 
   return (
     <PortalShell title="Bus Tracking" activePath="bus">
@@ -18,11 +35,11 @@ export default function BusPage() {
         <section className="relative bg-gradient-to-br from-primary to-primary-container rounded-lg p-space-lg text-white overflow-hidden shadow-[0_12px_28px_-6px_rgba(28,42,200,0.35)]">
           <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10"></div>
           <p className="font-label-sm text-label-sm font-bold tracking-widest opacity-80">
-            ROUTE 14-A · WB-02-AK-9821
+            {routeNo} · {plate}
           </p>
-          <p className="font-display-lg-mobile text-display-lg-mobile mt-1">7 min away</p>
+          <p className="font-display-lg-mobile text-display-lg-mobile mt-1">{eta} min away</p>
           <p className="font-body-md text-body-md opacity-90 mt-0.5">
-            Next stop: Ultadanga Crossing • On Time
+            Next stop: {nextStop} • On Time
           </p>
           <div className="h-2 rounded-full bg-white/25 mt-space-md overflow-hidden">
             <div className="h-full w-3/4 rounded-full bg-white animate-pulse"></div>
@@ -37,14 +54,14 @@ export default function BusPage() {
                 <span className="material-symbols-outlined text-on-surface-variant text-[24px]">person</span>
               </span>
               <div>
-                <p className="text-[15px] font-bold text-on-surface">Rajeshwar Singh</p>
+                <p className="text-[15px] font-bold text-on-surface">{driver}</p>
                 <p className="font-body-sm text-body-sm text-on-surface-variant">
-                  Designated Driver · Route 14-A
+                  Designated Driver · {routeNo}
                 </p>
               </div>
             </div>
             <a
-              href="tel:+919831245890"
+              href={`tel:${phone.replace(/\s+/g, '')}`}
               className="w-11 h-11 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center hover:bg-tertiary hover:text-white transition-colors"
             >
               <span className="material-symbols-outlined text-[20px]">call</span>
@@ -56,9 +73,9 @@ export default function BusPage() {
               <span className="material-symbols-outlined text-secondary text-[24px]">pin_drop</span>
             </span>
             <div>
-              <p className="text-[15px] font-bold text-on-surface">Your Stop: Ultadanga Junction</p>
+              <p className="text-[15px] font-bold text-on-surface">Your Stop: {myStop}</p>
               <p className="font-body-sm text-body-sm text-on-surface-variant">
-                Scheduled Pickup: 07:35 AM • Drop: 03:15 PM
+                Scheduled Pickup: {pickupTime} • Drop: 03:15 PM
               </p>
             </div>
           </div>
