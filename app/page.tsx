@@ -501,10 +501,10 @@ export default function ExecutiveHomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
             
-            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between">
+            <div className="levitate-card group p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between hover:border-[#1c2ac8]/50 dark:hover:border-[#3b49df]/60 hover:shadow-xl hover:shadow-[#1c2ac8]/15 dark:hover:shadow-[#3b49df]/20 cursor-pointer">
               <div className="flex items-center justify-between text-[#1c2ac8] dark:text-[#bdc2ff]">
                 <span className="text-[11px] font-bold uppercase tracking-wider">Attendance Rate</span>
-                <span className="material-symbols-outlined text-[20px]">event_available</span>
+                <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform duration-300">event_available</span>
               </div>
               <div className="mt-3">
                 <div className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] dark:text-white">99.2%</div>
@@ -514,10 +514,10 @@ export default function ExecutiveHomePage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between">
+            <div className="levitate-card group p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between hover:border-indigo-500/50 dark:hover:border-indigo-400/60 hover:shadow-xl hover:shadow-indigo-500/15 dark:hover:shadow-indigo-500/20 cursor-pointer">
               <div className="flex items-center justify-between text-indigo-600 dark:text-indigo-400">
                 <span className="text-[11px] font-bold uppercase tracking-wider">Digital Modules</span>
-                <span className="material-symbols-outlined text-[20px]">widgets</span>
+                <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform duration-300">widgets</span>
               </div>
               <div className="mt-3">
                 <div className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] dark:text-white">16 Active</div>
@@ -527,10 +527,10 @@ export default function ExecutiveHomePage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between">
+            <div className="levitate-card group p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between hover:border-amber-500/50 dark:hover:border-amber-400/60 hover:shadow-xl hover:shadow-amber-500/15 dark:hover:shadow-amber-500/20 cursor-pointer">
               <div className="flex items-center justify-between text-amber-500">
                 <span className="text-[11px] font-bold uppercase tracking-wider">L1 Cache Latency</span>
-                <span className="material-symbols-outlined text-[20px]">speed</span>
+                <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform duration-300">speed</span>
               </div>
               <div className="mt-3">
                 <div className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] dark:text-white">&lt;0.8ms</div>
@@ -540,10 +540,10 @@ export default function ExecutiveHomePage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between">
+            <div className="levitate-card group p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between hover:border-rose-500/50 dark:hover:border-rose-400/60 hover:shadow-xl hover:shadow-rose-500/15 dark:hover:shadow-rose-500/20 cursor-pointer">
               <div className="flex items-center justify-between text-rose-500">
                 <span className="text-[11px] font-bold uppercase tracking-wider">House Shield</span>
-                <span className="material-symbols-outlined text-[20px]">military_tech</span>
+                <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform duration-300">military_tech</span>
               </div>
               <div className="mt-3">
                 <div className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] dark:text-white">1,240 pts</div>
@@ -553,10 +553,10 @@ export default function ExecutiveHomePage() {
               </div>
             </div>
 
-            <div className="col-span-2 md:col-span-1 p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between">
+            <div className="col-span-2 md:col-span-1 levitate-card group p-4 rounded-2xl bg-[#faf8ff] dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] flex flex-col justify-between hover:border-teal-500/50 dark:hover:border-teal-400/60 hover:shadow-xl hover:shadow-teal-500/15 dark:hover:shadow-teal-500/20 cursor-pointer">
               <div className="flex items-center justify-between text-teal-600 dark:text-teal-400">
                 <span className="text-[11px] font-bold uppercase tracking-wider">OWASP Shield</span>
-                <span className="material-symbols-outlined text-[20px]">shield</span>
+                <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform duration-300">shield</span>
               </div>
               <div className="mt-3">
                 <div className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] dark:text-white">20-Point</div>
@@ -648,14 +648,14 @@ export default function ExecutiveHomePage() {
             <Link
               key={item.id}
               href={item.href}
-              className="group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/50 hover:shadow-xl hover:shadow-[#1c2ac8]/10 transition-all duration-200 flex flex-col justify-between"
+              className="levitate-card group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/60 hover:shadow-2xl hover:shadow-[#1c2ac8]/18 dark:hover:shadow-[#3b49df]/25 flex flex-col justify-between cursor-pointer"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className={`w-11 h-11 rounded-xl bg-gradient-to-tr ${item.accent} flex items-center justify-center text-white shadow-md`}>
+                  <div className={`w-11 h-11 rounded-xl bg-gradient-to-tr ${item.accent} flex items-center justify-center text-white shadow-md group-hover:scale-110 group-hover:rotate-1 transition-transform duration-300`}>
                     <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#f2f3ff] dark:bg-[#23263b] text-[#1c2ac8] dark:text-[#bdc2ff] border border-[#e2e7ff] dark:border-[#333752]">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#f2f3ff] dark:bg-[#23263b] text-[#1c2ac8] dark:text-[#bdc2ff] border border-[#e2e7ff] dark:border-[#333752] group-hover:border-[#3b49df]/40 transition-colors">
                     {item.badge}
                   </span>
                 </div>
@@ -669,7 +669,7 @@ export default function ExecutiveHomePage() {
 
               <div className="mt-5 pt-3 border-t border-[#f2f3ff] dark:border-[#24283d] flex items-center justify-between text-[12px] font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">
                 <span>Launch Screen</span>
-                <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1.5 transition-transform duration-300">
                   arrow_forward
                 </span>
               </div>
@@ -707,7 +707,7 @@ export default function ExecutiveHomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-7 gap-3 items-center text-center font-mono text-xs">
               
-              <div className="p-3.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42]">
+              <div className="levitate-card-sm p-3.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42] hover:border-[#1c2ac8]/60 dark:hover:border-[#3b49df]/70 hover:shadow-xl hover:shadow-[#1c2ac8]/15 dark:hover:shadow-[#3b49df]/20 cursor-pointer">
                 <div className="font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">Next.js Client</div>
                 <div className="text-[10px] text-[#454655] dark:text-[#a0a4c0] mt-1">3MB Chrome PWA</div>
               </div>
@@ -716,7 +716,7 @@ export default function ExecutiveHomePage() {
                 <span className="material-symbols-outlined">trending_flat</span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42]">
+              <div className="levitate-card-sm p-3.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42] hover:border-amber-500/60 dark:hover:border-amber-400/70 hover:shadow-xl hover:shadow-amber-500/15 dark:hover:shadow-amber-500/20 cursor-pointer">
                 <div className="font-bold text-amber-600 dark:text-amber-400">HttpOnly Cookie</div>
                 <div className="text-[10px] text-[#454655] dark:text-[#a0a4c0] mt-1">school_auth_token</div>
               </div>
@@ -725,7 +725,7 @@ export default function ExecutiveHomePage() {
                 <span className="material-symbols-outlined">trending_flat</span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800">
+              <div className="levitate-card-sm p-3.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 hover:border-blue-500/70 dark:hover:border-blue-400/80 hover:shadow-xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/25 cursor-pointer">
                 <div className="font-bold text-blue-700 dark:text-blue-300">Go v1.23 Engine</div>
                 <div className="text-[10px] text-blue-600 dark:text-blue-400 mt-1">TinyLFU &lt;0.8ms</div>
               </div>
@@ -734,7 +734,7 @@ export default function ExecutiveHomePage() {
                 <span className="material-symbols-outlined">trending_flat</span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42]">
+              <div className="levitate-card-sm p-3.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#292c42] hover:border-emerald-500/60 dark:hover:border-emerald-400/70 hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-500/20 cursor-pointer">
                 <div className="font-bold text-emerald-600 dark:text-emerald-400">Postgres / SQLite</div>
                 <div className="text-[10px] text-[#454655] dark:text-[#a0a4c0] mt-1">SingleFlight Coalesced</div>
               </div>
@@ -783,12 +783,12 @@ export default function ExecutiveHomePage() {
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40]"
+                  className="levitate-card-sm group/sec flex items-center gap-2 p-2.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] hover:border-emerald-500/50 dark:hover:border-emerald-400/60 hover:shadow-lg hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/15 cursor-pointer"
                 >
-                  <span className="material-symbols-outlined text-emerald-500 text-[16px] flex-shrink-0">
+                  <span className="material-symbols-outlined text-emerald-500 group-hover/sec:scale-115 group-hover/sec:text-emerald-400 text-[16px] flex-shrink-0 transition-transform duration-300">
                     check_circle
                   </span>
-                  <span className="font-medium text-[#131b2e] dark:text-[#eaedff]">{item}</span>
+                  <span className="font-medium text-[#131b2e] dark:text-[#eaedff] group-hover/sec:text-emerald-600 dark:group-hover/sec:text-emerald-300 transition-colors">{item}</span>
                 </div>
               ))}
             </div>
@@ -817,9 +817,10 @@ export default function ExecutiveHomePage() {
         <div className="max-w-3xl mx-auto relative pl-6 sm:pl-8 border-l-2 border-[#1c2ac8]/30 dark:border-[#3b49df]/40 space-y-8">
           
           {/* Period 1 */}
+          {/* Period 1 */}
           <div className="relative">
             <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-[#12131a]" />
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+            <div className="levitate-card-sm p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/50 hover:shadow-xl hover:shadow-[#1c2ac8]/10 cursor-pointer shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <span className="font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 1 • 08:30 AM – 09:15 AM</span>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold text-[10px]">COMPLETED</span>
@@ -836,7 +837,7 @@ export default function ExecutiveHomePage() {
           {/* Period 2 */}
           <div className="relative">
             <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-[#12131a]" />
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+            <div className="levitate-card-sm p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/50 hover:shadow-xl hover:shadow-[#1c2ac8]/10 cursor-pointer shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <span className="font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 2 • 09:15 AM – 10:00 AM</span>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 font-bold text-[10px]">COMPLETED</span>
@@ -855,7 +856,7 @@ export default function ExecutiveHomePage() {
             <div className="absolute -left-[35px] sm:-left-[43px] top-1 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white ring-4 ring-emerald-300/40 dark:ring-emerald-900/60 animate-bounce">
               <span className="material-symbols-outlined text-[14px]">bolt</span>
             </div>
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-[#1b213b] dark:to-[#171d33] border-2 border-[#1c2ac8] dark:border-[#3b49df] shadow-md">
+            <div className="levitate-card-sm p-5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-[#1b213b] dark:to-[#171d33] border-2 border-[#1c2ac8] dark:border-[#3b49df] hover:border-[#3b49df] hover:shadow-2xl hover:shadow-[#1c2ac8]/20 cursor-pointer shadow-md">
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <span className="font-extrabold text-[#1c2ac8] dark:text-[#bdc2ff]">Period 4 • 11:15 AM – 12:15 PM</span>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-extrabold text-[10px] animate-pulse">
@@ -877,7 +878,7 @@ export default function ExecutiveHomePage() {
           {/* Period 4 (Recess) */}
           <div className="relative">
             <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-amber-400 ring-4 ring-white dark:ring-[#12131a]" />
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+            <div className="levitate-card-sm p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/10 cursor-pointer shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <span className="font-bold text-amber-600 dark:text-amber-400">Recess • 12:15 PM – 12:55 PM</span>
                 <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 font-bold text-[10px]">UPCOMING</span>
@@ -894,7 +895,7 @@ export default function ExecutiveHomePage() {
           {/* Period 5 */}
           <div className="relative">
             <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-slate-400 ring-4 ring-white dark:ring-[#12131a]" />
-            <div className="p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] shadow-sm">
+            <div className="levitate-card-sm p-4 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10 cursor-pointer shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <span className="font-bold text-[#454655] dark:text-[#a0a4c0]">Period 5 • 12:55 PM – 01:40 PM</span>
                 <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 font-bold text-[10px]">UPCOMING</span>

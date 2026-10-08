@@ -61,6 +61,29 @@
   font-family: 'Virgil', 'Caveat', cursive, sans-serif !important;
 }
 
+/* Smooth Hardware-Accelerated Levitation Physics */
+.levitate-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.levitate-card:hover {
+  transform: translate3d(0, -8px, 0) scale(1.02);
+}
+
+.levitate-card-sm {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.levitate-card-sm:hover {
+  transform: translate3d(0, -5px, 0) scale(1.02);
+}
+
 
 /* Base layer: ensure smooth, natural document scrolling and Poppins font everywhere */
 html {
