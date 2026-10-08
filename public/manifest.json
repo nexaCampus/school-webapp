@@ -1,7 +1,7 @@
 {
   "name": "NexaCampus - Lions Calcutta Greater Vidya Mandir",
   "short_name": "NexaCampus",
-  "description": "Official Student & Guardian Academic Portal — Lions Calcutta Greater Vidya Mandir (LCGVM • CISCE)",
+  "description": "Official Student & Guardian Academic Portal - Lions Calcutta Greater Vidya Mandir (LCGVM - CISCE)",
   "start_url": "/?source=pwa",
   "scope": "/",
   "id": "/?source=pwa",

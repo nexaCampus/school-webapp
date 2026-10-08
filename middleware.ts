@@ -9,16 +9,21 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Bypass static assets and internal Next.js paths
+  // 1. Bypass static assets, service worker, manifests, fonts, and internal Next.js paths
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/icons') ||
+    pathname.startsWith('/fonts') ||
+    pathname.startsWith('/models') ||
     pathname.startsWith('/api') ||
+    pathname === '/sw.js' ||
+    pathname === '/manifest.json' ||
+    pathname === '/manifest.webmanifest' ||
     pathname === '/favicon.ico' ||
     pathname === '/favicon.png' ||
-    pathname === '/manifest.webmanifest' ||
     pathname === '/robots.txt' ||
-    pathname === '/sitemap.xml'
+    pathname === '/sitemap.xml' ||
+    /\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2|woff|ttf|glb|gltf|js|css|json)$/i.test(pathname)
   ) {
     return NextResponse.next();
   }
@@ -51,8 +56,8 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except static files & images
+     * Match all request paths except static files, PWA files & images
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|icons|fonts|models|sw\\.js|manifest\\.json|manifest\\.webmanifest|favicon\\.ico|favicon\\.png|robots\\.txt|sitemap\\.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2|woff|ttf|glb|gltf|js|css|json)$).*)',
   ],
 };
