@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Poppins } from 'next/font/google';
 import BootSplash from '@/components/BootSplash';
 import PWARegistration from '@/components/PWARegistration';
+import QueryProvider from '@/components/QueryProvider';
 import './globals.css';
 
 const poppins = Poppins({
@@ -75,10 +76,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={`${poppins.className} font-sans antialiased bg-surface text-on-surface`}>
-        <BootSplash>
-          {children}
-          <PWARegistration />
-        </BootSplash>
+        <QueryProvider>
+          <BootSplash>
+            {children}
+            <PWARegistration />
+          </BootSplash>
+        </QueryProvider>
       </body>
     </html>
   );
