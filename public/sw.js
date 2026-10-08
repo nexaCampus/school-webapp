@@ -1,8 +1,9 @@
-const CACHE_NAME = 'nexacampus-pwa-v2.6.0';
+const CACHE_NAME = 'nexacampus-pwa-v2.6.1';
 const PRECACHE_ASSETS = [
   '/',
   '/manifest.json',
   '/manifest.webmanifest',
+  '/fonts/Virgil.woff2',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
   '/icons/icon-maskable-192x192.png',

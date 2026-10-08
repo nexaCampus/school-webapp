@@ -48,17 +48,19 @@
   --color-on-tertiary-container: #6ffbbe;
 }
 
+
 @font-face {
   font-family: 'Virgil';
-  src: url('https://unpkg.com/excalidraw/dist/excalidraw-assets/Virgil.woff2') format('woff2');
+  src: url('/fonts/Virgil.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 .font-virgil {
-  font-family: 'Virgil', 'Caveat', 'Comic Neue', cursive, sans-serif !important;
+  font-family: 'Virgil', 'Caveat', cursive, sans-serif !important;
 }
+
 
 /* Base layer: ensure smooth, natural document scrolling and Poppins font everywhere */
 html {
