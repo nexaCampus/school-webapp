@@ -2,12 +2,12 @@ export default function LogoEmblem({ className = 'h-9 w-9' }: { className?: stri
   return (
     <div
       className={`relative flex items-center justify-center flex-shrink-0 select-none ${className}`}
-      aria-label="NexaCampus Lite Emblem"
+      aria-label="NexaCampus Emblem"
     >
-      {/* Official NexaCampus Lite SVG Icon */}
+      {/* Official NexaCampus SVG Icon */}
       <img
-        src="/icons/icon-lite.svg"
-        alt="NexaCampus Lite"
+        src="/icons/icon.svg"
+        alt="NexaCampus"
         className="w-full h-full object-contain drop-shadow-sm rounded-[22%]"
       />
       <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5 pointer-events-none">

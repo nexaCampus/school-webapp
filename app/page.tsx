@@ -258,9 +258,6 @@ export default function ExecutiveHomePage() {
                   <span className="font-extrabold text-[17px] tracking-tight text-[#1c2ac8] dark:text-[#bdc2ff] group-hover:text-[#3b49df] transition-colors">
                     NexaCampus
                   </span>
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#fea619]/15 text-[#855300] dark:text-[#ffb95f] border border-[#fea619]/30">
-                    LITE
-                  </span>
                 </div>
                 <span className="text-[11px] text-[#454655] dark:text-[#a0a4c0] font-medium hidden sm:inline-block">
                   Lions Calcutta Greater Vidya Mandir • CISCE
@@ -591,7 +588,7 @@ export default function ExecutiveHomePage() {
           </div>
 
           {/* Module Filter Chips */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-full bg-[#eaedff] dark:bg-[#1a1c2b] border border-[#c6c5d8]/40 dark:border-[#2c3048]">
+          <div className="flex flex-nowrap items-center gap-1.5 p-1 rounded-full bg-[#eaedff] dark:bg-[#1a1c2b] border border-[#c6c5d8]/40 dark:border-[#2c3048] overflow-x-auto scrollbar-hide">
             <button
               onClick={() => setActiveModuleTab('all')}
               className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
@@ -756,7 +753,7 @@ export default function ExecutiveHomePage() {
                   Full compliance across OWASP Top 10, cryptographic HMAC webhooks, and session isolation.
                 </p>
               </div>
-              <span className="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/30">
+              <span className="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/30 whitespace-nowrap shrink-0">
                 20 / 20 PASS
               </span>
             </div>
@@ -1804,8 +1801,8 @@ export default function ExecutiveHomePage() {
       {/* =========================================================================
           DIV 15: GRAND INSTITUTIONAL CTA, LEADERSHIP MESSAGE & CAMPUS FOOTER
           ========================================================================= */}
-      <footer id="institutional-footer" className="bg-white dark:bg-[#0e0f17] border-t border-[#e2e7ff] dark:border-[#222538] pt-16 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+      <footer id="institutional-footer" className="bg-white dark:bg-[#0e0f17] border-t border-[#e2e7ff] dark:border-[#222538] pt-16 pb-0 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pb-12 sm:pb-16">
           
           {/* Institutional Grand Banner */}
           <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-[#1c2ac8] via-[#2a38db] to-[#121c87] text-white shadow-2xl relative overflow-hidden mb-16">
@@ -1838,13 +1835,13 @@ export default function ExecutiveHomePage() {
           </div>
 
           {/* Sitemaps & Links */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 pb-12 border-b border-[#e2e7ff] dark:border-[#222538] text-xs">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 text-xs">
             
             <div className="col-span-2">
               <div className="flex items-center gap-2.5 mb-3">
                 <LogoEmblem className="h-8 w-8" />
                 <span className="font-extrabold text-base text-[#1c2ac8] dark:text-[#bdc2ff]">
-                  NexaCampus Lite
+                  NexaCampus
                 </span>
               </div>
               <p className="text-[#454655] dark:text-[#a0a4c0] text-xs leading-relaxed max-w-sm">
@@ -1892,20 +1889,18 @@ export default function ExecutiveHomePage() {
 
           </div>
 
-          {/* Copyright & Technical Signature */}
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#454655] dark:text-[#a0a4c0]">
-            <div>
-              © 2026 Lions Calcutta Greater Vidya Mandir • All Rights Reserved.
-            </div>
-            <div className="flex items-center gap-4">
-              <span>CISCE School Code #WB-243</span>
-              <span>•</span>
-              <span>OWASP Top 20 Verified</span>
-              <span>•</span>
-              <span className="font-mono">v2.6.0 (Lite Build)</span>
-            </div>
-          </div>
+        </div>
 
+        {/* =========================================================================
+            INSPIRUX-STYLE FULL-BLEED DISPLAY BRAND BANNER (BLUE & WHITE)
+            Edge-to-edge vibrant Royal Blue block with giant White 'nexaCampus' typography
+            ========================================================================= */}
+        <div className="w-full bg-[#1c2ac8] dark:bg-[#1622a5] text-white pt-10 sm:pt-16 md:pt-20 lg:pt-24 pb-0 overflow-hidden select-none border-t border-[#1c2ac8]">
+          <div className="w-full flex items-end justify-center px-1 sm:px-2 md:px-4 overflow-hidden">
+            <span className="text-[14.6vw] sm:text-[14.8vw] md:text-[14.3vw] font-black tracking-tighter leading-[0.76] text-white text-center whitespace-nowrap select-none drop-shadow-md pointer-events-none block translate-y-[2%]">
+              nexaCampus
+            </span>
+          </div>
         </div>
       </footer>
 
