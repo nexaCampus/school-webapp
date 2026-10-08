@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getOrCompute, invalidateCachePrefix } from '@/lib/server/lru-cache';
 import { CACHE_TTLS } from '@/lib/query-keys';
 
-const GO_BACKEND_URL = process.env.GO_BACKEND_URL || 'http://localhost:8080';
+const GO_BACKEND_URL =
+  process.env.GO_BACKEND_URL ||
+  process.env.NEXT_PUBLIC_GO_API_URL ||
+  'https://backend-school-go.onrender.com';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params;
@@ -75,12 +78,14 @@ async function proxyGetRequest(request: NextRequest, slug: string[]) {
     }
   });
 
-  const targetUrl = `${GO_BACKEND_URL}/api/v1/${path}${search}`;
+  const cleanPath = path.startsWith('v1/') ? path.slice(3) : path;
+  const baseUrl = GO_BACKEND_URL.replace(/\/+$/, '');
+  const targetUrl = `${baseUrl}/v1/${cleanPath}${search}`;
 
   try {
     const cachedResult = await getOrCompute(cacheKey, ttl, async () => {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
 
       const goResponse = await fetch(targetUrl, {
         method: 'GET',
@@ -119,7 +124,9 @@ async function proxyGetRequest(request: NextRequest, slug: string[]) {
 async function proxyMutationRequest(request: NextRequest, slug: string[]) {
   const path = slug.join('/');
   const search = request.nextUrl.search;
-  const targetUrl = `${GO_BACKEND_URL}/api/v1/${path}${search}`;
+  const cleanPath = path.startsWith('v1/') ? path.slice(3) : path;
+  const baseUrl = GO_BACKEND_URL.replace(/\/+$/, '');
+  const targetUrl = `${baseUrl}/v1/${cleanPath}${search}`;
 
   const forwardHeaders = new Headers();
   request.headers.forEach((value, key) => {
@@ -131,7 +138,7 @@ async function proxyMutationRequest(request: NextRequest, slug: string[]) {
   try {
     const body = ['POST', 'PUT', 'PATCH'].includes(request.method) ? await request.text() : undefined;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     const goResponse = await fetch(targetUrl, {
       method: request.method,
