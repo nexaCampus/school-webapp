@@ -6,12 +6,14 @@ import { useRouter } from 'next/navigation';
 import { getSession, logoutUser, switchAccount } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
 import NotificationPrompt from '@/components/NotificationPrompt';
+import Toast from '@/components/Toast';
 
 export default function ProfilePage() {
   const router = useRouter();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showSwitchModal, setShowSwitchModal] = useState(false);
   const [isProcessingAuth, setIsProcessingAuth] = useState(false);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [studentData, setStudentData] = useState({
     name: 'Student',
     grade: '—',
@@ -469,7 +471,14 @@ export default function ProfilePage() {
               </div>
               <div className="rounded-lg bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-space-xs">
                 <button
-                  className="w-full flex items-center justify-between p-space-sm rounded-DEFAULT hover:bg-surface-container transition-colors text-left group"
+                  onClick={() =>
+                    setToastMsg(
+                      `Password reset link dispatched to ${
+                        studentData.email !== 'Not provided' ? studentData.email : 'registered parent email'
+                      }.`
+                    )
+                  }
+                  className="w-full flex items-center justify-between p-space-sm rounded-DEFAULT hover:bg-surface-container transition-colors text-left group cursor-pointer"
                   type="button"
                 >
                   <div className="flex items-center gap-space-sm min-w-0">
@@ -566,6 +575,9 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+      )}
+      {toastMsg && (
+        <Toast message={toastMsg} type="success" onClose={() => setToastMsg(null)} />
       )}
     </PortalShell>
   );
