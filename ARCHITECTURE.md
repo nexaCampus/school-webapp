@@ -14,7 +14,7 @@ The application adheres to a clean, layered architecture with strict separation 
 graph TD
     subgraph Presentation ["Presentation Layer (UI)"]
         Pages["App Router Pages (/home, /academics, /profile...)"]
-        Common["Modular UI Components (Modal, Badge, Button)"]
+        Common["Modular UI Components (Modal, Badge, Button, RevealMore)"]
         Feedback["Feedback Systems (ErrorBoundary, Toast)"]
     end
 
@@ -79,7 +79,7 @@ school-webapp/
 │   ├── home/ academics/ …        # Portal feature screens (one directory per module)
 │   └── globals.css               # Design tokens & global styles
 ├── components/
-│   ├── common/                   # UI primitives: Modal, Badge, Button (+ index barrel)
+│   ├── common/                   # UI primitives: Modal, Badge, Button, RevealMore (+ index barrel)
 │   ├── feedback/                 # ErrorBoundary and other resilience surfaces
 │   ├── PortalShell.tsx           # Institutional portal chrome (desktop nav, mobile tabs)
 │   └── QueryProvider.tsx         # TanStack Query provider, BootSplash, Toasts, PWA
@@ -186,6 +186,12 @@ school-webapp/
   - `<Modal />`: Accessible dialog with ESC dismissal, backdrop blur, and primary/danger variants.
   - `<Badge />`: Semantic status and count pills.
   - `<Button />`: Standardized button variants with loading indicators.
+  - `<RevealMore />`: Phone-only progressive-reveal control (`Showing X of Y` + expand/collapse arrow) driving the micro-module directory and the security matrix.
+- Homepage-local constants (`MODULES_DATA`, `SECURITY_AUDIT_CHECKS`, `buildMonthCalendar`) live in `app/page.tsx` beside the grids that consume them; shared interactive controls live here.
+
+### 4.7. Tailwind Token Caveat (opacity modifiers)
+
+Surface tokens are defined as `background-color: var(--color-surface, #faf8ff)` with **no `--tw-bg-opacity`**, so Tailwind cannot apply an opacity modifier to them — `bg-surface/90` silently generates no CSS and the element ships with no background at all (this once made the cookie panel fully transparent). When transparency is needed, spell out a colour Tailwind can decompose, e.g. `bg-[#faf8ff]/90`. After any change involving `/opacity` utilities, confirm the rule exists in the built stylesheet; a missing rule produces no build error.
 
 ---
 
