@@ -9,7 +9,7 @@ import {
   sendTestNotification,
   type PushPermissionStatus,
   type NotificationResult,
-} from '../firebaseNotifications';
+} from '../firebase-notifications';
 
 export const notificationService = {
   isSupported: isNotificationSupported,

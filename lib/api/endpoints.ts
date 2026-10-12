@@ -1,98 +1,93 @@
 /**
  * NexaCampus API Endpoints Catalog
- * Centralizes all 72 API endpoint paths for the Next.js frontend <-> Go backend connection.
+ *
+ * Single source of truth for every route exposed by the Go backend
+ * (https://backend-school-go.onrender.com). Consumed by `lib/api/go-client.ts`
+ * so that no endpoint path is hardcoded inside business logic.
+ *
+ * Paths are relative to `apiEnv.apiBaseUrl`. Query parameters are expressed as
+ * `(query)` builders to keep encoding concerns out of call sites.
  */
 
 export const API_ENDPOINTS = {
   AUTH: {
     SESSION: '/api/v1/auth/session',
     REFRESH: '/v1/auth/refresh',
-    LOGOUT: '/api/v1/auth/logout',
   },
   STUDENTS: {
     PROFILE: '/api/v1/studentData',
-    ROSTER: '/api/v1/students',
-    UPDATE: (id: string) => `/api/v1/students/${id}`,
+    PROFILE_FOR: (admissionId: string) => `/api/v1/studentData?admissionId=${encodeURIComponent(admissionId)}`,
+    CREATE: '/api/v1/newStudentData',
+    UPDATE: '/api/v1/updateStudentData',
   },
-  TIMETABLE: {
-    GET: '/api/v1/timeTable',
-    LAB_SESSIONS: '/api/v1/timeTable/labs',
-    SYLLABUS: '/api/v1/timeTable/syllabus',
-  },
-  DIARY: {
-    ENTRIES: '/api/v1/dairy',
-    CREATE: '/api/v1/dairy/entry',
-  },
-  HOMEWORK: {
-    LIST: '/api/v1/homework',
-    SUBMIT: '/api/v1/homework/submit',
+  ACADEMICS: {
+    TIMETABLE: '/api/v1/timeTable',
+    TIMETABLE_FOR: (classGrade: string, section: string) =>
+      `/api/v1/timeTable?classGrade=${encodeURIComponent(classGrade)}&section=${encodeURIComponent(section)}`,
+    LAB_TIMETABLE: '/api/v1/labTimeTable',
+    SYLLABUS: '/api/v1/syllabus',
+    DIARY: '/api/v1/dairy',
+    HOMEWORK: '/api/v1/homework',
+    HOMEWORK_SUBMIT: '/api/v1/homework/submit',
   },
   ATTENDANCE: {
     LOG: '/api/v1/attendance',
     LEAVE_REQUESTS: '/api/v1/leaveRequest',
-    APPLY_LEAVE: '/api/v1/leaveRequest/apply',
   },
   EXAMS: {
-    TIMETABLE: '/api/v1/exam/timetable',
-    HALL_TICKET: '/api/v1/exam/hallticket',
-    RESULTS: '/api/v1/exam/results',
+    TIMETABLE: '/api/v1/examTimeTable',
+    ADMIT_CARD: '/api/v1/exam',
+    RESULTS: '/api/v1/results',
   },
   FEES: {
-    SUMMARY: '/api/v1/fees',
-    ORDERS: '/api/v1/payment/order',
-    VERIFY: '/api/v1/payment/verify',
-    RECEIPTS: '/api/v1/fees/receipts',
-    TAX_RECEIPT: '/api/v1/fees/taxReceipt',
+    SUMMARY: '/api/v1/fees/summary',
+    CREATE_ORDER: '/api/v1/payment',
+    VERIFY_PAYMENT: '/api/v1/payment/verify',
+    HISTORY: '/api/v1/paymentHistory',
+    TAX_RECEIPT: '/api/v1/taxReceipt',
   },
   TRANSPORT: {
     BUS_GPS: '/api/v1/busTravel',
   },
   CANTEEN: {
     WALLET: '/api/v1/canteenWallet',
-    ORDERS: '/api/v1/canteen/order',
+    RECHARGE: '/api/v1/canteenWallet/recharge',
+    ORDER_HISTORY: '/api/v1/canteenFoodOrdered',
   },
   HALLPASS: {
     GET: '/api/v1/hallPass',
-    REQUEST: '/api/v1/hallPass/request',
   },
   HEALTH: {
-    PROFILE: '/api/v1/health',
+    STUDENT: '/api/v1/studentHealthInfo',
+    SYSTEM: '/api/v1/health',
   },
   STORE: {
-    CATALOG: '/api/v1/store/catalog',
-    CART: '/api/v1/store/cart',
-    CHECKOUT: '/api/v1/store/checkout',
+    CATALOG: '/api/v1/schoolStoreItems',
   },
   LIBRARY: {
     CATALOG: '/api/v1/library',
-    BORROW: '/api/v1/library/borrow',
   },
   CLUBS: {
-    LIST: '/api/v1/clubs',
-    POINTS: '/api/v1/clubs/points',
+    ACTIVITIES: '/api/v1/clubsAndActivities',
+    HOUSE_POINTS: '/api/v1/housePoints',
+  },
+  LOST_FOUND: {
+    ITEMS: '/api/v1/lostItems',
+  },
+  GALLERY: {
+    ALBUMS: '/api/v1/photoGalleryAlbums',
+  },
+  PARENT_DESK: {
+    THREADS: '/api/v1/parentDesk',
+  },
+  PTM: {
+    SEARCH_TEACHERS: '/api/v1/ptmSearchTeachers',
   },
   NOTICES: {
     LIST: '/api/v1/notices',
   },
-  PARENT_DESK: {
-    THREADS: '/api/v1/parentDesk',
-    MESSAGES: (threadId: string) => `/api/v1/parentDesk/${threadId}/messages`,
-    POST_MESSAGE: '/api/v1/parentDesk/send',
-  },
-  PTM: {
-    SLOTS: '/api/v1/ptm/slots',
-    BOOK: '/api/v1/ptm/book',
-  },
-  LOST_FOUND: {
-    LIST: '/api/v1/lostFound',
-    REPORT: '/api/v1/lostFound/report',
-  },
-  GALLERY: {
-    ALBUMS: '/api/v1/photoGallery',
-  },
-  SYSTEM: {
-    HEALTH: '/api/v1/health/system',
-  },
 } as const;
+
+export type ApiEndpointGroup = keyof typeof API_ENDPOINTS;
 
 export default API_ENDPOINTS;

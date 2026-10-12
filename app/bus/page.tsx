@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
-import { goApi } from '@/lib/goApiClient';
-import type { BusTravelData } from '@/lib/goApiTypes';
+import { goApi } from '@/lib/api/go-client';
+import type { BusTravelData } from '@/lib/api/go-types';
 
 export default function BusPage() {
   const [bus, setBus] = useState<BusTravelData | null>(null);

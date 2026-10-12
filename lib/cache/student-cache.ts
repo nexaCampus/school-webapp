@@ -1,4 +1,4 @@
-import type { Student } from './data';
+import type { Student } from '../data';
 
 export const TWO_WEEKS_MS = 14 * 24 * 60 * 60 * 1000; // 14 days in milliseconds
 export const ACTIVE_STUDENT_ID_KEY = 'nexacampus.active_student_id.v1';

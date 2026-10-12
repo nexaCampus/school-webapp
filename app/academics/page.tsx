@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
 import Toast from '@/components/Toast';
-import { goApi } from '@/lib/goApiClient';
+import { goApi } from '@/lib/api/go-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query-keys';
 

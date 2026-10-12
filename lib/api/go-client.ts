@@ -47,7 +47,7 @@ import type {
   NoticeItemData,
   StaffMemberData,
   GoSystemHealthData,
-} from './goApiTypes';
+} from './go-types';
 
 import {
   student as mockStudent,
@@ -66,9 +66,10 @@ import {
   storeItems as mockStoreItems,
   lostFound as mockLostFound,
   clubs as mockClubs,
-} from './data';
-import { getSession } from './session';
-import { secureFetch } from './apiClient';
+} from '../data';
+import { getSession } from '../session';
+import { secureFetch } from './client';
+import { API_ENDPOINTS } from './endpoints';
 
 function generateAuditRef(): string {
   const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -110,7 +111,7 @@ export const goApi = {
       auditRef,
     };
     const res = await request<AuthSessionResponse>(
-      '/api/v1/auth/session',
+      API_ENDPOINTS.AUTH.SESSION,
       { method: 'POST', body: JSON.stringify(req) },
       fallback
     );
@@ -159,7 +160,7 @@ export const goApi = {
 
     const targetId = admissionId || fallback.admissionId;
     const res = await request<StudentProfileData>(
-      `/api/v1/studentData?admissionId=${targetId}`,
+      API_ENDPOINTS.STUDENTS.PROFILE_FOR(targetId),
       { method: 'GET' },
       fallback
     );
@@ -169,7 +170,7 @@ export const goApi = {
   async newStudentData(req: NewStudentRequest): Promise<{ success: boolean; auditRef: string }> {
     const auditRef = generateAuditRef();
     const res = await request(
-      '/api/v1/newStudentData',
+      API_ENDPOINTS.STUDENTS.CREATE,
       { method: 'POST', body: JSON.stringify(req) },
       { success: true, auditRef }
     );
@@ -179,7 +180,7 @@ export const goApi = {
   async updateStudentData(req: UpdateStudentRequest): Promise<{ success: boolean; auditRef: string }> {
     const auditRef = generateAuditRef();
     const res = await request(
-      '/api/v1/updateStudentData',
+      API_ENDPOINTS.STUDENTS.UPDATE,
       { method: 'PUT', body: JSON.stringify(req) },
       { success: true, auditRef }
     );
@@ -214,7 +215,7 @@ export const goApi = {
       ],
     };
     const res = await request<TimeTableResponse>(
-      `/api/v1/timeTable?classGrade=${classGrade}&section=${section}`,
+      API_ENDPOINTS.ACADEMICS.TIMETABLE_FOR(classGrade, section),
       { method: 'GET' },
       fallback
     );
@@ -244,7 +245,7 @@ export const goApi = {
         safetyGuidelines: ['Save all projects to local drive', 'No food inside computer lab'],
       },
     ];
-    const res = await request<LabSessionItem[]>('/api/v1/labTimeTable', { method: 'GET' }, fallback);
+    const res = await request<LabSessionItem[]>(API_ENDPOINTS.ACADEMICS.LAB_TIMETABLE, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -277,7 +278,7 @@ export const goApi = {
         },
       ],
     };
-    const res = await request<SyllabusResponse>('/api/v1/syllabus', { method: 'GET' }, fallback);
+    const res = await request<SyllabusResponse>(API_ENDPOINTS.ACADEMICS.SYLLABUS, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -305,14 +306,14 @@ export const goApi = {
         priority: 'HIGH',
       },
     ];
-    const res = await request<DiaryEntryItem[]>('/api/v1/dairy', { method: 'GET' }, fallback);
+    const res = await request<DiaryEntryItem[]>(API_ENDPOINTS.ACADEMICS.DIARY, { method: 'GET' }, fallback);
     return res.data;
   },
 
   async postDairy(entry: CreateDiaryRequest): Promise<{ success: boolean; auditRef: string }> {
     const auditRef = generateAuditRef();
     const res = await request(
-      '/api/v1/dairy',
+      API_ENDPOINTS.ACADEMICS.DIARY,
       { method: 'POST', body: JSON.stringify(entry) },
       { success: true, auditRef }
     );
@@ -331,14 +332,14 @@ export const goApi = {
       assignedDate: 'Oct 06, 2026',
       submissionStatus: i === 0 ? 'PENDING' : 'SUBMITTED',
     }));
-    const res = await request<HomeworkItemData[]>('/api/v1/homework', { method: 'GET' }, fallback);
+    const res = await request<HomeworkItemData[]>(API_ENDPOINTS.ACADEMICS.HOMEWORK, { method: 'GET' }, fallback);
     return res.data;
   },
 
   async submitHomework(sub: SubmitHomeworkRequest): Promise<{ success: boolean; auditRef: string }> {
     const auditRef = generateAuditRef();
     const res = await request(
-      '/api/v1/homework/submit',
+      API_ENDPOINTS.ACADEMICS.HOMEWORK_SUBMIT,
       { method: 'POST', body: JSON.stringify(sub) },
       { success: true, auditRef }
     );
@@ -368,7 +369,7 @@ export const goApi = {
         { date: '2026-10-09', status: 'ABSENT', remarks: 'Sick leave' },
       ],
     };
-    const res = await request<AttendanceResponseData>('/api/v1/attendance', { method: 'GET' }, fallback);
+    const res = await request<AttendanceResponseData>(API_ENDPOINTS.ATTENDANCE.LOG, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -389,14 +390,14 @@ export const goApi = {
         auditRef: generateAuditRef(),
       },
     ];
-    const res = await request<LeaveRequestItemData[]>('/api/v1/leaveRequest', { method: 'GET' }, fallback);
+    const res = await request<LeaveRequestItemData[]>(API_ENDPOINTS.ATTENDANCE.LEAVE_REQUESTS, { method: 'GET' }, fallback);
     return res.data;
   },
 
   async postLeaveRequest(req: CreateLeaveRequestPayload): Promise<{ success: boolean; auditRef: string }> {
     const auditRef = generateAuditRef();
     const res = await request(
-      '/api/v1/leaveRequest',
+      API_ENDPOINTS.ATTENDANCE.LEAVE_REQUESTS,
       { method: 'POST', body: JSON.stringify(req) },
       { success: true, auditRef }
     );
@@ -420,7 +421,7 @@ export const goApi = {
         { examId: 'ex-3', termName: 'Mid-Term 2026', subject: 'Mathematics', date: 'Oct 20, 2026', sessionTime: '09:00 AM - 12:00 PM', roomNo: 'Block C / Aud 1', syllabusRange: 'Chapters 1 to 7', maxMarks: 80 },
       ],
     };
-    const res = await request<ExamTimetableResponseData>('/api/v1/examTimeTable', { method: 'GET' }, fallback);
+    const res = await request<ExamTimetableResponseData>(API_ENDPOINTS.EXAMS.TIMETABLE, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -439,7 +440,7 @@ export const goApi = {
         { examId: 'ex-1', termName: 'Mid-Term 2026', subject: 'Physics', date: 'Oct 14, 2026', sessionTime: '09:00 AM', roomNo: 'Hall C', syllabusRange: 'Full', maxMarks: 70 },
       ],
     };
-    const res = await request<AdmitCardPayload>('/api/v1/exam', { method: 'GET' }, fallback);
+    const res = await request<AdmitCardPayload>(API_ENDPOINTS.EXAMS.ADMIT_CARD, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -464,7 +465,7 @@ export const goApi = {
         { subject: 'English Core', maxMarks: 100, marksObtained: 88, gradePoint: 8.8, letterGrade: 'A2', percentile: 89.0 },
       ],
     };
-    const res = await request<ExamResultsData>('/api/v1/results', { method: 'GET' }, fallback);
+    const res = await request<ExamResultsData>(API_ENDPOINTS.EXAMS.RESULTS, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -480,7 +481,7 @@ export const goApi = {
       dueObligations: mockFeeRecords,
       auditRef: generateAuditRef(),
     };
-    const res = await request<FeeSummaryData>('/api/v1/fees/summary', { method: 'GET' }, fallback);
+    const res = await request<FeeSummaryData>(API_ENDPOINTS.FEES.SUMMARY, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -495,7 +496,7 @@ export const goApi = {
       auditRef,
     };
     const res = await request<FeePaymentOrderResponse>(
-      '/api/v1/payment',
+      API_ENDPOINTS.FEES.CREATE_ORDER,
       { method: 'POST', body: JSON.stringify(req) },
       fallback
     );
@@ -514,7 +515,7 @@ export const goApi = {
       auditRef,
     };
     const res = await request<PaymentReceiptData>(
-      '/api/v1/payment/verify',
+      API_ENDPOINTS.FEES.VERIFY_PAYMENT,
       { method: 'POST', body: JSON.stringify(req) },
       fallback
     );
@@ -542,7 +543,7 @@ export const goApi = {
         auditRef: generateAuditRef(),
       },
     ];
-    const res = await request<PaymentReceiptData[]>('/api/v1/paymentHistory', { method: 'GET' }, fallback);
+    const res = await request<PaymentReceiptData[]>(API_ENDPOINTS.FEES.HISTORY, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -559,7 +560,7 @@ export const goApi = {
       auditRef,
     };
     const res = await request<TaxReceiptResponse>(
-      '/api/v1/taxReceipt',
+      API_ENDPOINTS.FEES.TAX_RECEIPT,
       { method: 'POST', body: JSON.stringify(req) },
       fallback
     );
@@ -588,7 +589,7 @@ export const goApi = {
         lastUpdated: new Date().toISOString(),
       },
     };
-    const res = await request<BusTravelData>('/api/v1/busTravel', { method: 'GET' }, fallback);
+    const res = await request<BusTravelData>(API_ENDPOINTS.TRANSPORT.BUS_GPS, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -610,14 +611,14 @@ export const goApi = {
         { id: 'c-3', name: 'Cold Pressed Orange Juice', mealCategory: 'Beverage', price: 2.0, isAvailable: true },
       ],
     };
-    const res = await request<CanteenWalletData>('/api/v1/canteenWallet', { method: 'GET' }, fallback);
+    const res = await request<CanteenWalletData>(API_ENDPOINTS.CANTEEN.WALLET, { method: 'GET' }, fallback);
     return res.data;
   },
 
   async rechargeCanteenWallet(amount: number): Promise<{ success: boolean; newBalance: number; auditRef: string }> {
     const auditRef = generateAuditRef();
     const res = await request(
-      '/api/v1/canteenWallet/recharge',
+      API_ENDPOINTS.CANTEEN.RECHARGE,
       { method: 'POST', body: JSON.stringify({ amount }) },
       { success: true, newBalance: mockCanteen.balance + amount, auditRef }
     );
@@ -637,7 +638,7 @@ export const goApi = {
         auditRef: generateAuditRef(),
       },
     ];
-    const res = await request<CanteenOrderRecord[]>('/api/v1/canteenFoodOrdered', { method: 'GET' }, fallback);
+    const res = await request<CanteenOrderRecord[]>(API_ENDPOINTS.CANTEEN.ORDER_HISTORY, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -656,7 +657,7 @@ export const goApi = {
       qrToken: 'PASS-TOKEN-9042',
       auditRef: generateAuditRef(),
     };
-    const res = await request<HallPassData>('/api/v1/hallPass', { method: 'GET' }, fallback);
+    const res = await request<HallPassData>(API_ENDPOINTS.HALLPASS.GET, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -681,7 +682,7 @@ export const goApi = {
         },
       ],
     };
-    const res = await request<StudentHealthInfoData>('/api/v1/studentHealthInfo', { method: 'GET' }, fallback);
+    const res = await request<StudentHealthInfoData>(API_ENDPOINTS.HEALTH.STUDENT, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -696,7 +697,7 @@ export const goApi = {
       stockCount: 25,
       availableSizes: item.id.includes('s-1') ? ['36', '38', '40', '42'] : undefined,
     }));
-    const res = await request<StoreCatalogItemData[]>('/api/v1/schoolStoreItems', { method: 'GET' }, fallback);
+    const res = await request<StoreCatalogItemData[]>(API_ENDPOINTS.STORE.CATALOG, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -713,7 +714,7 @@ export const goApi = {
       dueDate: i === 0 ? 'Oct 28, 2026' : undefined,
       isBorrowedByMe: i === 0,
     }));
-    const res = await request<LibraryBookItem[]>('/api/v1/library', { method: 'GET' }, fallback);
+    const res = await request<LibraryBookItem[]>(API_ENDPOINTS.LIBRARY.CATALOG, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -728,7 +729,7 @@ export const goApi = {
       memberCount: c.members,
       isEnrolled: i === 0,
     }));
-    const res = await request<ClubActivityData[]>('/api/v1/clubsAndActivities', { method: 'GET' }, fallback);
+    const res = await request<ClubActivityData[]>(API_ENDPOINTS.CLUBS.ACTIVITIES, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -755,7 +756,7 @@ export const goApi = {
         },
       ],
     };
-    const res = await request<HousePointsLeaderboardData>('/api/v1/housePoints', { method: 'GET' }, fallback);
+    const res = await request<HousePointsLeaderboardData>(API_ENDPOINTS.CLUBS.HOUSE_POINTS, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -770,7 +771,7 @@ export const goApi = {
       status: 'UNCLAIMED',
       description: `Reported found in ${item.loc}. Contact gate office to claim.`,
     }));
-    const res = await request<LostItemRecordData[]>('/api/v1/lostItems', { method: 'GET' }, fallback);
+    const res = await request<LostItemRecordData[]>(API_ENDPOINTS.LOST_FOUND.ITEMS, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -800,7 +801,7 @@ export const goApi = {
         ],
       },
     ];
-    const res = await request<PhotoGalleryAlbumData[]>('/api/v1/photoGalleryAlbums', { method: 'GET' }, fallback);
+    const res = await request<PhotoGalleryAlbumData[]>(API_ENDPOINTS.GALLERY.ALBUMS, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -835,7 +836,7 @@ export const goApi = {
         ],
       },
     ];
-    const res = await request<ParentDeskThreadData[]>('/api/v1/parentDesk', { method: 'GET' }, fallback);
+    const res = await request<ParentDeskThreadData[]>(API_ENDPOINTS.PARENT_DESK.THREADS, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -853,7 +854,7 @@ export const goApi = {
         { slotId: `s-${idx}-3`, window: '09:30 AM - 09:45 AM', isBooked: false },
       ],
     }));
-    const res = await request<PtmTeacherSlotData[]>('/api/v1/ptmSearchTeachers', { method: 'GET' }, fallback);
+    const res = await request<PtmTeacherSlotData[]>(API_ENDPOINTS.PTM.SEARCH_TEACHERS, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -870,7 +871,7 @@ export const goApi = {
       content: `${n.title}. For full instructions, refer to the official circular.`,
       isUrgent: n.tag === 'URGENT',
     }));
-    const res = await request<NoticeItemData[]>('/api/v1/notices', { method: 'GET' }, fallback);
+    const res = await request<NoticeItemData[]>(API_ENDPOINTS.NOTICES.LIST, { method: 'GET' }, fallback);
     return res.data;
   },
 
@@ -885,7 +886,7 @@ export const goApi = {
       dbPingMs: 1.2,
       timestamp: new Date().toISOString(),
     };
-    const res = await request<GoSystemHealthData>('/api/v1/health', { method: 'GET' }, fallback);
+    const res = await request<GoSystemHealthData>(API_ENDPOINTS.HEALTH.SYSTEM, { method: 'GET' }, fallback);
     return res.data;
   },
 };

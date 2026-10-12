@@ -9,7 +9,7 @@ import {
   DEFAULT_TIMETABLE_BY_DAY,
   type TimetablePeriod,
   getStudentIdentifier,
-} from '@/lib/studentCache';
+} from '@/lib/cache/student-cache';
 import { student as fallbackStudent } from '@/lib/data';
 
 const DAYS = [
@@ -28,7 +28,7 @@ export default function TimetablePage() {
   const [student, setStudent] = useState({
     name: 'Student',
     section: 'Sec E',
-    details: 'Class 12-E • Roll No. 20',
+    details: 'Class 12-E â€¢ Roll No. 20',
     initials: 'ST',
   });
   const [joinToast, setJoinToast] = useState<string | null>(null);
@@ -54,7 +54,7 @@ export default function TimetablePage() {
     setStudent({
       name,
       section: `Sec ${section}`,
-      details: `Class ${grade}-${section} • Roll No. ${roll}`,
+      details: `Class ${grade}-${section} â€¢ Roll No. ${roll}`,
       initials,
     });
 
@@ -74,7 +74,7 @@ export default function TimetablePage() {
 
   const handleJoinClass = (period: TimetablePeriod) => {
     setJoinToast(
-      `Connecting to live classroom: ${period.subject} with ${period.teacher.split('·')[0].trim()}...`
+      `Connecting to live classroom: ${period.subject} with ${period.teacher.split('Â·')[0].trim()}...`
     );
     setTimeout(() => {
       setJoinToast(null);
@@ -132,7 +132,7 @@ export default function TimetablePage() {
               <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse" />
               <span>Offline Cache Active</span>
             </div>
-            <span className="hidden sm:inline">•</span>
+            <span className="hidden sm:inline">â€¢</span>
             <span>CISCE Curriculum 2026</span>
           </div>
         </section>
@@ -190,7 +190,7 @@ export default function TimetablePage() {
                     {p.isLive && (
                       <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-ping" />
                     )}
-                    {p.isLive ? `LIVE NOW · ${p.period}` : p.period}
+                    {p.isLive ? `LIVE NOW Â· ${p.period}` : p.period}
                   </span>
                   <span className="text-[11px] sm:text-[12px] text-on-surface-variant font-medium flex items-center gap-1">
                     <span className="material-symbols-outlined text-[13px] sm:text-[15px] text-outline">
