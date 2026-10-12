@@ -2,8 +2,8 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys, CACHE_TTLS } from '@/lib/query-keys';
-import { goApi } from '@/lib/goApiClient';
-import type { UpdateStudentRequest } from '@/lib/goApiTypes';
+import { goApi } from '@/lib/api/go-client';
+import type { UpdateStudentRequest } from '@/lib/api/go-types';
 
 export function useStudentProfile(studentId: string) {
   return useQuery({

@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys, CACHE_TTLS } from '@/lib/query-keys';
-import { goApi } from '@/lib/goApiClient';
+import { goApi } from '@/lib/api/go-client';
 
 export function useNotices(category = 'all', limit = 20) {
   return useQuery({

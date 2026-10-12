@@ -8,28 +8,41 @@ the Android app on phones, centered in a 430px phone column on desktop.
 
 - **Next.js 15 App Router + TypeScript** — one `app/<route>/page.tsx` per
   screen, all UI as `.tsx` (no HTML files anywhere)
-- **Tailwind CSS v3 (compiled)** with the Stitch Academic Fluidity tokens
-  extracted verbatim into `tailwind.config.cjs` — same classes, same look,
-  no CDN at runtime
+- **Tailwind CSS v3 (compiled)** with the design tokens declared in
+  `tailwind.config.js` and `app/globals.css` — no CDN at runtime
 - **Firebase JS SDK** — Email/Password + Google providers for sign-in,
-  anonymous session + `students/{admissionNumber}` docs (Clerk was retired on
-  web: it does not deliver SMS to India)
+  anonymous session + `students/{admissionNumber}` docs
+- **Go backend on Render** (`backend-school-go.onrender.com`) — reached through
+  the typed client in `lib/api/`; every call degrades to bundled fixtures when
+  the network or backend is unavailable
 - Production sample data mirrors the Android mock repository (Rajen Shaw,
   12-E) until the school backend lands
+
+## Architecture
+
+Layering, dependency rules and the API contract are specified in
+[ARCHITECTURE.md](./ARCHITECTURE.md). Security posture lives in
+[Security.md](./Security.md) and [ThreatModel.md](./ThreatModel.md).
+
+```
+app/ & components/  →  hooks/  →  lib/services/  →  lib/api/  →  Go backend
+                                    ↓
+                             lib/state/, lib/cache/
+```
+
 
 ## Screens
 
 | Page | Source |
 |---|---|
-| `index` (splash), `chooser`, `email`, `admission`, `onboarding` | Composed from the Android layouts, Stitch tokens |
-| `home`, `academics`, `diary`, `notices`, `profile`, `helpdesk` | 1:1 Stitch `code.html` ports (markup untouched) |
+| `page` (executive homepage), `chooser`, `email`, `admission`, `onboarding` | Composed from the Android layouts and design tokens |
+| `home`, `academics`, `diary`, `notices`, `profile`, `helpdesk` | 1:1 ports of the original Stitch `code.html` screens |
 | `attendance`, `bus`, `timetable`, `library`, `exams`, `canteen`, `ptm`, `hallpass`, `health`, `merits`, `store`, `lostfound`, `gallery`, `clubs` | Token-faithful compositions (no Stitch source exists) |
 
-`tools/html-to-tsx.mjs` converted the Stitch screens and composed module
-fragments into `app/` pages (since removed along with all HTML once the
-conversion was verified). Hand-written auth pages live directly in
-`app/<route>/page.tsx`; shared code in `lib/` (`data`, `firebase`,
-`session`), styling in `app/globals.css`.
+Auth pages live directly in `app/<route>/page.tsx`; shared code in `lib/`
+(`api/`, `services/`, `state/`, `cache/`, `config/`), reusable UI in
+`components/`, styling in `app/globals.css`.
+
 
 ## Setup
 

@@ -13,7 +13,7 @@ import {
   purgeOldStudentCacheExcept,
   initOrRestoreStudentCache,
   setActiveStudentId,
-} from '../studentCache';
+} from '../cache/student-cache';
 
 export interface Session {
   uid?: string;
