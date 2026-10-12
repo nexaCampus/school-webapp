@@ -61,11 +61,13 @@ export default function PortalShell({
   const servicesRef = useRef<HTMLDivElement>(null);
 
   const handlePerformLogout = async () => {
+    setShowLogoutModal(false);
     setIsProcessingAuth(true);
     await logoutUser('/chooser');
   };
 
   const handlePerformSwitch = async () => {
+    setShowSwitchModal(false);
     setIsProcessingAuth(true);
     await switchAccount();
   };
@@ -166,16 +168,38 @@ export default function PortalShell({
   }, [router]);
 
   useEffect(() => {
-    const s = getSession();
-    if (s?.student) {
-      const name = s.student.displayName || s.student.name || s.name;
+    const verifySession = () => {
+      const s = getSession();
+      if (!s?.student && !s?.name) {
+        setShowLogoutModal(false);
+        setShowSwitchModal(false);
+        setIsProcessingAuth(false);
+        window.location.replace('/chooser');
+        return false;
+      }
+      const name = s.student?.displayName || s.student?.name || s.name;
       if (name) setStudentName(name);
-      if (s.student.grade && s.student.section) {
+      if (s.student?.grade && s.student?.section) {
         setGradeSection(`${s.student.grade} - ${s.student.section}`);
       }
-    } else if (s?.name) {
-      setStudentName(s.name);
-    }
+      return true;
+    };
+
+    verifySession();
+
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted || !getSession()) {
+        setShowLogoutModal(false);
+        setShowSwitchModal(false);
+        setIsProcessingAuth(false);
+        window.location.replace('/chooser');
+      }
+    };
+
+    window.addEventListener('pageshow', handlePageShow);
+    return () => {
+      window.removeEventListener('pageshow', handlePageShow);
+    };
   }, []);
 
   useEffect(() => {
@@ -307,7 +331,7 @@ export default function PortalShell({
   return (
     <div className="relative min-h-screen bg-surface flex flex-col max-w-full overflow-x-hidden">
       {/* DESKTOP HEADER (>= 768px): Sleek, properly-aligned executive top bar */}
-      <header className="hidden md:block sticky top-0 w-full z-50 bg-surface/90 dark:bg-[#181818]/95 backdrop-blur-xl border-b border-outline/10 dark:border-[#2d2d2d] shadow-sm">
+      <header className="hidden md:block sticky top-0 w-full z-50 bg-surface/90 dark:bg-[#151622]/90 backdrop-blur-xl border-b border-outline/10 dark:border-[#222538] shadow-sm">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
           {/* Brand Identity */}
           <Link href="/home" className="flex items-center gap-3 group flex-shrink-0">
@@ -336,7 +360,7 @@ export default function PortalShell({
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all ${
                     isActive
                       ? 'bg-primary text-on-primary shadow-sm'
-                      : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container dark:hover:bg-[#2d2d2d]'
+                      : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container dark:hover:bg-[#222538]'
                   }`}
                 >
                   <span className="material-symbols-outlined text-[19px]">{item.icon}</span>
@@ -352,8 +376,8 @@ export default function PortalShell({
                 onClick={toggleServices}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${
                   servicesOpen
-                    ? 'bg-surface-container-high dark:bg-[#2d2d2d] text-primary ring-2 ring-primary/20'
-                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container dark:hover:bg-[#2d2d2d]'
+                    ? 'bg-surface-container-high dark:bg-[#222538] text-primary ring-2 ring-primary/20'
+                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container dark:hover:bg-[#222538]'
                 }`}
               >
                 <span className="material-symbols-outlined text-[19px]">apps</span>
@@ -364,8 +388,8 @@ export default function PortalShell({
               </button>
 
               {servicesOpen && (
-                <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl bg-white dark:bg-[#252526] shadow-2xl border border-outline/15 dark:border-[#3c3c3c] p-2 z-50 grid grid-cols-1 gap-0.5 max-h-[70vh] overflow-y-auto opacity-100">
-                  <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-outline border-b border-outline/10 dark:border-[#3c3c3c] mb-1">
+                <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl bg-white dark:bg-[#151622] shadow-2xl border border-outline/15 dark:border-[#222538] p-2 z-50 grid grid-cols-1 gap-0.5 max-h-[70vh] overflow-y-auto opacity-100">
+                  <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-outline border-b border-outline/10 dark:border-[#222538] mb-1">
                     All Student Services
                   </div>
                   {MORE_SERVICES.map((s) => (
@@ -373,9 +397,9 @@ export default function PortalShell({
                       key={s.href}
                       href={s.href}
                       onClick={() => setServicesOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] text-on-surface hover:bg-surface-container dark:hover:bg-[#2d2d2d] transition-colors"
+                      className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] text-on-surface hover:bg-surface-container dark:hover:bg-[#222538] transition-colors"
                     >
-                      <span className="w-8 h-8 rounded-lg bg-surface-container dark:bg-[#1e1e1e] flex items-center justify-center text-primary dark:text-[#3794ff]">
+                      <span className="w-8 h-8 rounded-lg bg-surface-container dark:bg-[#101119] flex items-center justify-center text-primary dark:text-[#bdc2ff]">
                         <span className="material-symbols-outlined text-[18px]">{s.icon}</span>
                       </span>
                       <span className="font-medium">{s.label}</span>
@@ -398,7 +422,7 @@ export default function PortalShell({
               className={`flex items-center gap-2.5 pl-2.5 pr-4 py-1.5 rounded-full border transition-all ${
                 pathname === '/profile'
                   ? 'bg-primary/10 border-primary text-primary'
-                  : 'bg-surface-container dark:bg-[#252526] border-transparent dark:border-[#3c3c3c] hover:bg-surface-container-high dark:hover:bg-[#2d2d2d] text-on-surface'
+                  : 'bg-surface-container dark:bg-[#151622] border-transparent dark:border-[#222538] hover:bg-surface-container-high dark:hover:bg-[#222538] text-on-surface'
               }`}
             >
               <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-on-primary text-[14px] shadow-sm">
@@ -440,7 +464,7 @@ export default function PortalShell({
       </header>
 
       {/* MOBILE HEADER (< 768px): Compact & sleek with Hamburger on Top Left & Dark Mode to the Left of Profile */}
-      <header className="md:hidden fixed top-0 w-full z-40 pt-safe bg-surface/90 dark:bg-[#181818]/95 backdrop-blur-xl shadow-[0_1px_6px_rgba(0,0,0,0.15)] border-b border-outline/10 dark:border-[#2d2d2d]">
+      <header className="md:hidden fixed top-0 w-full z-40 pt-safe bg-surface/90 dark:bg-[#151622]/90 backdrop-blur-xl shadow-[0_1px_6px_rgba(0,0,0,0.15)] border-b border-outline/10 dark:border-[#222538]">
         <div className="h-14 px-3 flex items-center justify-between gap-2">
           {/* Top Left: Hamburger menu button + School Emblem & Title */}
           <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -486,10 +510,10 @@ export default function PortalShell({
           role="dialog"
           aria-modal="true"
           aria-label="All School Services"
-          className="md:hidden fixed inset-0 z-50 bg-white dark:bg-[#1e1e1e] flex flex-col animate-in fade-in slide-in-from-top-6 duration-200"
+          className="md:hidden fixed inset-0 z-50 bg-white dark:bg-[#12131a] flex flex-col animate-in fade-in slide-in-from-top-6 duration-200"
         >
           {/* Top Bar inside Full-Screen Hamburger */}
-          <div className="h-14 px-3 pt-safe flex items-center justify-between border-b border-outline/10 dark:border-[#2d2d2d] bg-white dark:bg-[#181818] flex-shrink-0">
+          <div className="h-14 px-3 pt-safe flex items-center justify-between border-b border-outline/10 dark:border-[#222538] bg-white dark:bg-[#151622] flex-shrink-0">
             <div className="flex items-center gap-2">
               <Link href="/home" onClick={closeMobileServices} title="Go to Home" className="flex items-center">
                 <LogoEmblem className="h-7 w-7" />
@@ -509,7 +533,7 @@ export default function PortalShell({
               type="button"
               onClick={closeMobileServices}
               aria-label="Close menu"
-              className="w-9 h-9 rounded-full flex items-center justify-center bg-surface-container dark:bg-[#252526] dark:border dark:border-[#3c3c3c] text-on-surface hover:bg-surface-container-high dark:hover:bg-[#2d2d2d] active:scale-90 transition-all shadow-sm cursor-pointer z-30"
+              className="w-9 h-9 rounded-full flex items-center justify-center bg-surface-container dark:bg-[#1a1c2b] dark:border dark:border-[#222538] text-on-surface hover:bg-surface-container-high dark:hover:bg-[#222538] active:scale-90 transition-all shadow-sm cursor-pointer z-30"
             >
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
@@ -542,14 +566,14 @@ export default function PortalShell({
                       className={`p-2.5 sm:p-3 rounded-xl border transition-all duration-150 flex flex-col items-start gap-1.5 active:scale-95 shadow-sm cursor-pointer ${
                         isActive
                           ? 'bg-primary/10 border-primary text-primary'
-                          : 'bg-white dark:bg-[#252526] border-outline/10 dark:border-[#3c3c3c] hover:border-primary/40 dark:hover:bg-[#2d2d2d] text-on-surface'
+                          : 'bg-white dark:bg-[#151622] border-outline/10 dark:border-[#222538] hover:border-primary/40 dark:hover:bg-[#1a1c2b] text-on-surface'
                       }`}
                     >
                       <div
                         className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                           isActive
                             ? 'bg-primary text-on-primary shadow-sm'
-                            : 'bg-surface-container-high dark:bg-[#1e1e1e] text-primary dark:text-[#3794ff]'
+                            : 'bg-surface-container-high dark:bg-[#101119] text-primary dark:text-[#bdc2ff]'
                         }`}
                       >
                         <span className="material-symbols-outlined text-[19px]">{s.icon}</span>
@@ -568,7 +592,7 @@ export default function PortalShell({
               </div>
 
               {/* Quick links footer inside hamburger */}
-              <div className="mt-6 pt-4 border-t border-outline/10 dark:border-[#3c3c3c] flex items-center justify-between text-[11px] text-outline px-1">
+              <div className="mt-6 pt-4 border-t border-outline/10 dark:border-[#222538] flex items-center justify-between text-[11px] text-outline px-1">
                 <Link
                   href="/profile"
                   onClick={(e) => {
@@ -613,7 +637,7 @@ export default function PortalShell({
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
-          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#252526] border border-outline/15 dark:border-[#3c3c3c] p-6 shadow-2xl flex flex-col items-center text-center">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#151622] border border-outline/15 dark:border-[#222538] p-6 shadow-2xl flex flex-col items-center text-center">
             <div className="w-12 h-12 rounded-full bg-error/15 text-error flex items-center justify-center mb-3">
               <span className="material-symbols-outlined text-[28px]">logout</span>
             </div>
@@ -637,7 +661,7 @@ export default function PortalShell({
                 type="button"
                 disabled={isProcessingAuth}
                 onClick={() => setShowLogoutModal(false)}
-                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#333333] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#222538] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
               >
                 Cancel &amp; Stay
               </button>
@@ -649,7 +673,7 @@ export default function PortalShell({
       {/* Switch Account Modal */}
       {showSwitchModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
-          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#252526] border border-outline/15 dark:border-[#3c3c3c] p-6 shadow-2xl flex flex-col items-center text-center">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#151622] border border-outline/15 dark:border-[#222538] p-6 shadow-2xl flex flex-col items-center text-center">
             <div className="w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-3">
               <span className="material-symbols-outlined text-[28px]">switch_account</span>
             </div>
@@ -673,7 +697,7 @@ export default function PortalShell({
                 type="button"
                 disabled={isProcessingAuth}
                 onClick={() => setShowSwitchModal(false)}
-                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#333333] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#222538] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -698,7 +722,7 @@ export default function PortalShell({
       {/* MOBILE FLOATING PILL NAVBAR (< 768px): Refined & proportional to phone UI */}
       <nav className="md:hidden fixed bottom-0 w-full z-30 pb-safe pointer-events-none">
         <div className="px-3 pb-2 pt-0.5 pointer-events-auto max-w-[340px] mx-auto">
-          <div className="bg-white/95 dark:bg-[#181818]/95 backdrop-blur-2xl rounded-full shadow-[0_8px_20px_-4px_rgba(0,0,0,0.35)] border border-outline/10 dark:border-[#3c3c3c] p-1 flex items-center justify-between">
+          <div className="bg-white/95 dark:bg-[#151622]/95 backdrop-blur-2xl rounded-full shadow-[0_8px_20px_-4px_rgba(0,0,0,0.35)] border border-outline/10 dark:border-[#222538] p-1 flex items-center justify-between">
             <Link
               className={`flex-1 min-h-[36px] flex flex-col items-center justify-center py-1 px-1 rounded-full transition-all duration-200 ${
                 currentPath === 'home' || pathname === '/home' || pathname === '/'

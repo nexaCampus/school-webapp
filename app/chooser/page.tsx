@@ -31,7 +31,7 @@ function DesktopMethodCard({
     <Link
       href={href}
       onClick={onClick}
-      className="w-full bg-surface-container-lowest dark:bg-[#252526] rounded-2xl shadow-sm border border-outline/10 dark:border-[#3c3c3c] p-4 flex items-center gap-4 hover:shadow-md hover:border-primary/30 dark:hover:bg-[#2d2d2d] transition-all active:scale-[0.99] group cursor-pointer"
+      className="w-full bg-surface-container-lowest dark:bg-[#151622] rounded-2xl shadow-sm border border-outline/10 dark:border-[#222538] p-4 flex items-center gap-4 hover:shadow-md hover:border-primary/30 dark:hover:bg-[#1a1c2b] transition-all active:scale-[0.99] group cursor-pointer"
     >
       <span
         className={`w-12 h-12 rounded-xl ${iconWell} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform`}
@@ -46,7 +46,7 @@ function DesktopMethodCard({
           {subtitle}
         </span>
         <span
-          className={`inline-block mt-1.5 text-[10px] font-bold ${accent} bg-surface-container-high dark:bg-[#1e1e1e] rounded-full px-2.5 py-0.5`}
+          className={`inline-block mt-1.5 text-[10px] font-bold ${accent} bg-surface-container-high dark:bg-[#101119] rounded-full px-2.5 py-0.5`}
         >
           {badge}
         </span>
@@ -83,7 +83,7 @@ function MobileMethodCard({
     <Link
       href={href}
       onClick={onClick}
-      className="w-full bg-surface-container-lowest dark:bg-[#252526] rounded-[22px] shadow-[0_8px_20px_rgba(28,42,200,0.08)] dark:shadow-none border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-3.5 sm:p-4 flex items-center gap-3.5 active:scale-[0.99] transition-transform cursor-pointer"
+      className="w-full bg-surface-container-lowest dark:bg-[#151622] rounded-[22px] shadow-[0_8px_20px_rgba(28,42,200,0.08)] dark:shadow-none border border-outline/10 dark:border-[#222538] dark:hover:bg-[#1a1c2b] p-3.5 sm:p-4 flex items-center gap-3.5 active:scale-[0.99] transition-transform cursor-pointer"
     >
       <span
         className={`w-[46px] h-[46px] rounded-[14px] ${iconWell} flex items-center justify-center flex-shrink-0 shadow-sm`}
@@ -149,7 +149,7 @@ export default function ChooserPage() {
                 LCGVM
               </span>
             </Link>
-            <DarkModeToggle className="bg-white/15 dark:bg-[#252526] text-white border-white/20 hover:bg-white/25" />
+            <DarkModeToggle className="bg-white/15 dark:bg-[#151622] text-white border-white/20 hover:bg-white/25" />
           </div>
 
           {/* Center Brand Identity */}
@@ -171,7 +171,7 @@ export default function ChooserPage() {
         </div>
 
         {/* Bottom 70% Area: The Beloved Content Panel from Below */}
-        <div className="w-full bg-surface dark:bg-[#1e1e1e] rounded-t-[34px] shadow-[0_-16px_40px_rgba(0,0,0,0.5)] border-t border-outline/10 dark:border-[#2d2d2d] px-margin pt-4 pb-safe flex-1 flex flex-col justify-between z-20 min-h-[72vh] overflow-y-auto">
+        <div className="w-full bg-surface dark:bg-[#12131a] rounded-t-[34px] shadow-[0_-16px_40px_rgba(0,0,0,0.5)] border-t border-outline/10 dark:border-[#222538] px-margin pt-4 pb-safe flex-1 flex flex-col justify-between z-20 min-h-[72vh] overflow-y-auto">
           {/* Subtle sheet indicator */}
           <div className="w-10 h-1 rounded-full bg-outline/25 mx-auto mb-3 flex-shrink-0" />
 
@@ -236,7 +236,7 @@ export default function ChooserPage() {
               accent="text-tertiary"
             />
 
-            <div className="w-full bg-surface-container-low dark:bg-[#252526] rounded-xl p-3 flex gap-2.5 border border-outline/10 dark:border-[#3c3c3c]">
+            <div className="w-full bg-surface-container-low dark:bg-[#151622] rounded-xl p-3 flex gap-2.5 border border-outline/10 dark:border-[#222538]">
               <span className="material-symbols-outlined text-primary text-[18px] flex-shrink-0 mt-0.5">
                 info
               </span>
@@ -247,7 +247,7 @@ export default function ChooserPage() {
           </div>
 
           {/* Support Helpline & CISCE Footer */}
-          <div className="mt-4 pt-3 border-t border-outline/10 dark:border-[#2d2d2d] flex flex-col items-center gap-1.5 w-full text-center">
+          <div className="mt-4 pt-3 border-t border-outline/10 dark:border-[#222538] flex flex-col items-center gap-1.5 w-full text-center">
             <span className="text-[11px] text-on-surface-variant">Need help logging in?</span>
             <span className="flex items-center gap-1.5 text-primary text-[12px] font-bold">
               <span className="material-symbols-outlined text-[16px]">support_agent</span>
@@ -279,7 +279,7 @@ export default function ChooserPage() {
         {/* Centered Split Card Container */}
         <div className="flex-1 flex items-center justify-center p-6 lg:p-10 w-full relative z-10">
           {/* Main Responsive Split Card Container */}
-          <div className="w-full max-w-4xl mx-auto bg-surface-container-lowest dark:bg-[#252526] rounded-3xl shadow-[0_24px_70px_-12px_rgba(0,0,0,0.5)] border border-outline/10 dark:border-[#3c3c3c] overflow-hidden grid grid-cols-12 relative z-10">
+          <div className="w-full max-w-4xl mx-auto bg-surface-container-lowest dark:bg-[#151622] rounded-3xl shadow-[0_24px_70px_-12px_rgba(0,0,0,0.5)] border border-outline/10 dark:border-[#222538] overflow-hidden grid grid-cols-12 relative z-10">
             {/* Left Branding Rail on Desktop */}
             <div className="col-span-5 bg-gradient-to-br from-primary via-[#2435df] to-[#121c88] text-white p-8 md:p-10 flex flex-col justify-between relative overflow-hidden">
               {/* Subtle decorative circles */}
@@ -409,7 +409,7 @@ export default function ChooserPage() {
               </div>
 
               {/* Helpful Information Note */}
-              <div className="bg-surface-container-low/70 dark:bg-[#1e1e1e] rounded-2xl p-3.5 flex gap-3 mt-6 border border-outline/5 dark:border-[#3c3c3c]">
+              <div className="bg-surface-container-low/70 dark:bg-[#12131a] rounded-2xl p-3.5 flex gap-3 mt-6 border border-outline/5 dark:border-[#222538]">
                 <span className="material-symbols-outlined text-primary text-[20px] flex-shrink-0 mt-0.5">
                   info
                 </span>

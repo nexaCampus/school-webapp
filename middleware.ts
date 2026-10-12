@@ -28,8 +28,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Whitelisted public paths (splash, auth entry, registration)
-  const publicPaths = ['/chooser', '/email', '/admission', '/onboarding'];
+  // 2. Whitelisted public paths (splash, auth entry, registration, statutory legal policies)
+  const publicPaths = [
+    '/chooser',
+    '/email',
+    '/admission',
+    '/onboarding',
+    '/privacy',
+    '/terms',
+    '/refund',
+    '/cookies',
+    '/data-deletion',
+  ];
   const isPublicPath =
     pathname === '/' ||
     publicPaths.some((p) => pathname === p || pathname.startsWith(p + '/'));
