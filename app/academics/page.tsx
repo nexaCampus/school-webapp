@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import Toast from '@/components/Toast';
 import { goApi } from '@/lib/goApiClient';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query-keys';
@@ -14,6 +15,7 @@ export default function AcademicsPage() {
   const [isPaying, setIsPaying] = useState(false);
   const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const s = getSession();
@@ -116,7 +118,13 @@ export default function AcademicsPage() {
             >
               Marks &amp; Cards
             </Link>
-            <button className="px-3 py-1.5 sm:px-space-md sm:py-2 rounded-full text-[11.5px] sm:text-label-md font-semibold whitespace-nowrap bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1">
+            <button
+              onClick={() => {
+                const el = document.getElementById('payNowBtn');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-3 py-1.5 sm:px-space-md sm:py-2 rounded-full text-[11.5px] sm:text-label-md font-semibold whitespace-nowrap bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1 cursor-pointer"
+            >
               <span>Fee Payment</span>
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-secondary-container"></span>
             </button>
@@ -177,8 +185,9 @@ export default function AcademicsPage() {
                     <span>{isPaying ? 'Securing payment...' : 'Pay Now • ₹4,450'}</span>
                   </button>
                   <button
+                    onClick={() => setToastMsg('Fee structure details schedule downloaded (PDF).')}
                     aria-label="Fee details sheet"
-                    className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-on-primary hover:bg-white/30 transition-all"
+                    className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-on-primary hover:bg-white/30 active:scale-95 transition-all cursor-pointer"
                   >
                     <span className="material-symbols-outlined text-[18px] sm:text-[20px]">receipt_long</span>
                   </button>
@@ -221,7 +230,10 @@ export default function AcademicsPage() {
                     Semester II • Itemized structure
                   </span>
                 </div>
-                <button className="text-primary text-[11px] sm:text-label-md font-semibold hover:underline">
+                <button
+                  onClick={() => setToastMsg('All itemized term components selected.')}
+                  className="text-primary text-[11px] sm:text-label-md font-semibold hover:underline"
+                >
                   Select All
                 </button>
               </div>
@@ -248,6 +260,7 @@ export default function AcademicsPage() {
                       ₹3,100
                     </span>
                     <button
+                      onClick={() => setToastMsg('Tuition fee receipt downloaded (PDF).')}
                       aria-label="Item Receipt"
                       className="text-outline hover:text-primary transition-colors p-1"
                     >
@@ -279,6 +292,7 @@ export default function AcademicsPage() {
                       ₹250
                     </span>
                     <button
+                      onClick={() => setToastMsg('STEM Robotics Lab fee receipt downloaded (PDF).')}
                       aria-label="Item Receipt"
                       className="text-outline hover:text-primary transition-colors p-1"
                     >
@@ -310,6 +324,7 @@ export default function AcademicsPage() {
                       ₹400
                     </span>
                     <button
+                      onClick={() => setToastMsg('Computer & Digital Library fee receipt downloaded (PDF).')}
                       aria-label="Item Receipt"
                       className="text-outline hover:text-primary transition-colors p-1"
                     >
@@ -341,6 +356,7 @@ export default function AcademicsPage() {
                       ₹300
                     </span>
                     <button
+                      onClick={() => setToastMsg('Co-curricular & Athletics fee receipt downloaded (PDF).')}
                       aria-label="Item Receipt"
                       className="text-outline hover:text-primary transition-colors p-1"
                     >
@@ -353,11 +369,17 @@ export default function AcademicsPage() {
               </div>
               {/* Quick Document Actions */}
               <div className="grid grid-cols-2 gap-2 sm:gap-space-sm pt-1">
-                <button className="flex items-center justify-center gap-1.5 p-2.5 sm:p-3 rounded-xl bg-primary/10 text-primary text-[11.5px] sm:text-label-md font-semibold hover:bg-primary/15 transition-all">
+                <button
+                  onClick={() => setToastMsg('Official 80G Tax Exemption Certificate downloaded (PDF).')}
+                  className="flex items-center justify-center gap-1.5 p-2.5 sm:p-3 rounded-xl bg-primary/10 text-primary text-[11.5px] sm:text-label-md font-semibold hover:bg-primary/15 active:scale-95 transition-all cursor-pointer"
+                >
                   <span className="material-symbols-outlined text-[16px] sm:text-[18px]">description</span>
                   <span>Tax Receipt (80G)</span>
                 </button>
-                <button className="flex items-center justify-center gap-1.5 p-2.5 sm:p-3 rounded-xl bg-surface-container text-on-surface text-[11.5px] sm:text-label-md font-semibold hover:bg-surface-container-high transition-all">
+                <button
+                  onClick={() => setToastMsg('Payment History: All previous term dues cleared in full.')}
+                  className="flex items-center justify-center gap-1.5 p-2.5 sm:p-3 rounded-xl bg-surface-container text-on-surface text-[11.5px] sm:text-label-md font-semibold hover:bg-surface-container-high active:scale-95 transition-all cursor-pointer"
+                >
                   <span className="material-symbols-outlined text-[16px] sm:text-[18px]">history_edu</span>
                   <span>Payment History</span>
                 </button>
@@ -570,6 +592,10 @@ export default function AcademicsPage() {
             </div>
           </div>
         </div>
+
+        {toastMsg && (
+          <Toast message={toastMsg} type="success" onClose={() => setToastMsg(null)} />
+        )}
       </div>
     </PortalShell>
   );

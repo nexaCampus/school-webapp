@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import Toast from '@/components/Toast';
 import { sendTestNotification } from '@/lib/firebaseNotifications';
 import { goApi } from '@/lib/goApiClient';
 import type { NoticeItemData } from '@/lib/goApiTypes';
@@ -20,6 +21,7 @@ export default function NoticesPage() {
   const [activeCategory, setActiveCategory] = useState('All Notices');
   const [heroExpanded, setHeroExpanded] = useState(false);
   const [liveNotices, setLiveNotices] = useState<NoticeItemData[]>([]);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [student, setStudent] = useState({
     name: 'Student',
     gradeSection: 'Class 12-E',
@@ -47,6 +49,40 @@ export default function NoticesPage() {
 
     goApi.getNotices().then(setLiveNotices);
   }, []);
+
+  const handleAudioAssist = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        setToastMsg('Audio circular assist stopped.');
+        return;
+      }
+      const utter = new SpeechSynthesisUtterance(
+        'Resumption of Regular Classes and Annual Sports Day Registration. All secondary and senior secondary cohorts shall resume in-person curriculum schedules starting this Wednesday.'
+      );
+      utter.rate = 0.95;
+      window.speechSynthesis.speak(utter);
+      setToastMsg('Playing official audio circular...');
+    } else {
+      setToastMsg('Audio circular played via system audio assist.');
+    }
+  };
+
+  const handleDownloadPtm = () => {
+    setToastMsg('PTM_Schedule_2026.pdf downloaded successfully!');
+  };
+
+  const handlePreviewPtm = () => {
+    setToastMsg('Opening document preview for PTM Schedule (Acrobat PDF)...');
+  };
+
+  const handleRegisterStem = () => {
+    setToastMsg('Project proposal nomination logged! Science Faculty mentor will contact via Diary.');
+  };
+
+  const handleArchive = () => {
+    setToastMsg('Past school circular archive loaded (Academic Year 2025-2026).');
+  };
 
   return (
     <PortalShell title="Notices" activePath="notices">
@@ -92,8 +128,9 @@ export default function NoticesPage() {
               URGENT BROADCAST
             </div>
             <button
+              onClick={handleAudioAssist}
               aria-label="Listen to official audio circular"
-              className="flex items-center gap-1 bg-white/20 hover:bg-white/30 backdrop-blur-md px-2.5 py-0.5 sm:px-space-sm sm:py-1 rounded-full text-on-primary transition-all active:scale-95 shadow-sm"
+              className="flex items-center gap-1 bg-white/20 hover:bg-white/30 backdrop-blur-md px-2.5 py-0.5 sm:px-space-sm sm:py-1 rounded-full text-on-primary transition-all active:scale-95 shadow-sm cursor-pointer"
             >
               <span className="material-symbols-outlined text-[14px] sm:text-[16px]">volume_up</span>
               <span className="text-[10px] sm:text-label-sm font-medium">Audio Assist</span>
@@ -181,7 +218,10 @@ export default function NoticesPage() {
               <span className="material-symbols-outlined text-[14px]">notifications_active</span>
               <span>Test Notification</span>
             </button>
-            <button className="flex items-center gap-1 text-[11px] sm:text-label-sm text-primary hover:underline font-semibold cursor-pointer">
+            <button
+              onClick={handleArchive}
+              className="flex items-center gap-1 text-[11px] sm:text-label-sm text-primary hover:underline font-semibold cursor-pointer"
+            >
               <span className="material-symbols-outlined text-[15px] sm:text-[16px]">tune</span>
               <span>Archive</span>
             </button>
@@ -239,11 +279,17 @@ export default function NoticesPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-space-xs mt-0.5 pt-1">
-                  <button className="flex-1 py-1.5 px-2.5 sm:px-space-sm rounded-full bg-primary text-on-primary text-[11px] sm:text-label-md font-semibold flex items-center justify-center gap-1 shadow-sm active:scale-98 transition-transform">
+                  <button
+                    onClick={handleDownloadPtm}
+                    className="flex-1 py-1.5 px-2.5 sm:px-space-sm rounded-full bg-primary text-on-primary text-[11px] sm:text-label-md font-semibold flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
+                  >
                     <span className="material-symbols-outlined text-[14px] sm:text-[16px]">download</span>
                     <span>Download</span>
                   </button>
-                  <button className="py-1.5 px-3 sm:px-space-md rounded-full bg-surface-container text-primary text-[11px] sm:text-label-md font-semibold flex items-center justify-center gap-1 hover:bg-surface-container-high transition-colors">
+                  <button
+                    onClick={handlePreviewPtm}
+                    className="py-1.5 px-3 sm:px-space-md rounded-full bg-surface-container text-primary text-[11px] sm:text-label-md font-semibold flex items-center justify-center gap-1 hover:bg-surface-container-high active:scale-95 transition-all cursor-pointer"
+                  >
                     <span className="material-symbols-outlined text-[14px] sm:text-[16px]">visibility</span>
                     <span>Preview</span>
                   </button>
@@ -317,13 +363,20 @@ export default function NoticesPage() {
               Energy Models. Faculty mentorship sessions start this Saturday.
             </p>
             <div className="mt-2.5 sm:mt-space-md flex items-center gap-2 sm:gap-space-xs">
-              <button className="py-1.5 sm:py-2 px-3 sm:px-space-lg rounded-full bg-primary text-on-primary text-[11px] sm:text-label-md font-semibold flex items-center justify-center gap-1 shadow-sm active:scale-98 transition-transform">
+              <button
+                onClick={handleRegisterStem}
+                className="py-1.5 sm:py-2 px-3 sm:px-space-lg rounded-full bg-primary text-on-primary text-[11px] sm:text-label-md font-semibold flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
+              >
                 <span>Register Project Proposal</span>
                 <span className="material-symbols-outlined text-[14px] sm:text-[16px]">how_to_reg</span>
               </button>
             </div>
           </div>
         </div>
+
+        {toastMsg && (
+          <Toast message={toastMsg} type="success" onClose={() => setToastMsg(null)} />
+        )}
       </div>
     </PortalShell>
   );

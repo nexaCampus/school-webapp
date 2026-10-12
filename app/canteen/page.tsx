@@ -4,11 +4,18 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import Toast from '@/components/Toast';
 import { goApi } from '@/lib/goApiClient';
 import type { CanteenWalletData } from '@/lib/goApiTypes';
 
 export default function CanteenPage() {
   const [wallet, setWallet] = useState<CanteenWalletData | null>(null);
+  const [balance, setBalance] = useState<number>(42.5);
+  const [isTopUpOpen, setIsTopUpOpen] = useState<boolean>(false);
+  const [topUpAmount, setTopUpAmount] = useState<number>(250);
+  const [customAmount, setCustomAmount] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const s = getSession();
@@ -16,10 +23,12 @@ export default function CanteenPage() {
       window.location.replace('/chooser');
       return;
     }
-    goApi.getCanteenWallet().then(setWallet);
+    goApi.getCanteenWallet().then((data) => {
+      setWallet(data);
+      if (data?.balance != null) setBalance(data.balance);
+    });
   }, []);
 
-  const balance = wallet?.balance ?? 42.5;
   const spentToday = wallet?.spentToday ?? 6.2;
   const limit = wallet?.dailyLimit ?? 15.0;
   const pct = Math.min(100, Math.round((spentToday / limit) * 100));
@@ -34,6 +43,25 @@ export default function CanteenPage() {
     { id: 'tx-1', timestamp: 'Today, 11:15 AM', description: 'Cold Brew Chocolate Milk + Fruit Bowl', amount: 5.0 },
     { id: 'tx-2', timestamp: 'Yesterday, 01:20 PM', description: 'Whole Wheat Club Wrap + Fresh Orange Juice', amount: 4.2 },
   ];
+
+  const handleTopUpConfirm = (e: React.FormEvent) => {
+    e.preventDefault();
+    const finalAmount = customAmount ? parseFloat(customAmount) : topUpAmount;
+    if (isNaN(finalAmount) || finalAmount <= 0) {
+      setErrorMessage('Please enter a valid top-up amount greater than ₹0.');
+      return;
+    }
+    if (finalAmount > 5000) {
+      setErrorMessage('Maximum single top-up limit is ₹5,000 per institutional guideline.');
+      return;
+    }
+
+    setBalance((prev) => prev + finalAmount);
+    setIsTopUpOpen(false);
+    setCustomAmount('');
+    setErrorMessage(null);
+    setToastMsg(`₹${finalAmount.toFixed(2)} credited successfully to Smart RFID Card!`);
+  };
 
   return (
     <PortalShell title="Canteen" activePath="canteen">
@@ -52,8 +80,15 @@ export default function CanteenPage() {
               <div className="h-full rounded-full bg-white" style={{ width: `${pct}%` }}></div>
             </div>
           </div>
-          <button className="h-[46px] px-6 rounded-full bg-white text-primary text-[14px] font-bold shadow-sm hover:bg-surface-bright transition-colors cursor-pointer active:scale-95">
-            Top Up Balance
+          <button
+            onClick={() => {
+              setErrorMessage(null);
+              setIsTopUpOpen(true);
+            }}
+            className="h-[46px] px-6 rounded-full bg-white text-primary text-[14px] font-bold shadow-sm hover:bg-surface-bright transition-colors cursor-pointer active:scale-95 flex items-center justify-center gap-2"
+          >
+            <span className="material-symbols-outlined text-[18px]">add_card</span>
+            <span>Top Up Balance</span>
           </button>
         </section>
 
@@ -98,6 +133,109 @@ export default function CanteenPage() {
             </div>
           </section>
         </div>
+
+        {/* Top Up Modal */}
+        {isTopUpOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Top Up Canteen Smart Card"
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150"
+            onClick={() => setIsTopUpOpen(false)}
+          >
+            <div
+              className="w-full max-w-sm bg-white dark:bg-[#1a1c2b] rounded-3xl p-6 shadow-2xl border border-outline/15 dark:border-[#262a40] flex flex-col gap-4 animate-in zoom-in-95 duration-150"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between pb-3 border-b border-outline/10 dark:border-[#262a40]">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[24px]">account_balance_wallet</span>
+                  <h3 className="text-lg font-bold text-on-surface">Top-Up Card Wallet</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsTopUpOpen(false)}
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-outline hover:bg-surface-container active:scale-90 transition-transform cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[20px]">close</span>
+                </button>
+              </div>
+
+              <form onSubmit={handleTopUpConfirm} className="flex flex-col gap-4">
+                {errorMessage && (
+                  <div className="p-3 rounded-xl bg-error/10 text-error flex items-center gap-2 text-xs font-bold">
+                    <span className="material-symbols-outlined text-[18px]">error</span>
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
+
+                <div>
+                  <label className="text-xs font-bold text-on-surface mb-2 block">
+                    Choose Preset Amount
+                  </label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[100, 250, 500, 1000].map((amt) => (
+                      <button
+                        key={amt}
+                        type="button"
+                        onClick={() => {
+                          setTopUpAmount(amt);
+                          setCustomAmount('');
+                          setErrorMessage(null);
+                        }}
+                        className={`py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                          topUpAmount === amt && !customAmount
+                            ? 'bg-primary text-white border-primary shadow-sm'
+                            : 'bg-surface-container border-transparent text-on-surface hover:border-primary/30'
+                        }`}
+                      >
+                        ₹{amt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-on-surface">
+                    Or Enter Custom Amount (₹)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="5000"
+                    value={customAmount}
+                    onChange={(e) => {
+                      setCustomAmount(e.target.value);
+                      setErrorMessage(null);
+                    }}
+                    placeholder="e.g. 350"
+                    className="w-full h-11 px-3.5 rounded-xl bg-surface-container text-on-surface text-sm border border-transparent focus:border-primary focus:outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-outline/10">
+                  <button
+                    type="button"
+                    onClick={() => setIsTopUpOpen(false)}
+                    className="px-4 py-2.5 rounded-full text-xs font-bold text-on-surface hover:bg-surface-container transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 rounded-full bg-primary text-white text-xs font-bold shadow-md hover:bg-primary/90 active:scale-95 transition-all cursor-pointer"
+                  >
+                    Proceed to Pay
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {toastMsg && (
+          <Toast message={toastMsg} type="success" onClose={() => setToastMsg(null)} />
+        )}
       </div>
     </PortalShell>
   );

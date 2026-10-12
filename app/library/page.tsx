@@ -4,67 +4,105 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import Toast from '@/components/Toast';
 
-const BOOKS = [
+interface Book {
+  id: string;
+  title: string;
+  author: string;
+  accNo: string;
+  category: string;
+  available: string;
+  color: string;
+  reserved: boolean;
+}
+
+const INITIAL_BOOKS: Book[] = [
   {
+    id: 'b-1',
     title: 'Concepts of Physics (Vol 1 & 2)',
     author: 'Dr. H. C. Verma',
     accNo: 'ACC-PHY-8842',
     category: 'Textbooks',
     available: '3 of 8 available',
     color: 'text-tertiary',
+    reserved: false,
   },
   {
+    id: 'b-2',
     title: 'Clean Code: Agile Software',
     author: 'Robert C. Martin',
     accNo: 'ACC-CS-2041',
     category: 'Computer Science',
     available: '1 of 4 available',
     color: 'text-tertiary',
+    reserved: false,
   },
   {
+    id: 'b-3',
     title: 'Higher Algebra & Calculus Methods',
     author: 'Hall & Knight',
     accNo: 'ACC-MTH-9021',
     category: 'Textbooks',
     available: '4 of 5 available',
     color: 'text-tertiary',
+    reserved: false,
   },
   {
+    id: 'b-4',
     title: 'Organic Chemistry Structure & Mechanism',
     author: 'Morrison & Boyd',
     accNo: 'ACC-CHM-7714',
     category: 'Reference',
     available: '2 of 6 available',
     color: 'text-tertiary',
+    reserved: false,
   },
   {
+    id: 'b-5',
     title: 'A Brief History of Time',
     author: 'Stephen Hawking',
     accNo: 'ACC-SCI-1102',
     category: 'Popular Science',
     available: '5 of 5 available',
     color: 'text-tertiary',
+    reserved: false,
   },
   {
+    id: 'b-6',
     title: 'Artificial Intelligence: Modern Approach',
     author: 'Stuart Russell & Peter Norvig',
     accNo: 'ACC-CS-9912',
     category: 'Computer Science',
     available: '2 of 3 available',
     color: 'text-tertiary',
+    reserved: false,
   },
 ];
 
 export default function LibraryPage() {
+  const [books, setBooks] = useState<Book[]>(INITIAL_BOOKS);
   const [query, setQuery] = useState('');
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const s = getSession();
     if (!s?.student) window.location.replace('/chooser');
   }, []);
 
-  const filtered = BOOKS.filter(
+  const handleReserve = (bookId: string, title: string) => {
+    setBooks((prev) =>
+      prev.map((b) => (b.id === bookId ? { ...b, reserved: !b.reserved } : b))
+    );
+    const book = books.find((b) => b.id === bookId);
+    if (book?.reserved) {
+      setToastMsg(`Reservation cancelled for "${title}".`);
+    } else {
+      setToastMsg(`"${title}" reserved! Pick up at Main Library Counter within 48h.`);
+    }
+  };
+
+  const filtered = books.filter(
     (b) =>
       b.title.toLowerCase().includes(query.toLowerCase()) ||
       b.author.toLowerCase().includes(query.toLowerCase()) ||
@@ -86,11 +124,11 @@ export default function LibraryPage() {
           />
         </label>
 
-        {/* Books Responsive Grid: 1 on mobile, 2 on tablet, 3 on laptop */}
+        {/* Books Responsive Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-space-xs">
-          {filtered.map((b, idx) => (
+          {filtered.map((b) => (
             <div
-              key={idx}
+              key={b.id}
               className="bg-surface-container-lowest rounded-[20px] shadow-sm p-5 flex flex-col justify-between hover:shadow-md transition-shadow"
             >
               <div>
@@ -107,13 +145,24 @@ export default function LibraryPage() {
 
               <div className="flex items-center justify-between mt-5 pt-4 border-t border-outline/10">
                 <span className={`text-[12px] font-bold ${b.color}`}>{b.available}</span>
-                <button className="text-[12px] font-bold text-white bg-primary hover:bg-primary/90 transition-colors rounded-full px-4 py-1.5 shadow-sm">
-                  Reserve
+                <button
+                  onClick={() => handleReserve(b.id, b.title)}
+                  className={`text-[12px] font-bold rounded-full px-4 py-1.5 shadow-sm transition-all active:scale-95 cursor-pointer ${
+                    b.reserved
+                      ? 'bg-tertiary-container text-on-tertiary-container'
+                      : 'text-white bg-primary hover:bg-primary/90'
+                  }`}
+                >
+                  {b.reserved ? 'Reserved' : 'Reserve'}
                 </button>
               </div>
             </div>
           ))}
         </div>
+
+        {toastMsg && (
+          <Toast message={toastMsg} type="success" onClose={() => setToastMsg(null)} />
+        )}
       </div>
     </PortalShell>
   );

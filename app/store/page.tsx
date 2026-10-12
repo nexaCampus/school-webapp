@@ -283,10 +283,10 @@ export default function StorePage() {
                   </div>
                   <button
                     onClick={() => {
-                      alert(`Order placed successfully for ₹${totalCartPrice}! Collection slip generated for Student ${studentName}.`);
+                      setOrderNotification(`Order placed successfully for ₹${totalCartPrice.toLocaleString('en-IN')}! Counter pickup slip generated for ${studentName}.`);
                       setCart({});
                     }}
-                    className="w-full h-10 rounded-full bg-primary text-white font-bold text-[13px] shadow-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-1.5"
+                    className="w-full h-10 rounded-full bg-primary text-white font-bold text-[13px] shadow-sm hover:bg-primary/90 active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <span>Confirm Counter Order</span>
                     <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
