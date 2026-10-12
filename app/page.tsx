@@ -276,58 +276,54 @@ const BANNER_BOXES: BannerSpeck[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Attendance heatmap calendar model
+// Attendance heatmap calendar model — the full current month, Monday-first.
+// The date the client actually sees is resolved after mount (see `attendanceNow`
+// in the component): SSR always renders the deterministic fallback below, so
+// server markup and the first client paint are byte-identical and can never
+// hydrate-mismatch.
 // ---------------------------------------------------------------------------
 
-const ATTENDANCE_WINDOW_DAYS = 30;
-const ATTENDANCE_LEAVE_INDICES = new Set([11, 24]);
+const LEAVE_DAYS_OF_MONTH = new Set([12, 23]);
 
-// Fixed anchor rather than `new Date()`: the page is server-rendered, so a live
-// clock would risk a server/client hydration mismatch across a midnight boundary.
-const ATTENDANCE_WINDOW_END = '2026-10-09';
+const MONTH_LABELS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+] as const;
 
-const WEEKDAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
+/** SSR fallback — the same constant on server and first client paint. */
+const ATTENDANCE_FALLBACK_DATE = '2026-10-12T00:00:00';
 
-type AttendanceStatus = 'present' | 'leave' | 'holiday' | 'blank';
-
-interface AttendanceCell {
-  key: string;
-  status: AttendanceStatus;
-  dayOfMonth: number | null;
-  tooltip: string;
+interface MonthCalendar {
+  label: string;
+  cells: AttendanceCell[];
 }
 
 /**
- * Builds the 30-day window as a flat, Monday-first list of cells padded to whole
- * weeks, so it can be dropped straight into a `grid-cols-7` grid alongside the
- * weekday header row. Padding is what keeps every date in its true weekday column.
+ * Builds one calendar month as a flat, Monday-first cell list padded to whole
+ * weeks, so it drops straight into a `grid-cols-7` grid under the weekday
+ * header. Blanks keep partial first/last weeks in their true weekday columns.
  */
-function buildAttendanceCalendar(): AttendanceCell[] {
-  const end = new Date(`${ATTENDANCE_WINDOW_END}T00:00:00`);
-  const start = new Date(end);
-  start.setDate(end.getDate() - (ATTENDANCE_WINDOW_DAYS - 1));
+function buildMonthCalendar(year: number, month: number): MonthCalendar {
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstWeekday = (new Date(year, month, 1).getDay() + 6) % 7;
+  const monthShort = MONTH_LABELS[month].slice(0, 3);
 
-  // Monday = 0 ... Sunday = 6
-  const leadingBlanks = (start.getDay() + 6) % 7;
-  const cells: AttendanceCell[] = Array.from({ length: leadingBlanks }, (_, i) => ({
+  const cells: AttendanceCell[] = Array.from({ length: firstWeekday }, (_, i) => ({
     key: `lead-${i}`,
     status: 'blank',
     dayOfMonth: null,
     tooltip: '',
   }));
 
-  for (let i = 0; i < ATTENDANCE_WINDOW_DAYS; i++) {
-    const date = new Date(start);
-    date.setDate(start.getDate() + i);
-    const weekday = (date.getDay() + 6) % 7;
-    const label = `${date.getDate()} ${WEEKDAY_LABELS[weekday]}`;
-    const isWeekend = weekday >= 5;
-
+  for (let day = 1; day <= daysInMonth; day++) {
+    const weekday = (new Date(year, month, day).getDay() + 6) % 7;
+    const isLeave = LEAVE_DAYS_OF_MONTH.has(day) && weekday < 5;
+    const label = `${day} ${monthShort}`;
     cells.push({
-      key: `d-${i}`,
-      status: isWeekend ? 'holiday' : ATTENDANCE_LEAVE_INDICES.has(i) ? 'leave' : 'present',
-      dayOfMonth: date.getDate(),
-      tooltip: `${label}: ${isWeekend ? 'Weekend / Holiday' : ATTENDANCE_LEAVE_INDICES.has(i) ? 'Approved Leave' : 'Present'}`,
+      key: `d-${day}`,
+      status: weekday >= 5 ? 'holiday' : isLeave ? 'leave' : 'present',
+      dayOfMonth: day,
+      tooltip: `${label}: ${weekday >= 5 ? 'Weekend / Holiday' : isLeave ? 'Approved Leave' : 'Present'}`,
     });
   }
 
@@ -340,7 +336,18 @@ function buildAttendanceCalendar(): AttendanceCell[] {
     });
   }
 
-  return cells;
+  return { label: `${MONTH_LABELS[month]} ${year}`, cells };
+}
+
+const WEEKDAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
+
+type AttendanceStatus = 'present' | 'leave' | 'holiday' | 'blank';
+
+interface AttendanceCell {
+  key: string;
+  status: AttendanceStatus;
+  dayOfMonth: number | null;
+  tooltip: string;
 }
 
 const SECURITY_AUDIT_CHECKS: string[] = [
@@ -511,7 +518,19 @@ export default function ExecutiveHomePage() {
 
   const visibleSecurityChecks = Math.min(mobileVisibleChecks, SECURITY_AUDIT_CHECKS.length);
 
-  const attendanceCalendar = useMemo(() => buildAttendanceCalendar(), []);
+  // Resolves to the real current month after mount; null on SSR and first paint,
+  // which keeps both byte-identical to the deterministic fallback (no hydration
+  // mismatch), and lets the block track the month on its own afterwards.
+  const [attendanceNow, setAttendanceNow] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setAttendanceNow(new Date());
+  }, []);
+
+  const monthCalendar = useMemo(() => {
+    const anchor = attendanceNow ?? new Date(ATTENDANCE_FALLBACK_DATE);
+    return buildMonthCalendar(anchor.getFullYear(), anchor.getMonth());
+  }, [attendanceNow]);
 
   const toggleSecurityChecks = () => {
     setMobileVisibleChecks((prev) =>
@@ -1098,11 +1117,45 @@ export default function ExecutiveHomePage() {
             <Link
               key={item.id}
               href={item.href}
-              className={`levitate-card group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/60 hover:shadow-2xl hover:shadow-[#1c2ac8]/18 dark:hover:shadow-[#3b49df]/25 flex flex-col justify-between cursor-pointer ${
+              className={`levitate-card group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/60 hover:shadow-2xl hover:shadow-[#1c2ac8]/18 dark:hover:shadow-[#3b49df]/25 flex flex-col justify-between cursor-pointer relative overflow-hidden ${
                 index >= visibleModuleCount ? 'hidden lg:flex' : ''
               }`}
             >
-              <div>
+              {/* 45° diamond lattice behind the content. Light and dark variants are
+                  separate layers so each theme gets its own line colour; the lines
+                  sit at 30% and the content stays on top via `relative z-10`. */}
+              <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+                <div
+                  className="absolute inset-0 dark:hidden"
+                  style={{
+                    backgroundImage: [
+                      'repeating-linear-gradient(45deg, rgba(28,42,200,0.30) 0 1px, rgba(28,42,200,0) 1px 15px)',
+                      'repeating-linear-gradient(-45deg, rgba(28,42,200,0.30) 0 1px, rgba(28,42,200,0) 1px 15px)',
+                    ].join(','),
+                  }}
+                />
+                <div
+                  className="absolute inset-0 hidden dark:block"
+                  style={{
+                    backgroundImage: [
+                      'repeating-linear-gradient(45deg, rgba(255,255,255,0.30) 0 1px, rgba(255,255,255,0) 1px 15px)',
+                      'repeating-linear-gradient(-45deg, rgba(255,255,255,0.30) 0 1px, rgba(255,255,255,0) 1px 15px)',
+                    ].join(','),
+                  }}
+                />
+                {[
+                  { left: `${8 + ((index * 37) % 62)}%`, top: `${6 + ((index * 53) % 30)}%`, size: 26 },
+                  { left: `${12 + ((index * 61) % 58)}%`, top: `${56 + ((index * 29) % 32)}%`, size: 15 },
+                ].map((tile, t) => (
+                  <span
+                    key={t}
+                    className="absolute rotate-45 rounded-[2px] border border-current bg-current text-[#1c2ac8] dark:text-white"
+                    style={{ left: tile.left, top: tile.top, width: tile.size, height: tile.size, opacity: 0.1 }}
+                  />
+                ))}
+              </div>
+
+              <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
                   <div className={`w-11 h-11 rounded-xl bg-gradient-to-tr ${item.accent} flex items-center justify-center text-white shadow-md group-hover:scale-110 group-hover:rotate-1 transition-transform duration-300`}>
                     <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
@@ -1119,7 +1172,7 @@ export default function ExecutiveHomePage() {
                 </p>
               </div>
 
-              <div className="mt-5 pt-3 border-t border-[#f2f3ff] dark:border-[#24283d] flex items-center justify-between text-[12px] font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">
+              <div className="relative z-10 mt-5 pt-3 border-t border-[#f2f3ff] dark:border-[#24283d] flex items-center justify-between text-[12px] font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">
                 <span>Launch Screen</span>
                 <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1.5 transition-transform duration-300">
                   arrow_forward
@@ -1884,7 +1937,7 @@ export default function ExecutiveHomePage() {
             {/* 30-Day Grid */}
             <div className="lg:col-span-8 p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40]">
               <div className="flex items-center justify-between mb-4 text-xs font-bold text-[#454655] dark:text-[#a0a4c0]">
-                <span>Daily Log (Recent 30 Days)</span>                <div className="flex items-center gap-3">
+                <span>Daily Log ({monthCalendar.label})</span>                <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-emerald-500" /> Present</span>
                   <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-amber-400" /> Leave</span>
                   <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-slate-300 dark:bg-slate-700" /> Holiday</span>
@@ -1903,7 +1956,7 @@ export default function ExecutiveHomePage() {
                   </div>
                 ))}
 
-                {attendanceCalendar.map((cell) =>
+                {monthCalendar.cells.map((cell) =>
                   cell.status === 'blank' ? (
                     <div key={cell.key} aria-hidden="true" className="h-8 sm:h-9" />
                   ) : (
