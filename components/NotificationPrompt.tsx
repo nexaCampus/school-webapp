@@ -7,7 +7,7 @@ import {
   requestNotificationPermission,
   sendTestNotification,
   type PushPermissionStatus,
-} from '@/lib/firebaseNotifications';
+} from '@/lib/firebase-notifications';
 
 interface NotificationPromptProps {
   className?: string;
@@ -64,7 +64,7 @@ export default function NotificationPrompt({
     setFeedback(null);
     try {
       const sent = await sendTestNotification(
-        'NexaCampus Alert 📢',
+        'NexaCampus Alert ðŸ“¢',
         'Term practical exams & circulars are live! Web push notification test successful.',
         '/notices'
       );

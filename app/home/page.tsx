@@ -10,7 +10,7 @@ import {
   DEFAULT_IMPORTANT_DATES,
   type TimetablePeriod,
   type ImportantDate,
-} from '@/lib/studentCache';
+} from '@/lib/cache/student-cache';
 import { student as fallbackStudent } from '@/lib/data';
 
 export default function HomePage() {
@@ -162,14 +162,14 @@ export default function HomePage() {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1">
                   <span className="text-[10px] sm:text-label-sm uppercase text-secondary font-bold">
-                    Official Date • {nextSchoolEvent?.tag || 'ALERT'}
+                    Official Date â€¢ {nextSchoolEvent?.tag || 'ALERT'}
                   </span>
                   <span className="text-[10px] sm:text-label-sm text-outline">
-                    • {nextSchoolEvent?.date || 'Campus Roster'}
+                    â€¢ {nextSchoolEvent?.date || 'Campus Roster'}
                   </span>
                 </div>
                 <p className="text-[11px] sm:text-body-sm text-on-surface truncate">
-                  {nextSchoolEvent ? `${nextSchoolEvent.title} — ${nextSchoolEvent.description}` : 'Regular classes resume Thursday - official circular uploaded'}
+                  {nextSchoolEvent ? `${nextSchoolEvent.title} â€” ${nextSchoolEvent.description}` : 'Regular classes resume Thursday - official circular uploaded'}
                 </p>
               </div>
               <span className="material-symbols-outlined text-outline-variant text-[17px] sm:text-[20px] flex-shrink-0">
@@ -215,7 +215,7 @@ export default function HomePage() {
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className="inline-flex items-center gap-0.5 whitespace-nowrap flex-shrink-0 text-[9px] sm:text-[10px] uppercase bg-primary/10 text-primary px-1.5 py-0.2 sm:px-2 sm:py-0.5 rounded-md font-bold tracking-tight">
-                          {todayPeriods[0].isLive ? 'Now • ' : ''}
+                          {todayPeriods[0].isLive ? 'Now â€¢ ' : ''}
                           {todayPeriods[0].period}
                         </span>
                         <span className="text-[10px] sm:text-label-sm text-outline whitespace-nowrap">
@@ -226,7 +226,7 @@ export default function HomePage() {
                         {todayPeriods[0].subject}
                       </p>
                       <p className="text-[10px] sm:text-body-sm text-on-surface-variant truncate">
-                        {todayPeriods[0].room} • {todayPeriods[0].teacher}
+                        {todayPeriods[0].room} â€¢ {todayPeriods[0].teacher}
                       </p>
                     </div>
                   </div>
@@ -254,7 +254,7 @@ export default function HomePage() {
                         {p.subject}
                       </p>
                       <p className="text-[9.5px] sm:text-body-sm text-on-surface-variant truncate">
-                        {p.room} • {p.teacher}
+                        {p.room} â€¢ {p.teacher}
                       </p>
                     </div>
                     <span className="text-[9.5px] sm:text-label-sm text-primary mt-1 sm:mt-2 flex items-center gap-1 font-bold">

@@ -72,38 +72,68 @@ graph TD
 
 ```
 school-webapp/
-├── app/                      # Next.js App Router (Pages, Layouts, Route Handlers)
-│   ├── (auth)/               # Auth routes (admission, email, onboarding, chooser)
-│   ├── api/v1/[...slug]/     # API Proxy routes (CORS, CSRF, token forwarding)
-│   ├── layout.tsx            # Global root layout with metadata & fonts
-│   └── page.tsx              # Executive campus homepage
-├── components/               # React UI Components
-│   ├── common/               # Atomic design primitives (Modal, Badge, Button)
-│   ├── feedback/             # ErrorBoundary, alerts, feedback surfaces
-│   ├── home/                 # Executive homepage modules
-│   └── PortalShell.tsx       # Institutional student portal shell
-├── hooks/                    # Reusable React hooks
-│   └── useAuth.ts            # Reactive authentication hook
-├── lib/                      # Core business logic, services & infrastructure
-│   ├── api/                  # Scalable API client, types, catalog
-│   │   ├── client.ts         # Resilient HTTP client with retries & timeouts
-│   │   ├── endpoints.ts      # Centralized REST endpoint catalog
-│   │   └── types.ts          # Generic ApiResponse & request options
-│   ├── config/               # Centralized type-safe environment configurations
-│   │   └── env.ts            # firebaseEnv, apiEnv, appEnv
-│   ├── errors/               # Domain error hierarchy
-│   │   └── AppError.ts       # Network, Auth, Validation, RateLimit errors
-│   ├── services/             # Pure domain services (decoupled from UI)
-│   │   ├── auth.service.ts   # Authentication workflows & session setup
-│   │   ├── student.service.ts# Student roster retrieval & updates
+├── app/                          # Next.js App Router (one page per route)
+│   ├── api/v1/[...slug]/         # Cached Go-backend proxy (GET cache + mutation passthrough)
+│   ├── layout.tsx                # Root layout: fonts, metadata, providers, ErrorBoundary
+│   ├── page.tsx                  # Executive campus homepage + 16-module directory
+│   ├── home/ academics/ …        # Portal feature screens (one directory per module)
+│   └── globals.css               # Design tokens & global styles
+├── components/
+│   ├── common/                   # UI primitives: Modal, Badge, Button (+ index barrel)
+│   ├── feedback/                 # ErrorBoundary and other resilience surfaces
+│   ├── PortalShell.tsx           # Institutional portal chrome (desktop nav, mobile tabs)
+│   └── QueryProvider.tsx         # TanStack Query provider, BootSplash, Toasts, PWA
+├── hooks/                        # Feature-scoped React Query hooks (useAttendance, useAuth, …)
+├── lib/
+│   ├── api/                      # Scalable API layer — the only place HTTP lives
+│   │   ├── client.ts             # Hardened fetch: retries, timeouts, CSRF, 401 refresh
+│   │   ├── endpoints.ts          # Single source of truth for every Go backend route
+│   │   ├── go-client.ts          # Domain client (72 routes) with offline fallback data
+│   │   ├── go-types.ts           # Response contracts for the Go backend
+│   │   └── types.ts              # ApiResponse envelope & request options
+│   ├── cache/                    # student-cache: TTL student record memoization
+│   ├── config/                   # Centralized type-safe environment configuration
+│   │   └── env.ts                # firebaseEnv, apiEnv, appEnv (no raw process.env elsewhere)
+│   ├── errors/                   # AppError hierarchy + toAppError translation
+│   ├── security.ts               # CSRF header helpers, cookie & token hygiene
+│   ├── server/                   # Server-only helpers (LRU proxy cache)
+│   ├── services/                 # Pure domain services (decoupled from UI)
+│   │   ├── auth.service.ts       # Authentication workflows & session setup
+│   │   ├── student.service.ts    # Student roster retrieval & updates
 │   │   └── notification.service.ts # Push notification dispatch & permissions
-│   ├── state/                # Reactive state management
-│   │   └── sessionStore.ts   # Observable session store with tab synchronization
-│   ├── firebase.ts           # Firebase SDK initialization
-│   ├── session.ts            # Backward-compatible session facade
-│   └── apiClient.ts          # Backward-compatible apiClient facade
-└── styles/                   # Global style definitions & Tailwind tokens
+│   ├── state/                    # Reactive state management
+│   │   └── sessionStore.ts       # Observable session store with cross-tab sync
+│   ├── data.ts                   # Offline fallback fixtures for the Go client
+│   ├── firebase.ts               # Firebase SDK initialization
+│   ├── firebase-notifications.ts # FCM registration & permission plumbing
+│   ├── query-client.ts           # React Query client defaults
+│   ├── query-keys.ts             # Query key factory + per-resource cache TTLs
+│   └── session.ts                # Thin backward-compatible session facade
+├── ARCHITECTURE.md               # This document
+├── Auth.md  Security.md  DataSecurity.md  ThreatModel.md  SecurityChecklist.md
+└── firestore.rules  firebase.json  middleware.ts  next.config.mjs
 ```
+
+## 3.1 Documentation Set
+
+| Document | Covers |
+|---|---|
+| `README.md` | Setup, stack, auth flow, page inventory |
+| `ARCHITECTURE.md` | Layers, dependency rules, API contract, state management |
+| `Auth.md` | Identity, providers, session lifecycle, role-based access |
+| `Security.md` | Defensive coding standards and hardening baseline |
+| `DataSecurity.md` | Data classification, encryption and retention lifecycle |
+| `ThreatModel.md` | Attack surface map and mitigations |
+| `SecurityChecklist.md` | Pre-deploy and ongoing operational checks |
+
+
+### Dependency rules
+
+1. `app/` and `components/` never call `fetch` — they go through `lib/api/`.
+2. `lib/api/` never imports from `app/` or `components/`.
+3. `lib/services/` holds domain logic; `hooks/` adapts it to React; pages only consume hooks.
+4. `process.env` is read exclusively in `lib/config/env.ts`.
+
 
 ---
 
@@ -119,13 +149,20 @@ school-webapp/
   - `storage` event listeners provide multi-tab synchronization across browser windows.
   - Decoupled from React internals, usable in vanilla TypeScript, server helpers, or hooks.
 
-### 4.3. Resilient API Architecture (`lib/api/`)
-- **Centralized Catalog (`endpoints.ts`)**: Grouped endpoints for Auth, Students, Academics, Notices, Attendance, and System.
-- **Defensive HTTP Client (`client.ts`)**:
+### 4.3. Scalable API Architecture (`lib/api/`)
+- **Centralized Catalog (`endpoints.ts`)**: every Go backend route is declared once and consumed by
+  `go-client.ts` as `API_ENDPOINTS.<GROUP>.<ACTION>`. No endpoint string is hardcoded in business
+  logic, so a backend route change is a single-file edit.
+- **Hardened HTTP Client (`client.ts`)**:
   - Exponential backoff retries on 5xx and network blips for idempotent requests.
   - Automatic CSRF header injection (`X-CSRF-Token`).
   - Standardized JSON envelope parsing (`ApiResponse<T>`).
-  - Strict timeout guards (default 12,000ms).
+  - Strict timeout guards and silent HttpOnly token rotation on `401`.
+- **Domain Client (`go-client.ts`)**: exposes the full 72-route surface as typed methods and always
+  resolves to a usable payload — live data when the backend answers, offline fixtures otherwise.
+- **Proxy Route Handlers (`app/api/v1/[...slug]/route.ts`)**: same-origin proxy with per-resource TTLs
+  and prefix invalidation on mutation, so the browser never calls the Go backend cross-origin.
+
 
 ### 4.4. Domain Error System (`lib/errors/AppError.ts`)
 - Strongly typed error subclasses:
@@ -136,7 +173,8 @@ school-webapp/
   - `RateLimitError` (retryAfterMs support)
   - `NotFoundError`
 - **React `ErrorBoundary` (`components/feedback/ErrorBoundary.tsx`)**:
-  - Catches render crashes in child trees.
+  - Mounted once in `app/layout.tsx`, so any render crash anywhere in the portal tree is trapped.
+  - Catches render crashes in child trees; can also be mounted locally with a custom `fallback`.
   - Provides a dignified Obsidian Midnight recovery UI with a retry trigger and diagnostic reference.
 
 ### 4.5. Centralized Configuration (`lib/config/env.ts`)

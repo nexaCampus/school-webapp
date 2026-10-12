@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
-import { goApi } from '@/lib/goApiClient';
-import type { AttendanceResponseData } from '@/lib/goApiTypes';
+import { goApi } from '@/lib/api/go-client';
+import type { AttendanceResponseData } from '@/lib/api/go-types';
 
 export default function AttendancePage() {
   const [data, setData] = useState<AttendanceResponseData | null>(null);

@@ -4,6 +4,7 @@ import BootSplash from '@/components/BootSplash';
 import PWARegistration from '@/components/PWARegistration';
 import CookieConsentBanner from '@/components/CookieConsentBanner';
 import QueryProvider from '@/components/QueryProvider';
+import ErrorBoundary from '@/components/feedback/ErrorBoundary';
 import './globals.css';
 
 const poppins = Poppins({
@@ -84,11 +85,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${poppins.className} font-sans antialiased bg-surface text-on-surface`}>
         <QueryProvider>
-          <BootSplash>
-            {children}
-            <PWARegistration />
-            <CookieConsentBanner />
-          </BootSplash>
+          <ErrorBoundary>
+            <BootSplash>
+              {children}
+              <PWARegistration />
+              <CookieConsentBanner />
+            </BootSplash>
+          </ErrorBoundary>
         </QueryProvider>
       </body>
     </html>
