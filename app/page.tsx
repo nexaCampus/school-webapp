@@ -260,17 +260,19 @@ const BANNER_DOTS: BannerSpeck[] = [
   { left: '90%', top: '94%', size: 5, opacity: 0.28, round: true },
 ];
 
+// All boxes sit at 45 degrees so they read as diamonds and line up with the
+// crosshatch lattice behind them.
 const BANNER_BOXES: BannerSpeck[] = [
-  { left: '11%', top: '6%', size: 14, opacity: 0.16, rotate: 12 },
-  { left: '30%', top: '14%', size: 10, opacity: 0.13, rotate: -8 },
-  { left: '63%', top: '3%', size: 16, opacity: 0.15, rotate: 8 },
-  { left: '86%', top: '9%', size: 11, opacity: 0.14, rotate: -12 },
-  { left: '16%', top: '86%', size: 12, opacity: 0.14, rotate: -10 },
-  { left: '41%', top: '92%', size: 9, opacity: 0.12, rotate: 14 },
-  { left: '64%', top: '84%', size: 13, opacity: 0.15, rotate: -6 },
-  { left: '87%', top: '92%', size: 12, opacity: 0.14, rotate: 10 },
-  { left: '1%', top: '50%', size: 22, opacity: 0.08, rotate: 12, wide: true },
-  { left: '95%', top: '52%', size: 22, opacity: 0.08, rotate: -12, wide: true },
+  { left: '11%', top: '6%', size: 14, opacity: 0.16, rotate: 45 },
+  { left: '30%', top: '14%', size: 10, opacity: 0.13, rotate: 45 },
+  { left: '63%', top: '3%', size: 16, opacity: 0.15, rotate: 45 },
+  { left: '86%', top: '9%', size: 11, opacity: 0.14, rotate: 45 },
+  { left: '16%', top: '86%', size: 12, opacity: 0.14, rotate: 45 },
+  { left: '41%', top: '92%', size: 9, opacity: 0.12, rotate: 45 },
+  { left: '64%', top: '84%', size: 13, opacity: 0.15, rotate: 45 },
+  { left: '87%', top: '92%', size: 12, opacity: 0.14, rotate: 45 },
+  { left: '1%', top: '50%', size: 22, opacity: 0.08, rotate: 45, wide: true },
+  { left: '95%', top: '52%', size: 22, opacity: 0.08, rotate: 45, wide: true },
 ];
 
 const SECURITY_AUDIT_CHECKS: string[] = [
@@ -2331,8 +2333,31 @@ export default function ExecutiveHomePage() {
             Edge-to-edge vibrant Royal Blue block with crystal-clear, fully visible 'nexaCampus' display
             ========================================================================= */}
         <div className="relative w-full bg-[#1c2ac8] dark:bg-[#1622a5] text-white pt-10 sm:pt-14 md:pt-18 lg:pt-24 pb-8 sm:pb-12 md:pb-16 lg:pb-20 px-3 sm:px-6 md:px-10 select-none border-t border-[#1c2ac8] overflow-hidden">
-          {/* Decorative coding & study artifacts — white specks, boxes and glyphs behind the wordmark */}
-          <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+          {/* Decorative coding & study artifacts — white specks, diamonds, glyphs and a 45°
+              crosshatch lattice. Masked so the wordmark always sits on clean blue. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              // Soft elliptical clear zone covering the wordmark, fading back to full
+              // pattern at the edges. Percentages so it holds at phone and laptop widths.
+              WebkitMaskImage:
+                'radial-gradient(ellipse 66% 42% at 50% 50%, transparent 0%, transparent 74%, #000 100%)',
+              maskImage:
+                'radial-gradient(ellipse 66% 42% at 50% 50%, transparent 0%, transparent 74%, #000 100%)',
+            }}
+          >
+            {/* 45° crosshatch lattice — two opposing diagonal line sets form the diamonds */}
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: [
+                  'repeating-linear-gradient(45deg, rgba(255,255,255,0.22) 0 1px, rgba(255,255,255,0) 1px 15px)',
+                  'repeating-linear-gradient(-45deg, rgba(255,255,255,0.22) 0 1px, rgba(255,255,255,0) 1px 15px)',
+                ].join(','),
+              }}
+            />
+
             {BANNER_GLYPHS.map((g) => (
               <span
                 key={`g-${g.icon}-${g.left}`}
@@ -2393,13 +2418,13 @@ export default function ExecutiveHomePage() {
                 x="500"
                 y="120"
                 textAnchor="middle"
-                textLength="920"
+                textLength="944"
                 lengthAdjust="spacing"
                 fill="#ffffff"
                 fontFamily="var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif"
                 fontSize="136"
                 fontWeight="900"
-                letterSpacing="-2"
+                letterSpacing="1"
               >
                 nexaCampus
               </text>
