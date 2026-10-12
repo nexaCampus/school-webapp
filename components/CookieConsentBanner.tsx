@@ -6,17 +6,13 @@ import Link from 'next/link';
 export default function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);
 
+  // Shows on every page load by design: the stored choice is still recorded
+  // (and documented on /cookies), but it no longer suppresses the panel, so a
+  // returning visitor who already consented sees it again on the next open.
   useEffect(() => {
-    try {
-      const consent = localStorage.getItem('cookie_consent');
-      if (!consent) {
-        // Small delay to prevent layout jump on immediate load
-        const timer = setTimeout(() => setVisible(true), 800);
-        return () => clearTimeout(timer);
-      }
-    } catch {
-      /* storage unavailable */
-    }
+    // Small delay to prevent layout jump on immediate load
+    const timer = setTimeout(() => setVisible(true), 800);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleConsent = (choice: 'all' | 'essential') => {
