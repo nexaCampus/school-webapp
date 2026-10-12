@@ -2,7 +2,7 @@
 
 // Admission number via Firebase roster. Unknown numbers route to onboarding
 // (locked) instead of dead-ending — mirrors AdmissionLoginViewModel.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getStudent, normalizeAdmissionNumber } from '@/lib/firebase';
 import { setSession } from '@/lib/session';
@@ -14,6 +14,12 @@ export default function AdmissionPage() {
   const [admission, setAdmission] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = 'Admission Number Sign-In | NexaCampus School';
+    }
+  }, []);
 
   async function submit() {
     const normalized = normalizeAdmissionNumber(admission);
