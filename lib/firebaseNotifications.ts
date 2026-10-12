@@ -2,6 +2,7 @@
 // Works on Mobile Phones (Android Chrome, PWA standalone) and Desktop Laptops
 
 import { firebase } from './firebase';
+import { firebaseEnv } from './config/env';
 import { getSession } from './session';
 import { doc, setDoc } from 'firebase/firestore';
 
@@ -92,7 +93,7 @@ export async function requestNotificationPermission(): Promise<NotificationResul
         const messaging = getMessaging(app);
 
         // Optional VAPID key from environment, or default FCM registration
-        const vapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || undefined;
+        const vapidKey = firebaseEnv.vapidKey;
 
         token = await getToken(messaging, {
           serviceWorkerRegistration: swRegistration || undefined,
