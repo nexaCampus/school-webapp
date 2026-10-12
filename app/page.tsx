@@ -1129,8 +1129,8 @@ export default function ExecutiveHomePage() {
                   className="absolute inset-0 dark:hidden"
                   style={{
                     backgroundImage: [
-                      'repeating-linear-gradient(45deg, rgba(28,42,200,0.30) 0 1px, rgba(28,42,200,0) 1px 15px)',
-                      'repeating-linear-gradient(-45deg, rgba(28,42,200,0.30) 0 1px, rgba(28,42,200,0) 1px 15px)',
+                      'repeating-linear-gradient(45deg, rgba(28,42,200,0.20) 0 1px, rgba(28,42,200,0) 1px 15px)',
+                      'repeating-linear-gradient(-45deg, rgba(28,42,200,0.20) 0 1px, rgba(28,42,200,0) 1px 15px)',
                     ].join(','),
                   }}
                 />
@@ -1138,8 +1138,8 @@ export default function ExecutiveHomePage() {
                   className="absolute inset-0 hidden dark:block"
                   style={{
                     backgroundImage: [
-                      'repeating-linear-gradient(45deg, rgba(255,255,255,0.30) 0 1px, rgba(255,255,255,0) 1px 15px)',
-                      'repeating-linear-gradient(-45deg, rgba(255,255,255,0.30) 0 1px, rgba(255,255,255,0) 1px 15px)',
+                      'repeating-linear-gradient(45deg, rgba(255,255,255,0.20) 0 1px, rgba(255,255,255,0) 1px 15px)',
+                      'repeating-linear-gradient(-45deg, rgba(255,255,255,0.20) 0 1px, rgba(255,255,255,0) 1px 15px)',
                     ].join(','),
                   }}
                 />
@@ -1150,7 +1150,7 @@ export default function ExecutiveHomePage() {
                   <span
                     key={t}
                     className="absolute rotate-45 rounded-[2px] border border-current bg-current text-[#1c2ac8] dark:text-white"
-                    style={{ left: tile.left, top: tile.top, width: tile.size, height: tile.size, opacity: 0.1 }}
+                    style={{ left: tile.left, top: tile.top, width: tile.size, height: tile.size, opacity: 0.07 }}
                   />
                 ))}
               </div>
