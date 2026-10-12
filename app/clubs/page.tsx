@@ -1,11 +1,21 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import Toast from '@/components/Toast';
 
-const CLUBS = [
+interface Club {
+  name: string;
+  desc: string;
+  icon: string;
+  accentBg: string;
+  accentColor: string;
+  enrolled: boolean;
+}
+
+const INITIAL_CLUBS: Club[] = [
   {
     name: 'Robotics Club',
     desc: '42 members · Active Labs & Automation',
@@ -57,10 +67,22 @@ const CLUBS = [
 ];
 
 export default function ClubsPage() {
+  const [clubs, setClubs] = useState<Club[]>(INITIAL_CLUBS);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
   useEffect(() => {
     const s = getSession();
     if (!s?.student) window.location.replace('/chooser');
   }, []);
+
+  const handleJoinClub = (clubName: string) => {
+    setClubs((prev) =>
+      prev.map((c) => (c.name === clubName ? { ...c, enrolled: true } : c))
+    );
+    setToastMsg(`Successfully joined ${clubName}! Orientation notice sent to Diary.`);
+  };
+
+  const enrolledCount = clubs.filter((c) => c.enrolled).length;
 
   return (
     <PortalShell title="Clubs & Activities" activePath="clubs">
@@ -69,13 +91,13 @@ export default function ClubsPage() {
         <div className="bg-tertiary/10 border border-tertiary/20 rounded-[16px] px-4 py-3 flex items-center gap-2">
           <span className="material-symbols-outlined text-tertiary text-[20px]">groups</span>
           <p className="text-[13px] font-bold text-tertiary">
-            Enrolled in 2 clubs · 3 interschool competitions open for registration
+            Enrolled in {enrolledCount} club{enrolledCount === 1 ? '' : 's'} · 3 interschool competitions open for registration
           </p>
         </div>
 
         {/* Responsive Clubs Grid: 1 col on phone, 2 on tablet, 3 on laptop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-space-xs">
-          {CLUBS.map((c, idx) => (
+          {clubs.map((c, idx) => (
             <div
               key={idx}
               className="bg-surface-container-lowest rounded-[20px] shadow-sm p-5 flex flex-col justify-between hover:shadow-md transition-shadow"
@@ -103,7 +125,10 @@ export default function ClubsPage() {
                     Joined
                   </span>
                 ) : (
-                  <button className="text-[12px] font-bold text-white bg-primary hover:bg-primary/90 transition-colors rounded-full px-4 py-1 shadow-sm">
+                  <button
+                    onClick={() => handleJoinClub(c.name)}
+                    className="text-[12px] font-bold text-white bg-primary hover:bg-primary/90 active:scale-95 transition-all rounded-full px-4 py-1 shadow-sm cursor-pointer"
+                  >
                     Join
                   </button>
                 )}
@@ -111,6 +136,10 @@ export default function ClubsPage() {
             </div>
           ))}
         </div>
+
+        {toastMsg && (
+          <Toast message={toastMsg} type="success" onClose={() => setToastMsg(null)} />
+        )}
       </div>
     </PortalShell>
   );

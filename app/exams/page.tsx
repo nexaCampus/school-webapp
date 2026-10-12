@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSession } from '@/lib/session';
 import PortalShell from '@/components/PortalShell';
+import Toast from '@/components/Toast';
 import { goApi } from '@/lib/goApiClient';
 import type { ExamResultsData, AdmitCardPayload } from '@/lib/goApiTypes';
 
 export default function ExamsPage() {
   const [results, setResults] = useState<ExamResultsData | null>(null);
   const [admitCard, setAdmitCard] = useState<AdmitCardPayload | null>(null);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [student, setStudent] = useState({
     name: 'Student',
     gradeSection: 'Grade 12 · E',
@@ -56,8 +58,16 @@ export default function ExamsPage() {
     { subject: 'Chemistry', marksObtained: 92, maxMarks: 100 },
   ];
 
+  const handleDownloadHallTicket = () => {
+    setToastMsg(`Hall ticket generated & downloaded for ${student.name}!`);
+  };
+
+  const handleDownloadReportCard = () => {
+    setToastMsg(`Official Term 1 Report Card (PDF) downloaded successfully!`);
+  };
+
   return (
-    <PortalShell title="Exams & Results" activePath="exams">
+    <PortalShell title="Exams &amp; Results" activePath="exams">
       <div className="flex flex-col gap-space-lg">
         {/* Responsive Grid on Laptop (md:), Stacked on Phone */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -104,7 +114,10 @@ export default function ExamsPage() {
                 </span>
               </div>
             </div>
-            <button className="w-full h-[48px] mt-space-md rounded-full bg-primary text-white text-[14px] font-bold flex items-center justify-center gap-2 shadow-sm hover:bg-primary/90 transition-all">
+            <button
+              onClick={handleDownloadHallTicket}
+              className="w-full h-[48px] mt-space-md rounded-full bg-primary text-white text-[14px] font-bold flex items-center justify-center gap-2 shadow-sm hover:bg-primary/90 active:scale-95 transition-all cursor-pointer"
+            >
               <span className="material-symbols-outlined text-[18px]">download</span>
               <span>Download Hall Ticket</span>
             </button>
@@ -150,11 +163,18 @@ export default function ExamsPage() {
                 ))}
               </div>
             </div>
-            <button className="mt-space-md w-full h-[48px] rounded-full bg-primary/10 text-primary text-[14px] font-bold hover:bg-primary/15 transition-all">
+            <button
+              onClick={handleDownloadReportCard}
+              className="mt-space-md w-full h-[48px] rounded-full bg-primary/10 text-primary text-[14px] font-bold hover:bg-primary/15 active:scale-95 transition-all cursor-pointer"
+            >
               Download Full Report Card (PDF)
             </button>
           </section>
         </div>
+
+        {toastMsg && (
+          <Toast message={toastMsg} type="success" onClose={() => setToastMsg(null)} />
+        )}
       </div>
     </PortalShell>
   );
