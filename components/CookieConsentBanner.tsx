@@ -35,7 +35,17 @@ export default function CookieConsentBanner() {
       aria-label="Cookie consent banner"
       className="fixed bottom-3 left-3 right-3 sm:bottom-6 sm:right-6 sm:left-auto sm:max-w-md z-50 animate-in fade-in slide-in-from-bottom-5 duration-300"
     >
-      <div className="p-4 sm:p-5 rounded-2xl bg-surface/95 dark:bg-[#151622]/95 backdrop-blur-md border border-outline/20 shadow-2xl text-on-surface">
+      {/* Light: liquid glass at 10% transparency with a heavy blur, so high-contrast
+          backdrops average into a soft tint instead of streaking through. Dark stays
+          fully opaque — it has no legibility problem and reads cleaner solid.
+
+          NB: the surface colour is spelled out as an arbitrary value rather than
+          `bg-surface/90`. This project defines `.bg-surface` as
+          `background-color: var(--color-surface, #faf8ff)` with no
+          `--tw-bg-opacity`, so Tailwind cannot apply an opacity modifier to it and
+          `bg-surface/90` silently generates no rule at all — leaving the panel with
+          no background. #faf8ff is the exact value of --color-surface. */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-[#faf8ff]/90 dark:bg-[#151622] backdrop-blur-2xl backdrop-saturate-150 dark:backdrop-blur-none border border-white/60 dark:border-[#222538] shadow-2xl text-on-surface">
         <div className="flex items-start gap-3">
           <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
             <span className="material-symbols-outlined text-lg">cookie</span>
