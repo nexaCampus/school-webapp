@@ -23,6 +23,7 @@ import {
   type AuthAccount,
 } from '@/lib/firebase';
 import { getSession, setSession } from '@/lib/session';
+import { authService } from '@/lib/services';
 import { student as mockStudent } from '@/lib/data';
 import AuthFooter from '@/components/AuthFooter';
 import DarkModeToggle from '@/components/DarkModeToggle';
@@ -55,73 +56,7 @@ export default function EmailPage() {
   }
 
   async function routeGoogleAccount(account: AuthAccount) {
-    const existing = getSession();
-    // Returning user who already has an onboarded student profile
-    if (existing?.student && !existing.isNewAccount) {
-      setSession({
-        ...existing,
-        uid: account.uid,
-        name: account.displayName || existing.student.name,
-        email: account.email || existing.student.guardianEmail,
-        provider: 'google',
-      });
-      router.replace('/home');
-      return;
-    }
-
-    const cleanEmail = (account.email || '').trim().toLowerCase();
-    const accountName = (account.displayName || '').trim();
-
-    // 1. Lookup in Firestore by registered email
-    let studentDoc = await getStudentByEmail(cleanEmail);
-
-    // 2. Direct match for Parth Vastavik / 3651121 record if email or name matches
-    if (!studentDoc && (cleanEmail.includes('parth') || cleanEmail.includes('vastavik') || accountName.toLowerCase().includes('parth'))) {
-      studentDoc = await getStudent('3651121').catch(() => null);
-    }
-
-    // 3. If student record exists in roster, set session and enter portal directly
-    if (studentDoc) {
-      setSession({
-        uid: account.uid,
-        name: studentDoc.displayName || studentDoc.name || account.displayName,
-        email: account.email || studentDoc.guardianEmail,
-        provider: 'google',
-        isNewAccount: false,
-        student: studentDoc,
-      });
-      router.replace('/home');
-      return;
-    }
-
-    // 4. For any other Google account: synthesize full active student profile
-    // Never strand user in onboarding or block them with blank forms
-    const derivedName =
-      accountName ||
-      (account.email ? account.email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Student');
-
-    const defaultRoster = await getStudent('3651121').catch(() => null);
-    const studentProfile = {
-      ...(defaultRoster || mockStudent),
-      id: defaultRoster?.id || ('LCGVM-' + account.uid.slice(0, 6).toUpperCase()),
-      name: derivedName,
-      displayName: derivedName,
-      guardianEmail: account.email || '',
-      fatherName: defaultRoster?.fatherName || ('Guardian of ' + derivedName),
-      motherName: defaultRoster?.motherName || ('Family of ' + derivedName),
-      contactPhone: defaultRoster?.contactPhone || '+91 6289652322',
-      emergencyPhone: defaultRoster?.emergencyPhone || '+91 6289652322',
-      residentialAddress: defaultRoster?.residentialAddress || 'Address on school roster',
-    };
-
-    setSession({
-      uid: account.uid,
-      name: derivedName,
-      email: account.email,
-      provider: 'google',
-      isNewAccount: false,
-      student: studentProfile,
-    });
+    await authService.handleGoogleAccount(account);
     router.replace('/home');
   }
 

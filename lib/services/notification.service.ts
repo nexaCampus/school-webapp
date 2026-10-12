@@ -6,7 +6,7 @@ import {
   requestNotificationPermission,
   getNotificationPermission,
   isNotificationSupported,
-  sendTestPushNotification,
+  sendTestNotification,
   type PushPermissionStatus,
   type NotificationResult,
 } from '../firebaseNotifications';
@@ -21,7 +21,7 @@ export const notificationService = {
   },
 
   async sendTest(): Promise<boolean> {
-    return await sendTestPushNotification();
+    return await sendTestNotification();
   },
 };
 
