@@ -210,6 +210,13 @@ interface BannerSpeck {
 
 // Decorative "code & study" texture for the nexaCampus brand banner.
 // Purely presentational: hidden from assistive tech and from pointer events.
+//
+// Artifacts are positioned as a percentage of the banner but scaled in absolute
+// px, so a single set of coordinates serves every width. They are drawn a little
+// larger on phones (where the banner is narrow) and notably larger on laptops,
+// where the same px would otherwise look lost in the extra blue.
+const ARTIFACT_SCALE = '[--art-scale:1.15] sm:[--art-scale:1.35] lg:[--art-scale:1.65]';
+
 const BANNER_GLYPHS: BannerGlyph[] = [
   { icon: 'code', left: '4%', top: '8%', size: 18, opacity: 0.18 },
   { icon: 'terminal', left: '15%', top: '4%', size: 13, opacity: 0.14 },
@@ -2329,13 +2336,13 @@ export default function ExecutiveHomePage() {
             {BANNER_GLYPHS.map((g) => (
               <span
                 key={`g-${g.icon}-${g.left}`}
-                className={`material-symbols-outlined absolute leading-none ${g.wide ? 'hidden sm:block' : ''}`}
+                className={`material-symbols-outlined absolute leading-none ${ARTIFACT_SCALE} ${g.wide ? 'hidden sm:block' : ''}`}
                 style={{
                   left: g.left,
                   top: g.top,
                   fontSize: `${g.size}px`,
                   opacity: g.opacity,
-                  transform: g.rotate ? `rotate(${g.rotate}deg)` : undefined,
+                  transform: `${g.rotate ? `rotate(${g.rotate}deg) ` : ''}scale(var(--art-scale))`,
                 }}
               >
                 {g.icon}
@@ -2345,13 +2352,14 @@ export default function ExecutiveHomePage() {
             {BANNER_DOTS.map((d, i) => (
               <span
                 key={`d-${d.left}-${i}`}
-                className={`absolute ${d.round ? 'rounded-full' : ''} bg-white ${d.wide ? 'hidden sm:block' : ''}`}
+                className={`absolute ${d.round ? 'rounded-full' : ''} bg-white ${ARTIFACT_SCALE} ${d.wide ? 'hidden sm:block' : ''}`}
                 style={{
                   left: d.left,
                   top: d.top,
                   width: `${d.size}px`,
                   height: `${d.size}px`,
                   opacity: d.opacity,
+                  transform: 'scale(var(--art-scale))',
                 }}
               />
             ))}
@@ -2359,14 +2367,14 @@ export default function ExecutiveHomePage() {
             {BANNER_BOXES.map((b, i) => (
               <span
                 key={`b-${b.left}-${i}`}
-                className={`absolute border border-white rounded-[3px] ${b.wide ? 'hidden sm:block' : ''}`}
+                className={`absolute border border-white rounded-[3px] ${ARTIFACT_SCALE} ${b.wide ? 'hidden sm:block' : ''}`}
                 style={{
                   left: b.left,
                   top: b.top,
                   width: `${b.size}px`,
                   height: `${b.size}px`,
                   opacity: b.opacity,
-                  transform: `rotate(${b.rotate ?? 0}deg)`,
+                  transform: `rotate(${b.rotate ?? 0}deg) scale(var(--art-scale))`,
                 }}
               />
             ))}
