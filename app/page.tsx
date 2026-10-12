@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import LogoEmblem from '@/components/LogoEmblem';
 import DarkModeToggle from '@/components/DarkModeToggle';
 import HeroTypewriter from '@/components/HeroTypewriter';
+import RevealMore from '@/components/common/RevealMore';
 import { getSession } from '@/lib/session';
 
 // 16 Institutional Modules with categories and direct routes
@@ -183,8 +184,32 @@ const MODULES_DATA: ModuleItem[] = [
   },
 ];
 
-// On phones only the first 4 modules render; each tap on the arrow reveals 4 more.
-const MOBILE_MODULE_STEP = 4;
+// On phones only the first 4 items of a long card list render; each tap on the
+// arrow reveals 4 more. Laptop widths always render every item.
+const MOBILE_REVEAL_STEP = 4;
+
+const SECURITY_AUDIT_CHECKS: string[] = [
+  '1. SQL Injection: Parameterized pgx',
+  '2. XSS: Strict CSP + React Escape',
+  '3. CSRF: SameSite=Strict Cookies',
+  '4. Insecure Uploads: MIME Whitelist',
+  '5. IDOR: Tenant Ownership Guards',
+  '6. Rate Limiting: 20 req/s IP Window',
+  '7. Secure JWT: 256-Bit HS256 Secret',
+  '8. Zero Secret Leakage: env-only keys',
+  '9. Password Hashing: Argon2id salt',
+  '10. MFA: SMS OTP & Session Tokens',
+  '11. CORS: Strict Allowed Origins',
+  '12. Storage: Zero localStorage JWTs',
+  '13. Authorization: Backend Verified',
+  '14. Row-Level Security: Active Tenants',
+  '15. Webhooks: HMAC-SHA256 Signatures',
+  '16. SSRF: Private IP Filtered',
+  '17. Source Maps: Excluded in Prod',
+  '18. Default Creds: Purged & Blocked',
+  '19. Logs: PII & Auth Token Stripped',
+  '20. Dependencies: Automated Snyk Pass',
+];
 
 const MODULE_FILTER_TABS: Array<{ id: 'all' | 'academics' | 'logistics' | 'studentlife' | 'admin'; label: string }> = [
   { id: 'all', label: 'All (16)' },
@@ -197,7 +222,8 @@ const MODULE_FILTER_TABS: Array<{ id: 'all' | 'academics' | 'logistics' | 'stude
 export default function ExecutiveHomePage() {
   const router = useRouter();
   const [activeModuleTab, setActiveModuleTab] = useState<'all' | 'academics' | 'logistics' | 'studentlife' | 'admin'>('all');
-  const [mobileVisibleModules, setMobileVisibleModules] = useState<number>(MOBILE_MODULE_STEP);
+  const [mobileVisibleModules, setMobileVisibleModules] = useState<number>(MOBILE_REVEAL_STEP);
+  const [mobileVisibleChecks, setMobileVisibleChecks] = useState<number>(MOBILE_REVEAL_STEP);
   const [studentFirstName, setStudentFirstName] = useState<string>('Student');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [hallPassSeconds, setHallPassSeconds] = useState<number>(765); // 12m 45s
@@ -315,19 +341,28 @@ export default function ExecutiveHomePage() {
   // Phones progressively reveal the directory; laptops always render every card.
   const visibleModuleCount = Math.min(mobileVisibleModules, filteredModules.length);
   const hasHiddenModules = visibleModuleCount < filteredModules.length;
-  const nextRevealCount = Math.min(MOBILE_MODULE_STEP, filteredModules.length - visibleModuleCount);
 
   const revealMoreModules = () => {
     if (hasHiddenModules) {
-      setMobileVisibleModules((prev) => Math.min(prev + MOBILE_MODULE_STEP, filteredModules.length));
+      setMobileVisibleModules((prev) => Math.min(prev + MOBILE_REVEAL_STEP, filteredModules.length));
       return;
     }
-    setMobileVisibleModules(MOBILE_MODULE_STEP);
+    setMobileVisibleModules(MOBILE_REVEAL_STEP);
   };
 
   useEffect(() => {
-    setMobileVisibleModules(MOBILE_MODULE_STEP);
+    setMobileVisibleModules(MOBILE_REVEAL_STEP);
   }, [activeModuleTab]);
+
+  const visibleSecurityChecks = Math.min(mobileVisibleChecks, SECURITY_AUDIT_CHECKS.length);
+
+  const toggleSecurityChecks = () => {
+    setMobileVisibleChecks((prev) =>
+      prev >= SECURITY_AUDIT_CHECKS.length
+        ? MOBILE_REVEAL_STEP
+        : Math.min(prev + MOBILE_REVEAL_STEP, SECURITY_AUDIT_CHECKS.length)
+    );
+  };
 
   // Subtle 3D tilt tracking for hero card
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -938,28 +973,13 @@ export default function ExecutiveHomePage() {
         </div>
 
         {/* Phone-only progressive reveal control for the micro-module directory */}
-        {filteredModules.length > MOBILE_MODULE_STEP && (
-        <div className="lg:hidden mt-6 flex flex-col items-center gap-2">
-          <span className="text-[11px] font-semibold text-[#454655] dark:text-[#a0a4c0]">
-            Showing {visibleModuleCount} of {filteredModules.length} micro modules
-          </span>
-          <button
-            type="button"
-            onClick={revealMoreModules}
-            aria-expanded={!hasHiddenModules}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1c2ac8] dark:bg-[#3b49df] text-white text-xs font-bold shadow-[0_10px_24px_-8px_rgba(28,42,200,0.5)] hover:bg-[#2435df] active:scale-95 transition-all"
-          >
-            <span>{hasHiddenModules ? `Show ${nextRevealCount} more` : 'Collapse'}</span>
-            <span
-              className={`material-symbols-outlined text-[18px] transition-transform duration-300 ${
-                hasHiddenModules ? '' : 'rotate-180'
-              }`}
-            >
-              keyboard_arrow_down
-            </span>
-          </button>
-        </div>
-        )}
+        <RevealMore
+          visible={visibleModuleCount}
+          total={filteredModules.length}
+          onToggle={revealMoreModules}
+          step={MOBILE_REVEAL_STEP}
+          noun="micro modules"
+        />
       </div>
 
       {/* =========================================================================
@@ -1043,31 +1063,12 @@ export default function ExecutiveHomePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-              {[
-                '1. SQL Injection: Parameterized pgx',
-                '2. XSS: Strict CSP + React Escape',
-                '3. CSRF: SameSite=Strict Cookies',
-                '4. Insecure Uploads: MIME Whitelist',
-                '5. IDOR: Tenant Ownership Guards',
-                '6. Rate Limiting: 20 req/s IP Window',
-                '7. Secure JWT: 256-Bit HS256 Secret',
-                '8. Zero Secret Leakage: env-only keys',
-                '9. Password Hashing: Argon2id salt',
-                '10. MFA: SMS OTP & Session Tokens',
-                '11. CORS: Strict Allowed Origins',
-                '12. Storage: Zero localStorage JWTs',
-                '13. Authorization: Backend Verified',
-                '14. Row-Level Security: Active Tenants',
-                '15. Webhooks: HMAC-SHA256 Signatures',
-                '16. SSRF: Private IP Filtered',
-                '17. Source Maps: Excluded in Prod',
-                '18. Default Creds: Purged & Blocked',
-                '19. Logs: PII & Auth Token Stripped',
-                '20. Dependencies: Automated Snyk Pass',
-              ].map((item, idx) => (
+              {SECURITY_AUDIT_CHECKS.map((item, idx) => (
                 <div
                   key={idx}
-                  className="levitate-card-sm group/sec flex items-center gap-2 p-2.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] hover:border-emerald-500/50 dark:hover:border-emerald-400/60 hover:shadow-lg hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/15 cursor-pointer"
+                  className={`levitate-card-sm group/sec flex items-center gap-2 p-2.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] hover:border-emerald-500/50 dark:hover:border-emerald-400/60 hover:shadow-lg hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/15 cursor-pointer ${
+                    idx >= visibleSecurityChecks ? 'hidden lg:flex' : ''
+                  }`}
                 >
                   <span className="material-symbols-outlined text-emerald-500 group-hover/sec:scale-115 group-hover/sec:text-emerald-400 text-[16px] flex-shrink-0 transition-transform duration-300">
                     check_circle
@@ -1076,6 +1077,16 @@ export default function ExecutiveHomePage() {
                 </div>
               ))}
             </div>
+
+            {/* Phone-only progressive reveal control for the security matrix */}
+            <RevealMore
+              visible={visibleSecurityChecks}
+              total={SECURITY_AUDIT_CHECKS.length}
+              onToggle={toggleSecurityChecks}
+              step={MOBILE_REVEAL_STEP}
+              tone="success"
+              noun="security checks"
+            />
           </div>
 
         </div>
