@@ -7,7 +7,9 @@ export default function AuthFooter({ className = '' }: { className?: string }) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         {/* School Identity */}
         <div className="flex items-center gap-3">
-          <LogoEmblem className="h-8 w-8 flex-shrink-0" />
+          <Link href="/" title="NexaCampus Home" className="flex-shrink-0 flex items-center">
+            <LogoEmblem className="h-8 w-8" />
+          </Link>
           <div className="flex flex-col">
             <div className="flex items-center gap-2 justify-center sm:justify-start flex-wrap">
               <span className="text-[13px] font-bold text-on-surface">
@@ -39,8 +41,28 @@ export default function AuthFooter({ className = '' }: { className?: string }) {
               <span>Admin Office: +91 33 2437 1234</span>
             </a>
           </div>
-          <div className="flex items-center gap-2 text-outline text-[10px]">
-            <span>© 2026 LCGVM</span>
+          <div className="flex items-center gap-2 text-outline text-[10px] flex-wrap justify-center sm:justify-end">
+            <span>© {new Date().getFullYear()} LCGVM</span>
+            <span>•</span>
+            <Link href="/privacy" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+              Privacy
+            </Link>
+            <span>•</span>
+            <Link href="/terms" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+              Terms
+            </Link>
+            <span>•</span>
+            <Link href="/refund" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+              Refunds
+            </Link>
+            <span>•</span>
+            <Link href="/cookies" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+              Cookies
+            </Link>
+            <span>•</span>
+            <Link href="/data-deletion" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+              Data Deletion
+            </Link>
             <span>•</span>
             <span>Powered by NexaCampus v2.5.3</span>
           </div>

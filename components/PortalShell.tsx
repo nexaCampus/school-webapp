@@ -41,7 +41,6 @@ const MORE_SERVICES = [
   { label: 'Merits & Badges', href: '/merits', icon: 'military_tech', desc: 'Honors & points' },
   { label: 'PTM Meetings', href: '/ptm', icon: 'groups_2', desc: 'Teacher conference slots' },
   { label: 'Campus Homepage', href: '/', icon: 'domain', desc: 'Executive 15-section portal' },
-  { label: 'Timetable', href: '/timetable', icon: 'calendar_month', desc: 'Class period schedule' },
 ];
 
 export default function PortalShell({
@@ -178,6 +177,12 @@ export default function PortalShell({
       setStudentName(s.name);
     }
   }, []);
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = `${title} | NexaCampus School`;
+    }
+  }, [title]);
 
   const currentPath = activePath || pathname.replace(/^\//, '') || 'home';
   const firstName = studentName ? studentName.trim().split(/\s+/)[0] : 'Student';
@@ -448,7 +453,9 @@ export default function PortalShell({
             >
               <span className="material-symbols-outlined text-[22px]">menu</span>
             </button>
-            <LogoEmblem className="h-7 w-7 flex-shrink-0" />
+            <Link href="/home" title="Go to Home" className="flex-shrink-0 flex items-center">
+              <LogoEmblem className="h-7 w-7" />
+            </Link>
             <div className="flex flex-col min-w-0">
               <span className="text-[10px] text-outline uppercase tracking-wider font-bold truncate leading-tight">
                 {subtitle}
@@ -475,11 +482,18 @@ export default function PortalShell({
 
       {/* FULL-SCREEN MOBILE HAMBURGER MENU: Coming from Top to Entire Bottom with Cross Button on Top Right */}
       {mobileServicesOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-white dark:bg-[#1e1e1e] flex flex-col animate-in fade-in slide-in-from-top-6 duration-200">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="All School Services"
+          className="md:hidden fixed inset-0 z-50 bg-white dark:bg-[#1e1e1e] flex flex-col animate-in fade-in slide-in-from-top-6 duration-200"
+        >
           {/* Top Bar inside Full-Screen Hamburger */}
           <div className="h-14 px-3 pt-safe flex items-center justify-between border-b border-outline/10 dark:border-[#2d2d2d] bg-white dark:bg-[#181818] flex-shrink-0">
             <div className="flex items-center gap-2">
-              <LogoEmblem className="h-7 w-7" />
+              <Link href="/home" onClick={closeMobileServices} title="Go to Home" className="flex items-center">
+                <LogoEmblem className="h-7 w-7" />
+              </Link>
               <div>
                 <span className="text-[9.5px] uppercase font-bold tracking-widest text-primary block">
                   LCGVM Campus Gateway

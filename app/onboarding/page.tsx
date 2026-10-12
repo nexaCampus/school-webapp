@@ -4,6 +4,7 @@
 // caches the session, opens the portal. Phone lives in its own required
 // Contact Number section — Google/email sign-ups never capture one.
 import { Suspense, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { normalizeAdmissionNumber, onAuthChange, saveStudent } from '@/lib/firebase';
 import { getSession, setSession } from '@/lib/session';
@@ -85,8 +86,15 @@ function OnboardingForm() {
   const [mother, setMother] = useState('');
   const [guardianEmail, setGuardianEmail] = useState('');
   const [address, setAddress] = useState('');
+  const [agreedConsent, setAgreedConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = 'Student Profile Registration | NexaCampus School';
+    }
+  }, []);
 
   useEffect(() => {
     // Hard gate: a password signed-in email that is still unverified has no business
@@ -152,6 +160,12 @@ function OnboardingForm() {
     const isoDob = dobToISO(dob);
     if (dob && !validateDateFormatYYYYMMDD(isoDob)) {
       return setError('Please enter a valid Date of Birth (calendar date YYYY-MM-DD)');
+    }
+
+    if (!agreedConsent) {
+      return setError(
+        'Parental or guardian consent is legally required under DPDP Act 2023 §9. Please check the agreement box below.'
+      );
     }
 
     setError(null);
@@ -388,6 +402,32 @@ function OnboardingForm() {
         <p className="font-body-sm text-body-sm text-on-surface-variant leading-[15px]">
           Used for school SMS alerts and as the account contact.
         </p>
+      </section>
+
+      {/* Statutory Parental Consent & Verification (DPDP Act 2023 §9 / COPPA) */}
+      <section className="w-full bg-surface-container-lowest/95 rounded-[20px] shadow-[0_4px_16px_rgba(28,42,200,0.08)] p-4 flex flex-col gap-2 mt-space-md border border-outline/10">
+        <label className="flex items-start gap-3 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={agreedConsent}
+            onChange={(e) => {
+              setAgreedConsent(e.target.checked);
+              setError(null);
+            }}
+            className="mt-1 h-4 w-4 rounded border-outline/30 text-primary focus:ring-primary accent-[#1c2ac8]"
+          />
+          <span className="text-[12px] text-on-surface leading-relaxed">
+            <span className="font-semibold text-on-surface">Parental / Guardian Consent &amp; Legal Agreement:</span>{' '}
+            I confirm that I am a parent, legal guardian, or adult student (18+), and I grant explicit consent for Lions Calcutta Greater Vidya Mandir to collect and process this educational record in accordance with the{' '}
+            <Link href="/privacy" target="_blank" className="text-primary font-medium underline underline-offset-2">
+              Privacy Policy
+            </Link>{' '}
+            and{' '}
+            <Link href="/terms" target="_blank" className="text-primary font-medium underline underline-offset-2">
+              Terms of Service
+            </Link>.
+          </span>
+        </label>
       </section>
 
       {error && (
