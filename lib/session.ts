@@ -162,8 +162,9 @@ export async function logoutUser(redirectTo: string = '/chooser'): Promise<void>
   if (typeof window !== 'undefined') {
     try {
       sessionStorage.clear();
+      window.history.replaceState(null, '', redirectTo);
     } catch {}
-    window.location.href = redirectTo;
+    window.location.replace(redirectTo);
   }
 }
 

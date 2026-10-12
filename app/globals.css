@@ -26,26 +26,26 @@
 
 .dark {
   color-scheme: dark;
-  /* VS Code Dark+ Theme Palette */
-  --color-surface: #1e1e1e;
-  --color-surface-bright: #252526;
-  --color-surface-dim: #181818;
-  --color-surface-container-lowest: #252526;
-  --color-surface-container-low: #1e1e1e;
-  --color-surface-container: #252526;
-  --color-surface-container-high: #2d2d2d;
-  --color-surface-container-highest: #37373d;
-  --color-surface-variant: #2d2d2d;
-  --color-on-surface: #d4d4d4;
-  --color-on-surface-variant: #969696;
-  --color-outline: #858585;
-  --color-outline-variant: #3c3c3c;
-  --color-bg: #1e1e1e;
-  --color-primary: #007acc;
-  --color-primary-container: #0e639c;
-  --color-tertiary: #4edea3;
-  --color-tertiary-container: #1b4d3e;
-  --color-on-tertiary-container: #6ffbbe;
+  /* Executive Midnight Palette aligned with Homepage (/) Design System */
+  --color-surface: #151622;
+  --color-surface-bright: #1c1e2e;
+  --color-surface-dim: #0e0f17;
+  --color-surface-container-lowest: #101119;
+  --color-surface-container-low: #151622;
+  --color-surface-container: #1a1c2b;
+  --color-surface-container-high: #222538;
+  --color-surface-container-highest: #2b2f48;
+  --color-surface-variant: #222538;
+  --color-on-surface: #eaedff;
+  --color-on-surface-variant: #a0a4c0;
+  --color-outline: #5c6282;
+  --color-outline-variant: #222538;
+  --color-bg: #12131a;
+  --color-primary: #3b49df;
+  --color-primary-container: #1c2ac8;
+  --color-tertiary: #10b981;
+  --color-tertiary-container: #065f46;
+  --color-on-tertiary-container: #6ee7b7;
 }
 
 
@@ -118,8 +118,8 @@ textarea {
 }
 
 .dark body {
-  background: #1e1e1e;
-  color: #d4d4d4;
+  background: var(--color-bg, #12131a);
+  color: var(--color-on-surface, #eaedff);
 }
 
 .pb-safe {
@@ -164,13 +164,16 @@ textarea {
       var(--color-bg, #faf8ff);
   }
   .dark body {
-    background: #1e1e1e;
+    background:
+      radial-gradient(900px 600px at 10% -80px, rgba(59, 73, 223, 0.08), transparent 60%),
+      radial-gradient(800px 500px at 90% 120px, rgba(16, 185, 129, 0.04), transparent 60%),
+      var(--color-bg, #12131a);
   }
   .dark ::-webkit-scrollbar-thumb {
-    background: #3c3c3c;
+    background: #222538;
   }
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: #4f4f4f;
+    background: #3b49df;
   }
 }
 

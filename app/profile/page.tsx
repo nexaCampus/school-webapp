@@ -61,11 +61,13 @@ export default function ProfilePage() {
   }, []);
 
   async function handleLogout() {
+    setShowLogoutModal(false);
     setIsProcessingAuth(true);
     await logoutUser('/chooser');
   }
 
   async function handleSwitchAccount() {
+    setShowSwitchModal(false);
     setIsProcessingAuth(true);
     await switchAccount();
   }
@@ -510,7 +512,7 @@ export default function ProfilePage() {
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
-          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#252526] border border-outline/15 dark:border-[#3c3c3c] p-6 shadow-2xl flex flex-col items-center text-center">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#151622] border border-outline/15 dark:border-[#222538] p-6 shadow-2xl flex flex-col items-center text-center">
             <div className="w-12 h-12 rounded-full bg-error/15 text-error flex items-center justify-center mb-3">
               <span className="material-symbols-outlined text-[28px]">logout</span>
             </div>
@@ -531,7 +533,7 @@ export default function ProfilePage() {
                 <span>{isProcessingAuth ? 'Logging out...' : 'Yes, Log Out'}</span>
               </button>
               <button
-                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#333333] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#222538] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
                 onClick={() => setShowLogoutModal(false)}
                 disabled={isProcessingAuth}
                 type="button"
@@ -546,7 +548,7 @@ export default function ProfilePage() {
       {/* Switch Account Modal */}
       {showSwitchModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
-          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#252526] border border-outline/15 dark:border-[#3c3c3c] p-6 shadow-2xl flex flex-col items-center text-center">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#151622] border border-outline/15 dark:border-[#222538] p-6 shadow-2xl flex flex-col items-center text-center">
             <div className="w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-3">
               <span className="material-symbols-outlined text-[28px]">switch_account</span>
             </div>
@@ -565,7 +567,7 @@ export default function ProfilePage() {
                 <span>{isProcessingAuth ? 'Switching...' : 'Switch Account'}</span>
               </button>
               <button
-                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#333333] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                className="w-full py-2.5 rounded-full bg-surface-container-high dark:bg-[#222538] text-on-surface text-[13px] font-semibold hover:bg-surface-container-highest active:scale-95 transition-all cursor-pointer disabled:opacity-50"
                 onClick={() => setShowSwitchModal(false)}
                 disabled={isProcessingAuth}
                 type="button"

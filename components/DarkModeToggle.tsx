@@ -45,7 +45,7 @@ export default function DarkModeToggle({ className = '' }: { className?: string 
       onClick={toggle}
       title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
       aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-      className={`relative w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center bg-surface-container dark:bg-[#252526] text-on-surface hover:bg-surface-container-high dark:hover:bg-[#2d2d2d] border border-outline/20 dark:border-[#3c3c3c] shadow-sm active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0 z-20 group ${className}`}
+      className={`relative w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center bg-surface-container dark:bg-[#151622] text-on-surface hover:bg-surface-container-high dark:hover:bg-[#1a1c2b] border border-outline/20 dark:border-[#222538] shadow-sm active:scale-95 transition-all duration-200 cursor-pointer flex-shrink-0 z-20 group ${className}`}
     >
       {isDark ? (
         // Bright glowing sun icon in dark mode — clicking switches back to light mode
@@ -54,7 +54,7 @@ export default function DarkModeToggle({ className = '' }: { className?: string 
         </span>
       ) : (
         // Sleek moon icon in light mode — clicking switches to dark mode
-        <span className="material-symbols-outlined text-[19px] text-indigo-600 dark:text-[#3794ff] group-hover:-rotate-12 transition-transform duration-300">
+        <span className="material-symbols-outlined text-[19px] text-indigo-600 dark:text-[#bdc2ff] group-hover:-rotate-12 transition-transform duration-300">
           dark_mode
         </span>
       )}
