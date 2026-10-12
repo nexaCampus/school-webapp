@@ -113,6 +113,9 @@ export default function ChooserPage() {
   const [activeSession, setActiveSession] = useState<Session | null>(null);
 
   useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = 'Select Portal Sign-In Method | NexaCampus School';
+    }
     const s = getSession();
     if (s?.student || s?.name) {
       setActiveSession(s);
@@ -140,12 +143,12 @@ export default function ChooserPage() {
 
           {/* Top Bar: LCGVM Tag & Dark Mode Toggle */}
           <div className="flex items-center justify-between pt-2 relative z-10">
-            <div className="flex items-center gap-2">
+            <Link href="/" title="Back to Home" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
               <LogoEmblem className="h-7 w-7 shadow-sm" />
               <span className="text-[12px] font-extrabold text-white tracking-wider uppercase">
                 LCGVM
               </span>
-            </div>
+            </Link>
             <DarkModeToggle className="bg-white/15 dark:bg-[#252526] text-white border-white/20 hover:bg-white/25" />
           </div>
 
@@ -285,7 +288,7 @@ export default function ChooserPage() {
 
               {/* Top Brand Header */}
               <div className="relative z-10">
-                <div className="flex items-center gap-3">
+                <Link href="/" title="Back to Home" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
                   <LogoEmblem className="h-11 w-11 shadow-sm" />
                   <div>
                     <span className="text-[10px] uppercase tracking-widest text-white/70 font-bold block">
@@ -298,7 +301,7 @@ export default function ChooserPage() {
                       Gr Vidya Mandir
                     </span>
                   </div>
-                </div>
+                </Link>
 
                 <div className="mt-8 space-y-4">
                   <h2 className="text-[22px] font-bold leading-tight">

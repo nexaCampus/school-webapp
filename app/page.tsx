@@ -197,11 +197,27 @@ export default function ExecutiveHomePage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [hallPassSeconds, setHallPassSeconds] = useState<number>(765); // 12m 45s
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Ref and scroll states for the module tabs
   const moduleTabsRef = useRef<HTMLDivElement>(null);
   const [canScrollTabsLeft, setCanScrollTabsLeft] = useState(false);
   const [canScrollTabsRight, setCanScrollTabsRight] = useState(true);
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = 'NexaCampus School | Lions Calcutta Greater Vidya Mandir';
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileMenuOpen]);
 
   // Check scroll boundary for category tabs
   const updateTabsScrollState = () => {
@@ -342,29 +358,171 @@ export default function ExecutiveHomePage() {
               <a href="#exam-radar" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">Examinations</a>
             </nav>
 
-            {/* Actions: Theme Toggle + Role Entry */}
-            <div className="flex items-center gap-3">
+            {/* Actions: Theme Toggle + Role Entry + Mobile Hamburger Button */}
+            <div className="flex items-center gap-2 sm:gap-3">
               <DarkModeToggle />
               {isAuthenticated ? (
                 <Link
                   href="/home"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white text-[13px] font-bold shadow-sm shadow-[#1c2ac8]/25 active:scale-95 transition-all"
+                  className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white text-[12px] sm:text-[13px] font-bold shadow-sm shadow-[#1c2ac8]/25 active:scale-95 transition-all"
                 >
                   <span className="material-symbols-outlined text-[18px]">dashboard</span>
-                  <span>{studentFirstName}&apos;s Portal</span>
+                  <span className="hidden sm:inline">{studentFirstName}&apos;s Portal</span>
+                  <span className="sm:hidden">Portal</span>
                 </Link>
               ) : (
                 <Link
                   href="/chooser"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white text-[13px] font-bold shadow-sm shadow-[#1c2ac8]/25 active:scale-95 transition-all"
+                  className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white text-[12px] sm:text-[13px] font-bold shadow-sm shadow-[#1c2ac8]/25 active:scale-95 transition-all"
                 >
                   <span className="material-symbols-outlined text-[18px]">login</span>
                   <span>Enter Portal</span>
                 </Link>
               )}
+              {/* Mobile Navigation Drawer Toggle */}
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(true)}
+                aria-label="Open navigation menu"
+                aria-expanded={mobileMenuOpen}
+                className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-[#131b2e] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-90 transition-transform flex-shrink-0 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[24px]">menu</span>
+              </button>
             </div>
           </div>
         </header>
+
+        {/* Accessible Slide-Out Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Main Navigation Menu"
+            className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-end animate-in fade-in duration-200"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <div
+              className="w-full max-w-xs sm:max-w-sm h-full bg-white dark:bg-[#161824] shadow-2xl flex flex-col justify-between p-5 overflow-y-auto animate-in slide-in-from-right duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Drawer Top */}
+              <div>
+                <div className="flex items-center justify-between pb-4 border-b border-[#e2e7ff] dark:border-[#262a40]">
+                  <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5">
+                    <LogoEmblem className="h-8 w-8" />
+                    <div>
+                      <span className="font-extrabold text-sm text-[#1c2ac8] dark:text-[#bdc2ff] block leading-tight">
+                        NexaCampus
+                      </span>
+                      <span className="text-[10px] text-[#454655] dark:text-[#a0a4c0] block">
+                        LCGVM • CISCE WB-243
+                      </span>
+                    </div>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen(false)}
+                    aria-label="Close navigation menu"
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-[#454655] dark:text-[#a0a4c0] hover:bg-black/5 dark:hover:bg-white/10 active:scale-90 transition-transform cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">close</span>
+                  </button>
+                </div>
+
+                {/* Section Navigation Links */}
+                <div className="py-4">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-2 px-1">
+                    On-Page Sections
+                  </p>
+                  <nav className="flex flex-col gap-1 text-sm font-semibold">
+                    {[
+                      { label: '16 Integrated Modules', href: '#modules', icon: 'apps' },
+                      { label: 'Backend Architecture', href: '#backend-architecture', icon: 'dns' },
+                      { label: 'Live Timetable Stream', href: '#timetable-stream', icon: 'calendar_month' },
+                      { label: 'Smart Canteen RFID', href: '#canteen-wallet', icon: 'restaurant' },
+                      { label: 'School Bus GPS Radar', href: '#bus-radar', icon: 'directions_bus' },
+                      { label: 'Examinations & Marks', href: '#exam-radar', icon: 'workspace_premium' },
+                    ].map((item) => (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-on-surface hover:bg-[#eaedff] dark:hover:bg-[#202334] hover:text-[#1c2ac8] transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[19px] text-[#1c2ac8] dark:text-[#bdc2ff]">
+                          {item.icon}
+                        </span>
+                        <span>{item.label}</span>
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+
+                {/* Quick Student Portal Shortcuts */}
+                <div className="py-3 border-t border-[#e2e7ff] dark:border-[#262a40]">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-2 px-1">
+                    Student Portals
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+                    <Link
+                      href="/home"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-[16px] text-primary">dashboard</span>
+                      <span>Dashboard</span>
+                    </Link>
+                    <Link
+                      href="/timetable"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-[16px] text-primary">schedule</span>
+                      <span>Timetable</span>
+                    </Link>
+                    <Link
+                      href="/notices"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-[16px] text-primary">campaign</span>
+                      <span>Notices</span>
+                    </Link>
+                    <Link
+                      href="/helpdesk"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-[16px] text-primary">support_agent</span>
+                      <span>Parent Desk</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Drawer Bottom CTA */}
+              <div className="pt-4 border-t border-[#e2e7ff] dark:border-[#262a40] flex flex-col gap-2">
+                <Link
+                  href="/chooser"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-3 rounded-full bg-[#1c2ac8] text-white text-center font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-[18px]">login</span>
+                  <span>Enter Student Portal</span>
+                </Link>
+                <div className="flex items-center justify-between text-[11px] text-outline px-1">
+                  <Link href="/privacy" onClick={() => setMobileMenuOpen(false)} className="hover:text-primary">
+                    Privacy Policy
+                  </Link>
+                  <a href="tel:+913324371234" className="hover:text-primary">
+                    +91 33 2437 1234
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Hero Banner Grid with 3D Perspective Model */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-10 sm:pt-16 pb-16 sm:pb-24">
@@ -1883,7 +2041,7 @@ export default function ExecutiveHomePage() {
                   <span className="material-symbols-outlined text-[16px]">check_circle</span>
                   <span>Resolution Completed</span>
                 </span>
-                <span className="text-[#454655] dark:text-[#a0a4c0] text-[11px]">Satisfaction Rating: 5/5 ★</span>
+                <span className="text-[#454655] dark:text-[#a0a4c0] text-[11px]">Verified Parent Desk • 99.4% SLA Resolution</span>
               </div>
             </div>
 
@@ -1929,19 +2087,29 @@ export default function ExecutiveHomePage() {
           </div>
 
           {/* Sitemaps & Links */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 text-xs">
             
             <div className="col-span-2">
-              <div className="flex items-center gap-2.5 mb-3">
+              <Link href="/" title="NexaCampus Home" className="flex items-center gap-2.5 mb-3 hover:opacity-90 transition-opacity">
                 <LogoEmblem className="h-8 w-8" />
                 <span className="font-extrabold text-base text-[#1c2ac8] dark:text-[#bdc2ff]">
                   NexaCampus
                 </span>
-              </div>
+              </Link>
               <p className="text-[#454655] dark:text-[#a0a4c0] text-xs leading-relaxed max-w-sm">
                 Official high-speed web application for Lions Calcutta Greater Vidya Mandir.
                 Operates at &lt;3MB storage with instant cache warming and zero background battery drain.
               </p>
+              <div className="mt-3 flex flex-col gap-1.5 text-xs text-[#454655] dark:text-[#a0a4c0]">
+                <a href="tel:+913324371234" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]">call</span>
+                  <span>+91 33 2437 1234 / +91 91798 0679513</span>
+                </a>
+                <a href="mailto:office@lcgvm.edu.in" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]">mail</span>
+                  <span>office@lcgvm.edu.in</span>
+                </a>
+              </div>
               <div className="mt-4 flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold font-mono">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Go Engine Latency: 0.74ms</span>
@@ -1952,8 +2120,8 @@ export default function ExecutiveHomePage() {
               <h4 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Academics</h4>
               <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
                 <li><Link href="/attendance" className="hover:text-[#1c2ac8]">Attendance Tracker</Link></li>
-                <li><Link href="/diary" className="hover:text-[#1c2ac8]">Homework & Diary</Link></li>
-                <li><Link href="/exams" className="hover:text-[#1c2ac8]">Exams & Results</Link></li>
+                <li><Link href="/diary" className="hover:text-[#1c2ac8]">Homework &amp; Diary</Link></li>
+                <li><Link href="/exams" className="hover:text-[#1c2ac8]">Exams &amp; Results</Link></li>
                 <li><Link href="/library" className="hover:text-[#1c2ac8]">Digital Library</Link></li>
                 <li><Link href="/timetable" className="hover:text-[#1c2ac8]">Class Timetable</Link></li>
               </ul>
@@ -1964,7 +2132,7 @@ export default function ExecutiveHomePage() {
               <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
                 <li><Link href="/canteen" className="hover:text-[#1c2ac8]">Smart Canteen RFID</Link></li>
                 <li><Link href="/bus" className="hover:text-[#1c2ac8]">Bus GPS Radar</Link></li>
-                <li><Link href="/clubs" className="hover:text-[#1c2ac8]">Clubs & Societies</Link></li>
+                <li><Link href="/clubs" className="hover:text-[#1c2ac8]">Clubs &amp; Societies</Link></li>
                 <li><Link href="/merits" className="hover:text-[#1c2ac8]">House Merits</Link></li>
                 <li><Link href="/gallery" className="hover:text-[#1c2ac8]">Photo Gallery</Link></li>
               </ul>
@@ -1973,14 +2141,43 @@ export default function ExecutiveHomePage() {
             <div>
               <h4 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Institutional</h4>
               <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
-                <li><Link href="/health" className="hover:text-[#1c2ac8]">Clinic & Vitals</Link></li>
-                <li><Link href="/helpdesk" className="hover:text-[#1c2ac8]">Parent Desk & PTM</Link></li>
-                <li><Link href="/notices" className="hover:text-[#1c2ac8]">Circulars & Notices</Link></li>
+                <li><Link href="/health" className="hover:text-[#1c2ac8]">Clinic &amp; Vitals</Link></li>
+                <li><Link href="/helpdesk" className="hover:text-[#1c2ac8]">Parent Desk &amp; PTM</Link></li>
+                <li><Link href="/notices" className="hover:text-[#1c2ac8]">Circulars &amp; Notices</Link></li>
                 <li><Link href="/store" className="hover:text-[#1c2ac8]">Campus Store</Link></li>
                 <li><Link href="/chooser" className="hover:text-[#1c2ac8]">Role Switcher</Link></li>
               </ul>
             </div>
 
+            <div>
+              <h4 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Legal &amp; Compliance</h4>
+              <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
+                <li><Link href="/privacy" className="hover:text-[#1c2ac8]">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="hover:text-[#1c2ac8]">Terms of Service</Link></li>
+                <li><Link href="/refund" className="hover:text-[#1c2ac8]">Refund &amp; Billing</Link></li>
+                <li><Link href="/cookies" className="hover:text-[#1c2ac8]">Cookie Inventory</Link></li>
+                <li><Link href="/data-deletion" className="hover:text-[#1c2ac8]">Data Deletion (Right to Erasure)</Link></li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/* Institutional Compliance & Registration Notice */}
+          <div className="mt-12 pt-6 border-t border-[#e2e7ff] dark:border-[#222538] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#454655] dark:text-[#a0a4c0]">
+            <p>
+              © {new Date().getFullYear()} Lions Calcutta Greater Vidya Mandir (LCGVM). Managed by Lions Club of Calcutta Greater Education Trust. Affiliation WB-243.
+            </p>
+            <div className="flex items-center gap-3 flex-wrap">
+              <Link href="/privacy" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Privacy</Link>
+              <span>•</span>
+              <Link href="/terms" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Terms</Link>
+              <span>•</span>
+              <Link href="/refund" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Refunds</Link>
+              <span>•</span>
+              <Link href="/cookies" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Cookies</Link>
+              <span>•</span>
+              <Link href="/data-deletion" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Data Deletion</Link>
+            </div>
           </div>
 
         </div>

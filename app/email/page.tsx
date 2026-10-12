@@ -4,6 +4,7 @@
 // New Google/email registrations land on onboarding (phone asked there);
 // returning users go straight to the portal.
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   claimRedirectAccount,
@@ -97,6 +98,12 @@ export default function EmailPage() {
     });
     router.push(`/onboarding?${q.toString()}`);
   }
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = (mode === 'signup' ? 'Create Student Account' : 'Email Sign-In') + ' | NexaCampus School';
+    }
+  }, [mode]);
 
   // Completes a returning Google redirect via ONE shared outcome. Calling
   // getRedirectResult separately per effect run discards the first retrieval
@@ -569,6 +576,19 @@ export default function EmailPage() {
                 </>
               )}
             </button>
+
+            {mode === 'signup' && (
+              <p className="text-[11px] text-on-surface-variant leading-relaxed text-center mt-2 px-1">
+                By creating an account, you agree to our{' '}
+                <Link href="/terms" target="_blank" className="text-primary font-medium underline underline-offset-2">
+                  Terms of Service
+                </Link>{' '}
+                and acknowledge our{' '}
+                <Link href="/privacy" target="_blank" className="text-primary font-medium underline underline-offset-2">
+                  Privacy Policy
+                </Link>.
+              </p>
+            )}
           </div>
 
           {error && (

@@ -8,7 +8,9 @@ export default function PortalFooter() {
         {/* Top Institutional Header Row */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 pb-5 md:pb-8 border-b border-outline/10">
           <div className="flex items-start md:items-center gap-3">
-            <LogoEmblem className="h-9 w-9 md:h-11 md:w-11 shadow-sm flex-shrink-0" />
+            <Link href="/" title="NexaCampus Home" className="flex-shrink-0 flex items-center">
+              <LogoEmblem className="h-9 w-9 md:h-11 md:w-11 shadow-sm" />
+            </Link>
             <div>
               <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
                 <span className="text-[15px] md:text-[17px] font-extrabold text-on-surface tracking-tight">
@@ -132,13 +134,23 @@ export default function PortalFooter() {
               <span className="material-symbols-outlined text-[17px] text-primary flex-shrink-0">
                 call
               </span>
-              <span className="text-[12px]">+91 33 2437 1234 / +91 91798 0679513</span>
+              <span className="text-[12px]">
+                <a href="tel:+913324371234" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+                  +91 33 2437 1234
+                </a>
+                {' / '}
+                <a href="tel:+91917980679513" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+                  +91 91798 0679513
+                </a>
+              </span>
             </div>
             <div className="flex items-center gap-2 text-on-surface-variant">
               <span className="material-symbols-outlined text-[17px] text-primary flex-shrink-0">
                 mail
               </span>
-              <span className="text-[12px]">office@lcgvm.edu.in</span>
+              <a href="mailto:office@lcgvm.edu.in" className="text-[12px] hover:text-primary transition-colors underline-offset-2 hover:underline">
+                office@lcgvm.edu.in
+              </a>
             </div>
             <div className="mt-2 pt-2 border-t border-outline/10">
               <Link
@@ -155,22 +167,31 @@ export default function PortalFooter() {
         {/* Bottom Legal, Version & Copyright Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 pt-4 md:pt-6 text-[11px] md:text-[12px] text-on-surface-variant">
           <div className="flex items-center gap-1.5 md:gap-2 flex-wrap text-center md:text-left justify-center md:justify-start">
-            <span>© 2026 Lions Calcutta Greater Vidya Mandir. All rights reserved.</span>
+            <span>© 2026 Lions Calcutta Greater Vidya Mandir (Lions Club of Calcutta Greater Education Trust).</span>
             <span className="hidden md:inline">•</span>
-            <span className="text-outline">Affiliated to CISCE, New Delhi</span>
+            <span className="text-outline">CISCE Affiliation No. 2430095 • School Code: 15632</span>
           </div>
 
-          <div className="flex items-center gap-2.5 md:gap-3 flex-wrap justify-center">
-            <span className="inline-flex items-center gap-1 text-[10px] md:text-[11px] font-semibold text-outline">
-              <span className="material-symbols-outlined text-[12px] md:text-[13px] text-tertiary">check_circle</span>
-              NexaCampus v2.5.3
-            </span>
-            <span>•</span>
-            <Link href="/helpdesk" className="hover:text-primary transition-colors">
-              Help &amp; FAQ
+          <div className="flex items-center gap-2 md:gap-2.5 flex-wrap justify-center font-medium">
+            <Link href="/privacy" className="hover:text-primary transition-colors">
+              Privacy Policy
             </Link>
             <span>•</span>
-            <span className="text-outline">Privacy &amp; Terms</span>
+            <Link href="/terms" className="hover:text-primary transition-colors">
+              Terms of Service
+            </Link>
+            <span>•</span>
+            <Link href="/refund" className="hover:text-primary transition-colors">
+              Refund Policy
+            </Link>
+            <span>•</span>
+            <Link href="/cookies" className="hover:text-primary transition-colors">
+              Cookie Policy
+            </Link>
+            <span>•</span>
+            <Link href="/data-deletion" className="hover:text-rose-500 transition-colors">
+              Data Deletion
+            </Link>
           </div>
         </div>
       </div>

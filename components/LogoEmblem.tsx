@@ -8,6 +8,10 @@ export default function LogoEmblem({ className = 'h-9 w-9' }: { className?: stri
       <img
         src="/icons/icon.svg"
         alt="NexaCampus"
+        width={36}
+        height={36}
+        loading="eager"
+        decoding="async"
         className="w-full h-full object-contain drop-shadow-sm rounded-[22%]"
       />
       <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5 pointer-events-none">

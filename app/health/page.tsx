@@ -71,7 +71,11 @@ export default function HealthPage() {
                 <p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
                   Block A, Ground Floor · Duty Nurse: Sister Mary
                 </p>
-                <p className="font-body-sm text-body-sm text-outline mt-1">+91 33 2456 7890 (Ext. 112)</p>
+                <p className="font-body-sm text-body-sm text-outline mt-1">
+                  <a href="tel:+913324567890" className="hover:text-primary transition-colors">
+                    +91 33 2456 7890 (Ext. 112)
+                  </a>
+                </p>
               </div>
             </div>
             <a
