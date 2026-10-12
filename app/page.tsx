@@ -275,6 +275,74 @@ const BANNER_BOXES: BannerSpeck[] = [
   { left: '95%', top: '52%', size: 22, opacity: 0.08, rotate: 45, wide: true },
 ];
 
+// ---------------------------------------------------------------------------
+// Attendance heatmap calendar model
+// ---------------------------------------------------------------------------
+
+const ATTENDANCE_WINDOW_DAYS = 30;
+const ATTENDANCE_LEAVE_INDICES = new Set([11, 24]);
+
+// Fixed anchor rather than `new Date()`: the page is server-rendered, so a live
+// clock would risk a server/client hydration mismatch across a midnight boundary.
+const ATTENDANCE_WINDOW_END = '2026-10-09';
+
+const WEEKDAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
+
+type AttendanceStatus = 'present' | 'leave' | 'holiday' | 'blank';
+
+interface AttendanceCell {
+  key: string;
+  status: AttendanceStatus;
+  dayOfMonth: number | null;
+  tooltip: string;
+}
+
+/**
+ * Builds the 30-day window as a flat, Monday-first list of cells padded to whole
+ * weeks, so it can be dropped straight into a `grid-cols-7` grid alongside the
+ * weekday header row. Padding is what keeps every date in its true weekday column.
+ */
+function buildAttendanceCalendar(): AttendanceCell[] {
+  const end = new Date(`${ATTENDANCE_WINDOW_END}T00:00:00`);
+  const start = new Date(end);
+  start.setDate(end.getDate() - (ATTENDANCE_WINDOW_DAYS - 1));
+
+  // Monday = 0 ... Sunday = 6
+  const leadingBlanks = (start.getDay() + 6) % 7;
+  const cells: AttendanceCell[] = Array.from({ length: leadingBlanks }, (_, i) => ({
+    key: `lead-${i}`,
+    status: 'blank',
+    dayOfMonth: null,
+    tooltip: '',
+  }));
+
+  for (let i = 0; i < ATTENDANCE_WINDOW_DAYS; i++) {
+    const date = new Date(start);
+    date.setDate(start.getDate() + i);
+    const weekday = (date.getDay() + 6) % 7;
+    const label = `${date.getDate()} ${WEEKDAY_LABELS[weekday]}`;
+    const isWeekend = weekday >= 5;
+
+    cells.push({
+      key: `d-${i}`,
+      status: isWeekend ? 'holiday' : ATTENDANCE_LEAVE_INDICES.has(i) ? 'leave' : 'present',
+      dayOfMonth: date.getDate(),
+      tooltip: `${label}: ${isWeekend ? 'Weekend / Holiday' : ATTENDANCE_LEAVE_INDICES.has(i) ? 'Approved Leave' : 'Present'}`,
+    });
+  }
+
+  while (cells.length % 7 !== 0) {
+    cells.push({
+      key: `tail-${cells.length}`,
+      status: 'blank',
+      dayOfMonth: null,
+      tooltip: '',
+    });
+  }
+
+  return cells;
+}
+
 const SECURITY_AUDIT_CHECKS: string[] = [
   '1. SQL Injection: Parameterized pgx',
   '2. XSS: Strict CSP + React Escape',
@@ -442,6 +510,8 @@ export default function ExecutiveHomePage() {
   }, [activeModuleTab]);
 
   const visibleSecurityChecks = Math.min(mobileVisibleChecks, SECURITY_AUDIT_CHECKS.length);
+
+  const attendanceCalendar = useMemo(() => buildAttendanceCalendar(), []);
 
   const toggleSecurityChecks = () => {
     setMobileVisibleChecks((prev) =>
@@ -1814,37 +1884,44 @@ export default function ExecutiveHomePage() {
             {/* 30-Day Grid */}
             <div className="lg:col-span-8 p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40]">
               <div className="flex items-center justify-between mb-4 text-xs font-bold text-[#454655] dark:text-[#a0a4c0]">
-                <span>Daily Log (Recent 30 Days)</span>
-                <div className="flex items-center gap-3">
+                <span>Daily Log (Recent 30 Days)</span>                <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-emerald-500" /> Present</span>
                   <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-amber-400" /> Leave</span>
                   <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-slate-300 dark:bg-slate-700" /> Holiday</span>
                 </div>
               </div>
 
-              {/* 30 Day Heatmap Blocks */}
-              <div className="grid grid-cols-6 sm:grid-cols-10 gap-2">
-                {Array.from({ length: 30 }).map((_, i) => {
-                  const isHoliday = i % 7 === 5 || i % 7 === 6;
-                  const isMedical = i === 11;
-                  const isPresent = !isHoliday && !isMedical;
+              {/* Calendar heatmap: 7 fixed weekday columns so every date sits in its
+                  true weekday, padded with blanks so partial weeks still line up. */}
+              <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+                {WEEKDAY_LABELS.map((label) => (
+                  <div
+                    key={label}
+                    className="text-center text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#8a8fa8] dark:text-[#7b8099] pb-0.5"
+                  >
+                    {label}
+                  </div>
+                ))}
 
-                  return (
+                {attendanceCalendar.map((cell) =>
+                  cell.status === 'blank' ? (
+                    <div key={cell.key} aria-hidden="true" className="h-8 sm:h-9" />
+                  ) : (
                     <div
-                      key={i}
-                      title={`Day ${i + 1}: ${isPresent ? 'Present' : isMedical ? 'Approved Leave' : 'Weekend / Holiday'}`}
-                      className={`h-9 rounded-lg flex items-center justify-center font-mono text-[10px] font-bold transition-transform hover:scale-105 cursor-pointer ${
-                        isPresent
+                      key={cell.key}
+                      title={cell.tooltip}
+                      className={`h-8 sm:h-9 rounded-lg flex items-center justify-center font-mono text-[10px] sm:text-[11px] font-bold transition-transform hover:scale-105 cursor-pointer ${
+                        cell.status === 'present'
                           ? 'bg-emerald-500 text-white shadow-sm'
-                          : isMedical
+                          : cell.status === 'leave'
                           ? 'bg-amber-400 text-amber-950'
                           : 'bg-slate-200 dark:bg-[#25283d] text-slate-500'
                       }`}
                     >
-                      {i + 1}
+                      {cell.dayOfMonth}
                     </div>
-                  );
-                })}
+                  )
+                )}
               </div>
 
               <div className="mt-4 pt-3 border-t border-[#e2e7ff] dark:border-[#24283d] flex justify-between items-center text-xs">
