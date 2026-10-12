@@ -188,6 +188,84 @@ const MODULES_DATA: ModuleItem[] = [
 // arrow reveals 4 more. Laptop widths always render every item.
 const MOBILE_REVEAL_STEP = 4;
 
+interface BannerGlyph {
+  icon: string;
+  left: string;
+  top: string;
+  size: number;
+  opacity: number;
+  rotate?: number;
+  wide?: boolean;
+}
+
+interface BannerSpeck {
+  left: string;
+  top: string;
+  size: number;
+  opacity: number;
+  round?: boolean;
+  rotate?: number;
+  wide?: boolean;
+}
+
+// Decorative "code & study" texture for the nexaCampus brand banner.
+// Purely presentational: hidden from assistive tech and from pointer events.
+const BANNER_GLYPHS: BannerGlyph[] = [
+  { icon: 'code', left: '4%', top: '8%', size: 18, opacity: 0.18 },
+  { icon: 'terminal', left: '15%', top: '4%', size: 13, opacity: 0.14 },
+  { icon: 'data_object', left: '26%', top: '11%', size: 16, opacity: 0.16 },
+  { icon: 'calculate', left: '38%', top: '6%', size: 12, opacity: 0.12 },
+  { icon: 'lightbulb', left: '58%', top: '10%', size: 13, opacity: 0.13 },
+  { icon: 'school', left: '68%', top: '3%', size: 12, opacity: 0.12 },
+  { icon: 'function', left: '78%', top: '7%', size: 17, opacity: 0.17 },
+  { icon: 'menu_book', left: '88%', top: '13%', size: 14, opacity: 0.15 },
+  { icon: 'psychology', left: '48%', top: '2%', size: 11, opacity: 0.11, wide: true },
+  { icon: 'widgets', left: '93%', top: '5%', size: 11, opacity: 0.12, wide: true },
+  { icon: 'developer_mode', left: '7%', top: '84%', size: 19, opacity: 0.18 },
+  { icon: 'schema', left: '19%', top: '88%', size: 13, opacity: 0.14 },
+  { icon: 'fact_check', left: '33%', top: '83%', size: 15, opacity: 0.15 },
+  { icon: 'auto_stories', left: '62%', top: '87%', size: 13, opacity: 0.13 },
+  { icon: 'key', left: '74%', top: '82%', size: 15, opacity: 0.15 },
+  { icon: 'dns', left: '86%', top: '86%', size: 14, opacity: 0.14 },
+  { icon: 'terminal', left: '47%', top: '90%', size: 11, opacity: 0.11, wide: true },
+  { icon: 'code', left: '55%', top: '79%', size: 12, opacity: 0.12, wide: true },
+];
+
+const BANNER_DOTS: BannerSpeck[] = [
+  { left: '8%', top: '4%', size: 3, opacity: 0.3, round: true },
+  { left: '21%', top: '15%', size: 4, opacity: 0.26, round: true },
+  { left: '34%', top: '3%', size: 3, opacity: 0.24, round: true },
+  { left: '44%', top: '16%', size: 5, opacity: 0.22, round: true },
+  { left: '57%', top: '5%', size: 3, opacity: 0.28, round: true },
+  { left: '66%', top: '17%', size: 4, opacity: 0.24, round: true },
+  { left: '72%', top: '2%', size: 3, opacity: 0.22, round: true },
+  { left: '83%', top: '16%', size: 5, opacity: 0.26, round: true },
+  { left: '92%', top: '6%', size: 4, opacity: 0.3, round: true },
+  { left: '3%', top: '20%', size: 3, opacity: 0.18, round: true, wide: true },
+  { left: '96%', top: '20%', size: 3, opacity: 0.18, round: true, wide: true },
+  { left: '12%', top: '90%', size: 4, opacity: 0.28, round: true },
+  { left: '27%', top: '95%', size: 3, opacity: 0.24, round: true },
+  { left: '39%', top: '88%', size: 4, opacity: 0.22, round: true },
+  { left: '52%', top: '94%', size: 5, opacity: 0.26, round: true },
+  { left: '59%', top: '85%', size: 3, opacity: 0.2, round: true },
+  { left: '70%', top: '96%', size: 4, opacity: 0.26, round: true },
+  { left: '81%', top: '89%', size: 3, opacity: 0.22, round: true },
+  { left: '90%', top: '94%', size: 5, opacity: 0.28, round: true },
+];
+
+const BANNER_BOXES: BannerSpeck[] = [
+  { left: '11%', top: '6%', size: 14, opacity: 0.16, rotate: 12 },
+  { left: '30%', top: '14%', size: 10, opacity: 0.13, rotate: -8 },
+  { left: '63%', top: '3%', size: 16, opacity: 0.15, rotate: 8 },
+  { left: '86%', top: '9%', size: 11, opacity: 0.14, rotate: -12 },
+  { left: '16%', top: '86%', size: 12, opacity: 0.14, rotate: -10 },
+  { left: '41%', top: '92%', size: 9, opacity: 0.12, rotate: 14 },
+  { left: '64%', top: '84%', size: 13, opacity: 0.15, rotate: -6 },
+  { left: '87%', top: '92%', size: 12, opacity: 0.14, rotate: 10 },
+  { left: '1%', top: '50%', size: 22, opacity: 0.08, rotate: 12, wide: true },
+  { left: '95%', top: '52%', size: 22, opacity: 0.08, rotate: -12, wide: true },
+];
+
 const SECURITY_AUDIT_CHECKS: string[] = [
   '1. SQL Injection: Parameterized pgx',
   '2. XSS: Strict CSP + React Escape',
@@ -2245,8 +2323,56 @@ export default function ExecutiveHomePage() {
             INSPIRUX-STYLE FULL-BLEED DISPLAY BRAND BANNER (BLUE & WHITE)
             Edge-to-edge vibrant Royal Blue block with crystal-clear, fully visible 'nexaCampus' display
             ========================================================================= */}
-        <div className="w-full bg-[#1c2ac8] dark:bg-[#1622a5] text-white pt-10 sm:pt-14 md:pt-18 lg:pt-24 pb-8 sm:pb-12 md:pb-16 lg:pb-20 px-3 sm:px-6 md:px-10 select-none border-t border-[#1c2ac8] overflow-hidden">
-          <div className="w-full max-w-[1400px] mx-auto flex items-center justify-center">
+        <div className="relative w-full bg-[#1c2ac8] dark:bg-[#1622a5] text-white pt-10 sm:pt-14 md:pt-18 lg:pt-24 pb-8 sm:pb-12 md:pb-16 lg:pb-20 px-3 sm:px-6 md:px-10 select-none border-t border-[#1c2ac8] overflow-hidden">
+          {/* Decorative coding & study artifacts — white specks, boxes and glyphs behind the wordmark */}
+          <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+            {BANNER_GLYPHS.map((g) => (
+              <span
+                key={`g-${g.icon}-${g.left}`}
+                className={`material-symbols-outlined absolute leading-none ${g.wide ? 'hidden sm:block' : ''}`}
+                style={{
+                  left: g.left,
+                  top: g.top,
+                  fontSize: `${g.size}px`,
+                  opacity: g.opacity,
+                  transform: g.rotate ? `rotate(${g.rotate}deg)` : undefined,
+                }}
+              >
+                {g.icon}
+              </span>
+            ))}
+
+            {BANNER_DOTS.map((d, i) => (
+              <span
+                key={`d-${d.left}-${i}`}
+                className={`absolute ${d.round ? 'rounded-full' : ''} bg-white ${d.wide ? 'hidden sm:block' : ''}`}
+                style={{
+                  left: d.left,
+                  top: d.top,
+                  width: `${d.size}px`,
+                  height: `${d.size}px`,
+                  opacity: d.opacity,
+                }}
+              />
+            ))}
+
+            {BANNER_BOXES.map((b, i) => (
+              <span
+                key={`b-${b.left}-${i}`}
+                className={`absolute border border-white rounded-[3px] ${b.wide ? 'hidden sm:block' : ''}`}
+                style={{
+                  left: b.left,
+                  top: b.top,
+                  width: `${b.size}px`,
+                  height: `${b.size}px`,
+                  opacity: b.opacity,
+                  transform: `rotate(${b.rotate ?? 0}deg)`,
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="relative z-10 w-full max-w-[1400px] mx-auto flex items-center justify-center">
             <svg
               viewBox="0 0 1000 155"
               className="w-full h-auto select-none pointer-events-none drop-shadow-md"
