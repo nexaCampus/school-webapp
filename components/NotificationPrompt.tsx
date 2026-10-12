@@ -107,7 +107,7 @@ export default function NotificationPrompt({
   if (variant === 'inline' || variant === 'card') {
     return (
       <div
-        className={`rounded-2xl p-4 bg-white dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c] shadow-sm flex flex-col gap-3 ${className}`}
+        className={`rounded-2xl p-4 bg-white dark:bg-[#151622] border border-outline/10 dark:border-[#222538] shadow-sm flex flex-col gap-3 ${className}`}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -171,7 +171,7 @@ export default function NotificationPrompt({
               type="button"
               disabled={loading}
               onClick={handleSendTest}
-              className="flex-1 py-2 px-3 rounded-full bg-surface-container hover:bg-surface-container-high dark:bg-[#333333] text-on-surface text-[12px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="flex-1 py-2 px-3 rounded-full bg-surface-container hover:bg-surface-container-high dark:bg-[#1a1c2b] dark:border dark:border-[#222538] text-on-surface text-[12px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-[16px]">send</span>
               <span>{loading ? 'Sending...' : 'Send Test Notification'}</span>
@@ -223,7 +223,7 @@ export default function NotificationPrompt({
           onClick={handleDismiss}
           title="Maybe Later"
           aria-label="Dismiss notification prompt"
-          className="px-3 py-2 rounded-full bg-surface-container dark:bg-[#333333] text-on-surface-variant hover:text-on-surface text-[12px] font-medium transition-all active:scale-95 cursor-pointer"
+          className="px-3 py-2 rounded-full bg-surface-container dark:bg-[#1a1c2b] dark:border dark:border-[#222538] text-on-surface-variant hover:text-on-surface text-[12px] font-medium transition-all active:scale-95 cursor-pointer"
         >
           Later
         </button>

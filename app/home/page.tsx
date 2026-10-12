@@ -76,14 +76,14 @@ export default function HomePage() {
       </div>
 
       {/* Student Welcome Banner Card (Elevated Frosted Hero Slab) */}
-      <section className="relative mt-2 sm:mt-space-sm bg-gradient-to-br from-white/95 via-surface-container-lowest/90 to-surface-container-low/80 dark:from-[#252526] dark:via-[#252526] dark:to-[#252526] dark:bg-[#252526] backdrop-blur-xl rounded-lg sm:rounded-xl border border-outline/10 dark:border-[#3c3c3c] p-3 sm:p-4 md:p-space-lg shadow-[0_8px_20px_-6px_rgba(15,23,42,0.06)] dark:shadow-none overflow-hidden">
+      <section className="relative mt-2 sm:mt-space-sm bg-gradient-to-br from-white/95 via-surface-container-lowest/90 to-surface-container-low/80 dark:from-[#151622] dark:via-[#151622] dark:to-[#151622] dark:bg-[#151622] backdrop-blur-xl rounded-lg sm:rounded-xl border border-outline/10 dark:border-[#222538] p-3 sm:p-4 md:p-space-lg shadow-[0_8px_20px_-6px_rgba(15,23,42,0.06)] dark:shadow-none overflow-hidden">
         {/* Ambient Accent Glow */}
         <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none dark:hidden"></div>
         <div className="flex items-start justify-between gap-2.5 sm:gap-space-md relative z-10">
           <div className="flex items-center gap-2.5 sm:gap-space-md min-w-0">
             {/* Student Avatar with Verified Ring */}
             <div className="relative flex-shrink-0">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden shadow-sm dark:shadow-none bg-primary-fixed dark:bg-[#007acc]/20 flex items-center justify-center text-primary dark:text-[#3794ff] font-bold text-base sm:text-xl">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden shadow-sm dark:shadow-none bg-primary-fixed dark:bg-[#3b49df]/20 flex items-center justify-center text-primary dark:text-[#bdc2ff] font-bold text-base sm:text-xl">
                 <span>{student.initials}</span>
               </div>
               <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 sm:w-5 sm:h-5 bg-tertiary text-on-tertiary rounded-full flex items-center justify-center text-[10px] sm:text-[12px] shadow-sm">
@@ -107,7 +107,7 @@ export default function HomePage() {
                 {student.name}
               </h1>
               <div className="flex items-center gap-1.5 sm:gap-space-xs flex-wrap mt-0.5">
-                <span className="text-[10px] sm:text-label-md bg-surface-container dark:bg-[#1e1e1e] dark:border dark:border-[#3c3c3c] px-2 py-0.5 rounded-md text-primary font-bold">
+                <span className="text-[10px] sm:text-label-md bg-surface-container dark:bg-[#101119] dark:border dark:border-[#222538] px-2 py-0.5 rounded-md text-primary font-bold">
                   {student.gradeSection}
                 </span>
                 <span className="text-[11px] sm:text-body-sm text-on-surface-variant font-medium">
@@ -117,13 +117,13 @@ export default function HomePage() {
             </div>
           </div>
           {/* Quick Date Dial */}
-          <div className="flex flex-col items-center bg-surface-container-low dark:bg-[#1e1e1e] px-2 py-1 sm:px-3 sm:py-2 rounded-md sm:rounded-lg border border-outline/10 dark:border-[#3c3c3c] text-center shadow-sm flex-shrink-0">
+          <div className="flex flex-col items-center bg-surface-container-low dark:bg-[#101119] px-2 py-1 sm:px-3 sm:py-2 rounded-md sm:rounded-lg border border-outline/10 dark:border-[#222538] text-center shadow-sm flex-shrink-0">
             <span className="text-[9px] sm:text-label-sm text-outline uppercase">Sep</span>
             <span className="text-[16px] sm:text-headline-md text-primary font-bold leading-none">23</span>
           </div>
         </div>
         {/* Micro Highlights / Attendance & Today's Metric */}
-        <div className="mt-2.5 pt-2 sm:mt-space-md sm:pt-space-md flex items-center justify-between gap-2 relative z-10 border-t border-outline/10 dark:border-[#3c3c3c]">
+        <div className="mt-2.5 pt-2 sm:mt-space-md sm:pt-space-md flex items-center justify-between gap-2 relative z-10 border-t border-outline/10 dark:border-[#222538]">
           <div className="flex items-center gap-1.5 bg-emerald-500/10 dark:bg-emerald-400/15 text-emerald-700 dark:text-emerald-300 px-2.5 py-1 sm:px-space-md sm:py-1.5 rounded-md border border-emerald-500/20 dark:border-emerald-400/25">
             <span
               className="material-symbols-outlined text-[15px] sm:text-[18px] text-emerald-600 dark:text-emerald-400"
@@ -154,7 +154,7 @@ export default function HomePage() {
           <section>
             <Link
               href="/notices"
-              className="bg-gradient-to-r from-secondary-container/20 via-surface-container-low to-surface-container-lowest dark:from-[#252526] dark:via-[#252526] dark:to-[#252526] dark:border dark:border-[#3c3c3c] p-2 sm:p-space-sm rounded-lg sm:rounded-md flex items-center gap-2 sm:gap-space-sm shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+              className="bg-gradient-to-r from-secondary-container/20 via-surface-container-low to-surface-container-lowest dark:from-[#151622] dark:via-[#151622] dark:to-[#151622] dark:border dark:border-[#222538] p-2 sm:p-space-sm rounded-lg sm:rounded-md flex items-center gap-2 sm:gap-space-sm shadow-sm cursor-pointer hover:shadow-md transition-shadow"
             >
               <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center flex-shrink-0 shadow-sm">
                 <span className="material-symbols-outlined text-[16px] sm:text-[18px]">campaign</span>
@@ -196,14 +196,14 @@ export default function HomePage() {
               </Link>
             </div>
             {/* Active Class Card Stream */}
-            <div className="bg-white dark:bg-[#252526] rounded-lg sm:rounded-xl border border-outline/10 dark:border-[#3c3c3c] p-2 sm:p-space-md shadow-sm space-y-1.5 sm:space-y-space-sm">
+            <div className="bg-white dark:bg-[#151622] rounded-lg sm:rounded-xl border border-outline/10 dark:border-[#222538] p-2 sm:p-space-md shadow-sm space-y-1.5 sm:space-y-space-sm">
               {/* Period 1: Live / First Period */}
               {todayPeriods[0] && (
                 <div
                   className={`flex items-center justify-between p-2 sm:p-space-sm rounded-md sm:rounded-lg border transition-all ${
                     todayPeriods[0].isLive
-                      ? 'bg-primary/5 dark:bg-[#007acc]/15 border-primary/20 dark:border-[#007acc]/40'
-                      : 'bg-surface-container-low dark:bg-[#1e1e1e] border-outline/10 dark:border-[#3c3c3c]'
+                      ? 'bg-primary/5 dark:bg-[#3b49df]/15 border-primary/20 dark:border-[#3b49df]/40'
+                      : 'bg-surface-container-low dark:bg-[#101119] border-outline/10 dark:border-[#222538]'
                   }`}
                 >
                   <div className="flex items-center gap-2 sm:gap-space-sm min-w-0">
@@ -246,7 +246,7 @@ export default function HomePage() {
                 {todayPeriods.slice(1, 3).map((p, idx) => (
                   <div
                     key={`${p.period}-${idx}`}
-                    className="bg-surface-container-low dark:bg-[#1e1e1e] p-2 sm:p-space-sm rounded-md sm:rounded-lg border border-outline/10 dark:border-[#3c3c3c] flex flex-col justify-between"
+                    className="bg-surface-container-low dark:bg-[#101119] p-2 sm:p-space-sm rounded-md sm:rounded-lg border border-outline/10 dark:border-[#222538] flex flex-col justify-between"
                   >
                     <div>
                       <span className="text-[9.5px] sm:text-label-sm text-outline">{p.time}</span>
@@ -277,7 +277,7 @@ export default function HomePage() {
                   Essential student tools, diaries, &amp; academics
                 </p>
               </div>
-              <span className="whitespace-nowrap flex-shrink-0 inline-flex items-center text-[10px] sm:text-[11px] font-bold tracking-tight bg-surface-container dark:bg-[#252526] dark:border dark:border-[#3c3c3c] px-2 sm:px-2.5 py-0.5 rounded-md text-on-surface-variant">
+              <span className="whitespace-nowrap flex-shrink-0 inline-flex items-center text-[10px] sm:text-[11px] font-bold tracking-tight bg-surface-container dark:bg-[#151622] dark:border dark:border-[#222538] px-2 sm:px-2.5 py-0.5 rounded-md text-on-surface-variant">
                 9 Services
               </span>
             </div>
@@ -286,7 +286,7 @@ export default function HomePage() {
               {/* 1. Homework & Diary */}
               <Link
                 href="/diary"
-                className="group relative bg-white dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#151622] border border-outline/10 dark:border-[#222538] dark:hover:bg-[#1a1c2b] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-error text-on-error text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.2 sm:py-0.5 rounded-md font-bold shadow-sm">
                   {pendingDiaryCount} Due
@@ -302,7 +302,7 @@ export default function HomePage() {
               {/* 2. Attendance Tracker */}
               <Link
                 href="/attendance"
-                className="group relative bg-white dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(0,80,54,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#151622] border border-outline/10 dark:border-[#222538] dark:hover:bg-[#1a1c2b] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(0,80,54,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-tertiary-fixed text-on-tertiary-fixed text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.2 sm:py-0.5 rounded-md font-bold">
                   100% Oct
@@ -318,7 +318,7 @@ export default function HomePage() {
               {/* 3. Announcements */}
               <Link
                 href="/notices"
-                className="group relative bg-white dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(254,166,25,0.2)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#151622] border border-outline/10 dark:border-[#222538] dark:hover:bg-[#1a1c2b] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(254,166,25,0.2)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-secondary-container text-on-secondary-container text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.2 sm:py-0.5 rounded-md font-bold">
                   3 New
@@ -334,7 +334,7 @@ export default function HomePage() {
               {/* 4. Fees & Payment */}
               <Link
                 href="/academics"
-                className="group relative bg-white dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#151622] border border-outline/10 dark:border-[#222538] dark:hover:bg-[#1a1c2b] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-secondary-fixed text-on-secondary-fixed text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.2 sm:py-0.5 rounded-md font-bold">
                   Due Sep
@@ -352,7 +352,7 @@ export default function HomePage() {
               {/* 5. Exam Marks & Results */}
               <Link
                 href="/exams"
-                className="group relative bg-white dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#151622] border border-outline/10 dark:border-[#222538] dark:hover:bg-[#1a1c2b] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-primary-fixed text-on-primary-fixed-variant text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.2 sm:py-0.5 rounded-md font-bold">
                   Report Card
@@ -368,7 +368,7 @@ export default function HomePage() {
               {/* 6. E-Content & Notes */}
               <Link
                 href="/library"
-                className="group relative bg-white dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#151622] border border-outline/10 dark:border-[#222538] dark:hover:bg-[#1a1c2b] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-surface-container-highest text-primary text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.2 sm:py-0.5 rounded-md font-bold">
                   12 Files
@@ -384,7 +384,7 @@ export default function HomePage() {
               {/* 7. Annual Calendar */}
               <Link
                 href="/timetable"
-                className="group relative bg-white dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#151622] border border-outline/10 dark:border-[#222538] dark:hover:bg-[#1a1c2b] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-md sm:rounded-lg bg-gradient-to-tr from-surface-dim to-surface-container-high text-primary flex items-center justify-center shadow-sm mb-1 sm:mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[20px] sm:text-[26px]">calendar_month</span>
@@ -399,7 +399,7 @@ export default function HomePage() {
               {/* 8. Write to School / Helpdesk */}
               <Link
                 href="/helpdesk"
-                className="group relative bg-white dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#151622] border border-outline/10 dark:border-[#222538] dark:hover:bg-[#1a1c2b] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-md sm:rounded-lg bg-gradient-to-tr from-secondary-fixed-dim to-secondary-container text-on-secondary-fixed flex items-center justify-center shadow-sm mb-1 sm:mb-2 group-hover:-translate-y-1 transition-transform">
                   <span className="material-symbols-outlined text-[20px] sm:text-[26px]">mark_chat_unread</span>
@@ -412,7 +412,7 @@ export default function HomePage() {
               {/* 9. Live Class & Online Tests */}
               <Link
                 href="/exams"
-                className="group relative bg-white dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c] dark:hover:bg-[#2d2d2d] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
+                className="group relative bg-white dark:bg-[#151622] border border-outline/10 dark:border-[#222538] dark:hover:bg-[#1a1c2b] p-2 sm:p-space-sm rounded-lg sm:rounded-xl flex flex-col items-center text-center shadow-sm hover:shadow-[0_12px_24px_-4px_rgba(59,73,223,0.18)] transition-all cursor-pointer transform active:scale-95"
               >
                 <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
@@ -433,13 +433,13 @@ export default function HomePage() {
         {/* Side Column on Laptop (lg:col-span-4) */}
         <div className="lg:col-span-4 flex flex-col gap-2.5 sm:gap-space-lg mt-2.5 sm:mt-space-lg lg:mt-0">
           {/* Quick Progress & Performance Snapshot Banner */}
-          <section className="bg-white dark:bg-[#252526] rounded-lg sm:rounded-xl border border-outline/10 dark:border-[#3c3c3c] p-2.5 sm:p-space-md shadow-sm flex items-center justify-between">
+          <section className="bg-white dark:bg-[#151622] rounded-lg sm:rounded-xl border border-outline/10 dark:border-[#222538] p-2.5 sm:p-space-md shadow-sm flex items-center justify-between">
             <div className="flex items-center gap-2.5 sm:gap-space-sm min-w-0">
               <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 flex items-center justify-center">
                 {/* Circular Progress Ring SVG */}
                 <svg className="w-10 h-10 sm:w-12 sm:h-12 transform -rotate-90" viewBox="0 0 36 36">
                   <path
-                    className="text-surface-container dark:text-[#3c3c3c]"
+                    className="text-surface-container dark:text-[#222538]"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     fill="none"
                     stroke="currentColor"
@@ -470,42 +470,42 @@ export default function HomePage() {
             </div>
             <Link
               href="/exams"
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-md sm:rounded-lg bg-surface-container dark:bg-[#1e1e1e] hover:bg-surface-container-high dark:hover:bg-[#2d2d2d] flex items-center justify-center text-primary flex-shrink-0 transition-colors"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-md sm:rounded-lg bg-surface-container dark:bg-[#101119] hover:bg-surface-container-high dark:hover:bg-[#1a1c2b] flex items-center justify-center text-primary flex-shrink-0 transition-colors"
             >
               <span className="material-symbols-outlined text-[18px] sm:text-[20px]">trending_up</span>
             </Link>
           </section>
 
           {/* Quick Academic Hub Shortcuts (Desktop View Enhancement) */}
-          <section className="bg-white dark:bg-[#252526] rounded-lg sm:rounded-xl border border-outline/10 dark:border-[#3c3c3c] p-space-md shadow-sm hidden lg:flex flex-col gap-3">
+          <section className="bg-white dark:bg-[#151622] rounded-lg sm:rounded-xl border border-outline/10 dark:border-[#222538] p-space-md shadow-sm hidden lg:flex flex-col gap-3">
             <h3 className="font-label-lg text-label-lg text-on-surface font-bold">
               Quick Shortcuts
             </h3>
             <div className="grid grid-cols-2 gap-2">
               <Link
                 href="/bus"
-                className="flex items-center gap-2 p-2.5 rounded-md sm:rounded-lg bg-surface-container-low dark:bg-[#1e1e1e] hover:bg-surface-container dark:hover:bg-[#2d2d2d] dark:border dark:border-[#3c3c3c] transition-colors"
+                className="flex items-center gap-2 p-2.5 rounded-md sm:rounded-lg bg-surface-container-low dark:bg-[#101119] hover:bg-surface-container dark:hover:bg-[#1a1c2b] dark:border dark:border-[#222538] transition-colors"
               >
                 <span className="material-symbols-outlined text-primary text-[20px]">directions_bus</span>
                 <span className="text-[12px] font-semibold text-on-surface">Bus Track</span>
               </Link>
               <Link
                 href="/canteen"
-                className="flex items-center gap-2 p-2.5 rounded-md sm:rounded-lg bg-surface-container-low dark:bg-[#1e1e1e] hover:bg-surface-container dark:hover:bg-[#2d2d2d] dark:border dark:border-[#3c3c3c] transition-colors"
+                className="flex items-center gap-2 p-2.5 rounded-md sm:rounded-lg bg-surface-container-low dark:bg-[#101119] hover:bg-surface-container dark:hover:bg-[#1a1c2b] dark:border dark:border-[#222538] transition-colors"
               >
                 <span className="material-symbols-outlined text-secondary text-[20px]">restaurant</span>
                 <span className="text-[12px] font-semibold text-on-surface">Canteen</span>
               </Link>
               <Link
                 href="/library"
-                className="flex items-center gap-2 p-2.5 rounded-md sm:rounded-lg bg-surface-container-low dark:bg-[#1e1e1e] hover:bg-surface-container dark:hover:bg-[#2d2d2d] dark:border dark:border-[#3c3c3c] transition-colors"
+                className="flex items-center gap-2 p-2.5 rounded-md sm:rounded-lg bg-surface-container-low dark:bg-[#101119] hover:bg-surface-container dark:hover:bg-[#1a1c2b] dark:border dark:border-[#222538] transition-colors"
               >
                 <span className="material-symbols-outlined text-tertiary text-[20px]">local_library</span>
                 <span className="text-[12px] font-semibold text-on-surface">E-Library</span>
               </Link>
               <Link
                 href="/health"
-                className="flex items-center gap-2 p-2.5 rounded-md sm:rounded-lg bg-surface-container-low dark:bg-[#1e1e1e] hover:bg-surface-container dark:hover:bg-[#2d2d2d] dark:border dark:border-[#3c3c3c] transition-colors"
+                className="flex items-center gap-2 p-2.5 rounded-md sm:rounded-lg bg-surface-container-low dark:bg-[#101119] hover:bg-surface-container dark:hover:bg-[#1a1c2b] dark:border dark:border-[#222538] transition-colors"
               >
                 <span className="material-symbols-outlined text-error text-[20px]">local_hospital</span>
                 <span className="text-[12px] font-semibold text-on-surface">Clinic</span>
@@ -514,7 +514,7 @@ export default function HomePage() {
           </section>
 
           {/* Parent Help & Quick Desk Link Pill */}
-          <div className="text-center p-2.5 sm:p-4 rounded-lg sm:rounded-md bg-surface-container-low dark:bg-[#252526] border border-outline/10 dark:border-[#3c3c3c]">
+          <div className="text-center p-2.5 sm:p-4 rounded-lg sm:rounded-md bg-surface-container-low dark:bg-[#151622] border border-outline/10 dark:border-[#222538]">
             <p className="text-[11px] sm:text-body-sm text-outline">
               Need guardian assistance?
               <Link href="/helpdesk" className="text-primary font-bold hover:underline ml-1">
