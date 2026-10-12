@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import LogoEmblem from '@/components/LogoEmblem';
 import DarkModeToggle from '@/components/DarkModeToggle';
+import HeroTypewriter from '@/components/HeroTypewriter';
 import { getSession } from '@/lib/session';
 
 // 16 Institutional Modules with categories and direct routes
@@ -537,9 +538,9 @@ export default function ExecutiveHomePage() {
                 <span>Go Engine v1.23 Online • CISCE Affiliation WB243</span>
               </div>
 
-              {/* Primary Poppins Headline with Excalidraw Virgil Stylish Annotation */}
+              {/* Primary Poppins Headline with Excalidraw Virgil Stylish Annotation & Dynamic Typewriter */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.12] text-[#131b2e] dark:text-white">
-                Empowering Campus <br />
+                <HeroTypewriter /> <br />
                 <span className="bg-gradient-to-r from-[#1c2ac8] via-[#3b49df] to-[#6366f1] dark:from-[#bdc2ff] dark:via-[#9398ff] dark:to-[#6ffbbe] bg-clip-text text-transparent">
                   Connected Intelligence
                 </span>
