@@ -183,6 +183,9 @@ const MODULES_DATA: ModuleItem[] = [
   },
 ];
 
+// On phones only the first 4 modules render; each tap on the arrow reveals 4 more.
+const MOBILE_MODULE_STEP = 4;
+
 const MODULE_FILTER_TABS: Array<{ id: 'all' | 'academics' | 'logistics' | 'studentlife' | 'admin'; label: string }> = [
   { id: 'all', label: 'All (16)' },
   { id: 'academics', label: 'Academics' },
@@ -194,6 +197,7 @@ const MODULE_FILTER_TABS: Array<{ id: 'all' | 'academics' | 'logistics' | 'stude
 export default function ExecutiveHomePage() {
   const router = useRouter();
   const [activeModuleTab, setActiveModuleTab] = useState<'all' | 'academics' | 'logistics' | 'studentlife' | 'admin'>('all');
+  const [mobileVisibleModules, setMobileVisibleModules] = useState<number>(MOBILE_MODULE_STEP);
   const [studentFirstName, setStudentFirstName] = useState<string>('Student');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [hallPassSeconds, setHallPassSeconds] = useState<number>(765); // 12m 45s
@@ -306,6 +310,23 @@ export default function ExecutiveHomePage() {
   const filteredModules = useMemo(() => {
     if (activeModuleTab === 'all') return MODULES_DATA;
     return MODULES_DATA.filter((m) => m.category === activeModuleTab);
+  }, [activeModuleTab]);
+
+  // Phones progressively reveal the directory; laptops always render every card.
+  const visibleModuleCount = Math.min(mobileVisibleModules, filteredModules.length);
+  const hasHiddenModules = visibleModuleCount < filteredModules.length;
+  const nextRevealCount = Math.min(MOBILE_MODULE_STEP, filteredModules.length - visibleModuleCount);
+
+  const revealMoreModules = () => {
+    if (hasHiddenModules) {
+      setMobileVisibleModules((prev) => Math.min(prev + MOBILE_MODULE_STEP, filteredModules.length));
+      return;
+    }
+    setMobileVisibleModules(MOBILE_MODULE_STEP);
+  };
+
+  useEffect(() => {
+    setMobileVisibleModules(MOBILE_MODULE_STEP);
   }, [activeModuleTab]);
 
   // Subtle 3D tilt tracking for hero card
@@ -879,13 +900,15 @@ export default function ExecutiveHomePage() {
           </div>
         </div>
 
-        {/* 16-Module Responsive Cards Grid */}
+        {/* 16-Module Responsive Cards Grid - phones reveal 4 at a time, laptops show all */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {filteredModules.map((item) => (
+          {filteredModules.map((item, index) => (
             <Link
               key={item.id}
               href={item.href}
-              className="levitate-card group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/60 hover:shadow-2xl hover:shadow-[#1c2ac8]/18 dark:hover:shadow-[#3b49df]/25 flex flex-col justify-between cursor-pointer"
+              className={`levitate-card group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/60 hover:shadow-2xl hover:shadow-[#1c2ac8]/18 dark:hover:shadow-[#3b49df]/25 flex flex-col justify-between cursor-pointer ${
+                index >= visibleModuleCount ? 'hidden lg:flex' : ''
+              }`}
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -913,6 +936,30 @@ export default function ExecutiveHomePage() {
             </Link>
           ))}
         </div>
+
+        {/* Phone-only progressive reveal control for the micro-module directory */}
+        {filteredModules.length > MOBILE_MODULE_STEP && (
+        <div className="lg:hidden mt-6 flex flex-col items-center gap-2">
+          <span className="text-[11px] font-semibold text-[#454655] dark:text-[#a0a4c0]">
+            Showing {visibleModuleCount} of {filteredModules.length} micro modules
+          </span>
+          <button
+            type="button"
+            onClick={revealMoreModules}
+            aria-expanded={!hasHiddenModules}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1c2ac8] dark:bg-[#3b49df] text-white text-xs font-bold shadow-[0_10px_24px_-8px_rgba(28,42,200,0.5)] hover:bg-[#2435df] active:scale-95 transition-all"
+          >
+            <span>{hasHiddenModules ? `Show ${nextRevealCount} more` : 'Collapse'}</span>
+            <span
+              className={`material-symbols-outlined text-[18px] transition-transform duration-300 ${
+                hasHiddenModules ? '' : 'rotate-180'
+              }`}
+            >
+              keyboard_arrow_down
+            </span>
+          </button>
+        </div>
+        )}
       </div>
 
       {/* =========================================================================
