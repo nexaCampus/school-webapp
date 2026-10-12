@@ -245,3 +245,6 @@ export async function listenToForegroundMessages(
     return null;
   }
 }
+
+export { sendTestNotification as sendTestPushNotification };
+

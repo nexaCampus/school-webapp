@@ -4,8 +4,8 @@
 // (locked) instead of dead-ending — mirrors AdmissionLoginViewModel.
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getStudent, normalizeAdmissionNumber } from '@/lib/firebase';
-import { setSession } from '@/lib/session';
+import { normalizeAdmissionNumber } from '@/lib/firebase';
+import { authService } from '@/lib/services';
 import DarkModeToggle from '@/components/DarkModeToggle';
 import AuthFooter from '@/components/AuthFooter';
 
@@ -23,21 +23,15 @@ export default function AdmissionPage() {
 
   async function submit() {
     const normalized = normalizeAdmissionNumber(admission);
-    if (normalized.length < 6) return setError('Enter the admission number from your ID card');
+    if (normalized.length < 5) return setError('Enter the admission number from your ID card');
     setError(null);
     setBusy(true);
     try {
-      const profile = await getStudent(normalized);
-      if (profile) {
-        setSession({
-          provider: 'admission',
-          isNewAccount: false,
-          name: profile.name,
-          student: profile,
-        });
-        router.replace('/home');
-      } else {
-        router.push(`/onboarding?admissionNumber=${encodeURIComponent(normalized)}`);
+      const result = await authService.loginWithAdmissionNumber(normalized);
+      if (result.success && result.redirectUrl) {
+        router.replace(result.redirectUrl);
+      } else if (result.redirectUrl) {
+        router.push(result.redirectUrl);
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not verify that admission number');
