@@ -173,6 +173,18 @@ export default function PortalFooter() {
           </div>
 
           <div className="flex items-center gap-2 md:gap-2.5 flex-wrap justify-center font-medium">
+            <Link href="/disclosures" className="text-primary font-bold hover:underline">
+              Mandatory Disclosures
+            </Link>
+            <span>•</span>
+            <Link href="/explore" className="text-primary font-bold hover:underline">
+              Explore Campuses
+            </Link>
+            <span>•</span>
+            <Link href="/maker" className="text-amber-700 dark:text-amber-400 font-bold hover:underline">
+              School Maker
+            </Link>
+            <span>•</span>
             <Link href="/privacy" className="hover:text-primary transition-colors">
               Privacy Policy
             </Link>

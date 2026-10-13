@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Poppins } from 'next/font/google';
+import { Poppins, Merriweather } from 'next/font/google';
 import BootSplash from '@/components/BootSplash';
 import PWARegistration from '@/components/PWARegistration';
 import CookieConsentBanner from '@/components/CookieConsentBanner';
@@ -11,6 +11,13 @@ const poppins = Poppins({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
   variable: '--font-poppins',
+  display: 'swap',
+});
+
+const merriweather = Merriweather({
+  subsets: ['latin'],
+  weight: ['300', '400', '700', '900'],
+  variable: '--font-merriweather',
   display: 'swap',
 });
 
@@ -55,7 +62,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${poppins.variable} ${poppins.className}`} suppressHydrationWarning>
+    <html lang="en" className={`${poppins.variable} ${merriweather.variable} ${poppins.className}`} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
