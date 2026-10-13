@@ -38,10 +38,24 @@ app/ & components/  →  hooks/  →  lib/services/  →  lib/api/  →  Go back
 | `page` (executive homepage), `chooser`, `email`, `admission`, `onboarding` | Composed from the Android layouts and design tokens |
 | `home`, `academics`, `diary`, `notices`, `profile`, `helpdesk` | 1:1 ports of the original Stitch `code.html` screens |
 | `attendance`, `bus`, `timetable`, `library`, `exams`, `canteen`, `ptm`, `hallpass`, `health`, `merits`, `store`, `lostfound`, `gallery`, `clubs` | Token-faithful compositions (no Stitch source exists) |
+| `maker` | Powered by the [SchoolMaker Extension](https://github.com/nexaCampus/schoolapp-nexacampus-maker) studio engine |
 
 Auth pages live directly in `app/<route>/page.tsx`; shared code in `lib/`
 (`api/`, `services/`, `state/`, `cache/`, `config/`), reusable UI in
 `components/`, styling in `app/globals.css`.
+
+## Extensions & Modular Ecosystem
+
+### [SchoolMaker Extension (`schoolapp-nexacampus-maker`)](https://github.com/nexaCampus/schoolapp-nexacampus-maker)
+- **Role**: Dedicated multi-tenant school creator studio extension mounted under `/maker`.
+- **Repository**: [https://github.com/nexaCampus/schoolapp-nexacampus-maker](https://github.com/nexaCampus/schoolapp-nexacampus-maker)
+- **Features**:
+  - Independent creator phone authentication with OTP verification.
+  - Institutional leadership role selection (Founder, President, Principal, Trustee, Director, IT Administrator).
+  - School capacity, faculty headcount (teacher count), board affiliation (CBSE, ICSE, CISCE, State, IB, Cambridge), and campus location.
+  - Selective modular access toggle engine for 15+ micro-modules (Canteen, Bus, Library, Attendance, Homework Diary, Exams, Timetable, Fees, Hallpass, Clubs, Health, Notices, PTM, Store, Lost & Found).
+  - Instant generated school portal preview and interactive simulator.
+
 
 
 ## Setup
