@@ -588,9 +588,6 @@ export default function ExecutiveHomePage() {
                 <span>Explore Campuses</span>
                 <span className="text-[10px] bg-amber-500/15 text-amber-700 dark:text-amber-300 px-1.5 py-0.5 rounded font-mono">Directory</span>
               </Link>
-              <Link href="/disclosures" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">
-                Disclosures
-              </Link>
               <Link href="/apply" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">
                 Admissions 2026
               </Link>
@@ -682,27 +679,19 @@ export default function ExecutiveHomePage() {
                   <p className="text-[11px] font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-2 px-1">
                     Institutional Hub
                   </p>
-                  <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+                  <div className="grid grid-cols-3 gap-2 text-xs font-semibold">
                     <Link
                       href="/explore"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200 border border-amber-200/60 dark:border-amber-800/40 flex items-center gap-2"
+                      className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200 border border-amber-200/60 dark:border-amber-800/40 flex items-center justify-center gap-1.5"
                     >
                       <span className="material-symbols-outlined text-[16px] text-amber-600">apartment</span>
                       <span>Campuses</span>
                     </Link>
                     <Link
-                      href="/disclosures"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
-                    >
-                      <span className="material-symbols-outlined text-[16px] text-primary">verified</span>
-                      <span>Disclosures</span>
-                    </Link>
-                    <Link
                       href="/apply"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center justify-center gap-1.5"
                     >
                       <span className="material-symbols-outlined text-[16px] text-primary">how_to_reg</span>
                       <span>Admissions</span>
@@ -710,7 +699,7 @@ export default function ExecutiveHomePage() {
                     <Link
                       href="/maker"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center justify-center gap-1.5"
                     >
                       <span className="material-symbols-outlined text-[16px] text-primary">build</span>
                       <span>Maker SaaS</span>

@@ -12,13 +12,12 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   {
-    label: 'Governance',
-    href: '/disclosures',
+    label: 'About School',
+    href: '/#principal',
     dropdown: [
-      { label: 'Mandatory Public Disclosures', href: '/disclosures', desc: 'CBSE & CISCE compliance, society certificates & fire safety' },
       { label: "Principal's Desk", href: '/#principal', desc: 'Welcome address from Dr. S. Mukherjee, Principal' },
-      { label: 'Managing Committee', href: '/disclosures#committee', desc: 'Governing body, patron list & trust deed' },
-      { label: 'Annual Academic Report', href: '/disclosures#reports', desc: 'Audited institutional report card 2025-26' },
+      { label: 'Managing Committee', href: '/#principal', desc: 'Governing body, patron list & trust deed' },
+      { label: 'Institutional Ethos', href: '/#principal', desc: 'Over 35 years of academic leadership & eminence' },
     ],
   },
   {
@@ -112,12 +111,6 @@ export default function PublicHeader() {
               <span>principal@lcgvm.edu.in</span>
             </a>
             <span className="text-slate-600">|</span>
-            <Link
-              href="/disclosures"
-              className="hover:text-amber-300 font-medium transition-colors"
-            >
-              Mandatory Disclosures
-            </Link>
             <span className="text-slate-600">|</span>
             <Link
               href="/maker"
@@ -355,20 +348,13 @@ export default function PublicHeader() {
               >
                 Apply Online 2026-27
               </Link>
-              <div className="grid grid-cols-2 gap-2">
-                <Link
-                  href="/disclosures"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="py-2 text-center text-xs font-medium text-slate-700 bg-slate-100 rounded-md block"
-                >
-                  Disclosures
-                </Link>
+              <div className="grid grid-cols-1 gap-2">
                 <Link
                   href="/maker"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="py-2 text-center text-xs font-medium text-amber-900 bg-amber-50 border border-amber-200 rounded-md block"
+                  className="py-2.5 text-center text-xs font-bold text-amber-900 bg-amber-50 border border-amber-200 rounded-md block"
                 >
-                  School Maker
+                  School Maker Studio
                 </Link>
               </div>
             </div>

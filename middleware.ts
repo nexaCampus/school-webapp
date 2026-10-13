@@ -28,7 +28,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Whitelisted public paths (splash, auth entry, registration, statutory legal policies)
+  // 2. Whitelisted public paths (splash, auth entry, registration, statutory legal policies, maker & public directory)
   const publicPaths = [
     '/chooser',
     '/email',
@@ -39,6 +39,13 @@ export function middleware(request: NextRequest) {
     '/refund',
     '/cookies',
     '/data-deletion',
+    '/maker',
+    '/explore',
+    '/apply',
+    '/disclosures',
+    '/facilities',
+    '/faculty',
+    '/admin',
   ];
   const isPublicPath =
     pathname === '/' ||
