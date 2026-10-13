@@ -1117,8 +1117,8 @@ export default function ExecutiveHomePage() {
             <Link
               key={item.id}
               href={item.href}
-              className={`levitate-card group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/60 hover:shadow-2xl hover:shadow-[#1c2ac8]/18 dark:hover:shadow-[#3b49df]/25 flex flex-col justify-between cursor-pointer relative overflow-hidden ${
-                index >= visibleModuleCount ? 'hidden lg:flex' : ''
+              className={`levitate-card group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/60 hover:shadow-2xl hover:shadow-[#1c2ac8]/18 dark:hover:shadow-[#3b49df]/25 flex-col justify-between cursor-pointer relative overflow-hidden ${
+                index < visibleModuleCount ? 'flex' : 'hidden lg:flex'
               }`}
             >
               {/* 45° diamond lattice behind the content. Light and dark variants are
@@ -1129,18 +1129,20 @@ export default function ExecutiveHomePage() {
                   className="absolute inset-0 dark:hidden"
                   style={{
                     backgroundImage: [
-                      'repeating-linear-gradient(45deg, rgba(28,42,200,0.20) 0 1px, rgba(28,42,200,0) 1px 15px)',
-                      'repeating-linear-gradient(-45deg, rgba(28,42,200,0.20) 0 1px, rgba(28,42,200,0) 1px 15px)',
+                      'repeating-linear-gradient(45deg, rgba(28,42,200,0.14) 0 1px, rgba(28,42,200,0) 1px 15px)',
+                      'repeating-linear-gradient(-45deg, rgba(28,42,200,0.14) 0 1px, rgba(28,42,200,0) 1px 15px)',
                     ].join(','),
+                    filter: 'blur(0.8px)',
                   }}
                 />
                 <div
                   className="absolute inset-0 hidden dark:block"
                   style={{
                     backgroundImage: [
-                      'repeating-linear-gradient(45deg, rgba(255,255,255,0.20) 0 1px, rgba(255,255,255,0) 1px 15px)',
-                      'repeating-linear-gradient(-45deg, rgba(255,255,255,0.20) 0 1px, rgba(255,255,255,0) 1px 15px)',
+                      'repeating-linear-gradient(45deg, rgba(255,255,255,0.14) 0 1px, rgba(255,255,255,0) 1px 15px)',
+                      'repeating-linear-gradient(-45deg, rgba(255,255,255,0.14) 0 1px, rgba(255,255,255,0) 1px 15px)',
                     ].join(','),
+                    filter: 'blur(0.8px)',
                   }}
                 />
                 {[
@@ -1276,8 +1278,8 @@ export default function ExecutiveHomePage() {
               {SECURITY_AUDIT_CHECKS.map((item, idx) => (
                 <div
                   key={idx}
-                  className={`levitate-card-sm group/sec flex items-center gap-2 p-2.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] hover:border-emerald-500/50 dark:hover:border-emerald-400/60 hover:shadow-lg hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/15 cursor-pointer ${
-                    idx >= visibleSecurityChecks ? 'hidden lg:flex' : ''
+                  className={`levitate-card-sm group/sec items-center gap-2 p-2.5 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#262a40] hover:border-emerald-500/50 dark:hover:border-emerald-400/60 hover:shadow-lg hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/15 cursor-pointer ${
+                    idx < visibleSecurityChecks ? 'flex' : 'hidden lg:flex'
                   }`}
                 >
                   <span className="material-symbols-outlined text-emerald-500 group-hover/sec:scale-115 group-hover/sec:text-emerald-400 text-[16px] flex-shrink-0 transition-transform duration-300">
