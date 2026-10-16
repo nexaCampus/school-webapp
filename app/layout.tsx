@@ -5,6 +5,7 @@ import PWARegistration from '@/components/PWARegistration';
 import CookieConsentBanner from '@/components/CookieConsentBanner';
 import QueryProvider from '@/components/QueryProvider';
 import ErrorBoundary from '@/components/feedback/ErrorBoundary';
+import { TenantProvider } from '@/lib/context/TenantContext';
 import './globals.css';
 
 const poppins = Poppins({
@@ -23,10 +24,10 @@ const merriweather = Merriweather({
 
 export const metadata: Metadata = {
   title: {
-    default: 'NexaCampus School | Lions Calcutta Greater Vidya Mandir',
-    template: '%s | NexaCampus School',
+    default: 'NexaCampus | Autonomous Multi-Tenant School Operating System',
+    template: '%s | NexaCampus',
   },
-  description: 'Official student, teacher & guardian academic portal for Lions Calcutta Greater Vidya Mandir (LCGVM • CISCE Affiliated WB-243). Real-time timetable, attendance, bus tracking, digital diary, and examinations.',
+  description: 'Autonomous multi-tenant academic cloud operating system providing unified institutional governance, student portals, biometric attendance, bus telemetry, and examinations.',
   applicationName: 'NexaCampus',
   manifest: '/manifest.json',
   appleWebApp: {
@@ -93,11 +94,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${poppins.className} font-sans antialiased bg-surface text-on-surface`}>
         <QueryProvider>
           <ErrorBoundary>
-            <BootSplash>
-              {children}
-              <PWARegistration />
-              <CookieConsentBanner />
-            </BootSplash>
+            <TenantProvider>
+              <BootSplash>
+                {children}
+                <PWARegistration />
+                <CookieConsentBanner />
+              </BootSplash>
+            </TenantProvider>
           </ErrorBoundary>
         </QueryProvider>
       </body>
