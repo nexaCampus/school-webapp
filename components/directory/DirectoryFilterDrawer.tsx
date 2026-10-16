@@ -30,13 +30,13 @@ export default function DirectoryFilterDrawer({
   const filterContent = (
     <div className="space-y-6 font-sans text-xs">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-        <span className="font-serif font-bold text-sm text-oxford uppercase tracking-wide">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#262a40]">
+        <span className="font-serif font-bold text-sm text-oxford dark:text-white uppercase tracking-wide">
           Filter Campuses
         </span>
         <button
           onClick={onReset}
-          className="text-amber-700 hover:text-amber-800 font-semibold underline"
+          className="text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 font-semibold underline cursor-pointer"
         >
           Reset All
         </button>
@@ -44,7 +44,7 @@ export default function DirectoryFilterDrawer({
 
       {/* Board Filter */}
       <div>
-        <label className="block font-bold text-slate-800 uppercase tracking-wider mb-2 font-mono text-[10px]">
+        <label className="block font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2 font-mono text-[10px]">
           Affiliation Board
         </label>
         <div className="space-y-1.5">
@@ -52,7 +52,9 @@ export default function DirectoryFilterDrawer({
             <label
               key={b}
               className={`flex items-center gap-2 p-1.5 rounded cursor-pointer transition-colors ${
-                filters.board === b ? 'bg-oxford text-white font-bold' : 'hover:bg-slate-100 text-slate-700'
+                filters.board === b
+                  ? 'bg-oxford dark:bg-[#3b49df] text-white font-bold'
+                  : 'hover:bg-slate-100 dark:hover:bg-[#1f2235] text-slate-700 dark:text-slate-300'
               }`}
             >
               <input
@@ -70,7 +72,7 @@ export default function DirectoryFilterDrawer({
 
       {/* State / Region */}
       <div>
-        <label className="block font-bold text-slate-800 uppercase tracking-wider mb-2 font-mono text-[10px]">
+        <label className="block font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2 font-mono text-[10px]">
           State / Territory
         </label>
         <div className="space-y-1.5">
@@ -78,7 +80,9 @@ export default function DirectoryFilterDrawer({
             <label
               key={s}
               className={`flex items-center gap-2 p-1.5 rounded cursor-pointer transition-colors ${
-                filters.state === s ? 'bg-oxford text-white font-bold' : 'hover:bg-slate-100 text-slate-700'
+                filters.state === s
+                  ? 'bg-oxford dark:bg-[#3b49df] text-white font-bold'
+                  : 'hover:bg-slate-100 dark:hover:bg-[#1f2235] text-slate-700 dark:text-slate-300'
               }`}
             >
               <input
@@ -96,7 +100,7 @@ export default function DirectoryFilterDrawer({
 
       {/* Institution Type */}
       <div>
-        <label className="block font-bold text-slate-800 uppercase tracking-wider mb-2 font-mono text-[10px]">
+        <label className="block font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2 font-mono text-[10px]">
           Institution Model
         </label>
         <div className="space-y-1.5">
@@ -104,7 +108,9 @@ export default function DirectoryFilterDrawer({
             <label
               key={t}
               className={`flex items-center gap-2 p-1.5 rounded cursor-pointer transition-colors ${
-                filters.type === t ? 'bg-oxford text-white font-bold' : 'hover:bg-slate-100 text-slate-700'
+                filters.type === t
+                  ? 'bg-oxford dark:bg-[#3b49df] text-white font-bold'
+                  : 'hover:bg-slate-100 dark:hover:bg-[#1f2235] text-slate-700 dark:text-slate-300'
               }`}
             >
               <input
@@ -122,7 +128,7 @@ export default function DirectoryFilterDrawer({
 
       {/* Annual Fee Budget */}
       <div>
-        <label className="block font-bold text-slate-800 uppercase tracking-wider mb-2 font-mono text-[10px]">
+        <label className="block font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2 font-mono text-[10px]">
           Annual Fee Band
         </label>
         <div className="space-y-1.5">
@@ -130,7 +136,9 @@ export default function DirectoryFilterDrawer({
             <label
               key={f}
               className={`flex items-center gap-2 p-1.5 rounded cursor-pointer transition-colors ${
-                filters.feeRange === f ? 'bg-oxford text-white font-bold' : 'hover:bg-slate-100 text-slate-700'
+                filters.feeRange === f
+                  ? 'bg-oxford dark:bg-[#3b49df] text-white font-bold'
+                  : 'hover:bg-slate-100 dark:hover:bg-[#1f2235] text-slate-700 dark:text-slate-300'
               }`}
             >
               <input
@@ -151,21 +159,21 @@ export default function DirectoryFilterDrawer({
   return (
     <>
       {/* Desktop Facet Sidebar */}
-      <div className="hidden lg:block bg-white p-5 rounded-xl border border-slate-200 shadow-xs h-fit sticky top-24">
+      <div className="hidden lg:block bg-white dark:bg-[#151622] p-5 rounded-xl border border-slate-200 dark:border-[#262a40] shadow-xs h-fit sticky top-24 transition-colors">
         {filterContent}
       </div>
 
       {/* Mobile Bottom-Sheet Filter Modal */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white rounded-t-2xl p-6 max-h-[80vh] overflow-y-auto shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
-              <span className="font-serif font-bold text-base text-oxford">
+          <div className="bg-white dark:bg-[#151622] rounded-t-2xl p-6 max-h-[80vh] overflow-y-auto shadow-2xl border-t border-slate-200 dark:border-[#262a40] transition-colors">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#262a40] mb-4">
+              <span className="font-serif font-bold text-base text-oxford dark:text-white">
                 Filter Institutional Directory
               </span>
               <button
                 onClick={onCloseMobile}
-                className="p-1 rounded-full text-slate-500 hover:bg-slate-100"
+                className="p-1 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1f2235]"
               >
                 ✕
               </button>
@@ -173,10 +181,10 @@ export default function DirectoryFilterDrawer({
 
             {filterContent}
 
-            <div className="mt-6 pt-4 border-t border-slate-200">
+            <div className="mt-6 pt-4 border-t border-slate-200 dark:border-[#262a40]">
               <button
                 onClick={onCloseMobile}
-                className="w-full py-2.5 bg-oxford text-white rounded text-xs font-bold"
+                className="w-full py-2.5 bg-oxford dark:bg-[#3b49df] hover:bg-slate-800 dark:hover:bg-[#2d38be] text-white rounded text-xs font-bold transition-colors cursor-pointer"
               >
                 Apply Filters
               </button>
