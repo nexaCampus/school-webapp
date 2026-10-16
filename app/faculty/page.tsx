@@ -7,7 +7,7 @@ import PortalFooter from '@/components/PortalFooter';
 
 export default function FacultyPage() {
   return (
-    <div className="min-h-screen bg-parchment flex flex-col justify-between font-sans">
+    <div className="min-h-screen bg-[#faf8ff] dark:bg-[#101119] flex flex-col justify-between font-sans text-[#131b2e] dark:text-[#eaedff] transition-colors">
       <PublicHeader />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-6">
