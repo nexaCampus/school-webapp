@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
+import LogoEmblem from '@/components/LogoEmblem';
 import { useTenant } from '@/lib/context/TenantContext';
 
 interface SchoolNavDrawerProps {
@@ -64,13 +65,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
         <div className="p-5 sm:p-6 border-b border-slate-100 dark:border-[#1d2136] bg-slate-50/60 dark:bg-[#141726]/60">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-oxford dark:bg-[#1a2038] text-amber-300 flex items-center justify-center p-2 shadow-sm border border-amber-500/30 flex-shrink-0">
-                <svg className="w-7 h-7" viewBox="0 0 40 40" fill="none">
-                  <path d="M20 3L6 9V19C6 27.5 12 35 20 37C28 35 34 27.5 34 19V9L20 3Z" fill="#0A192F" stroke="#F59E0B" strokeWidth="2" />
-                  <path d="M20 10V28M13 18L20 22L27 18" stroke="#F59E0B" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="20" cy="9" r="2.5" fill="#F59E0B" />
-                </svg>
-              </div>
+              <LogoEmblem className="h-11 w-11 flex-shrink-0 drop-shadow-sm" />
               <div className="min-w-0">
                 <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 font-mono text-[10px] font-bold uppercase tracking-wider mb-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
