@@ -1,28 +1,44 @@
+'use client';
+
+import React from 'react';
 import Link from 'next/link';
 import LogoEmblem from './LogoEmblem';
+import { useTenant } from '@/lib/context/TenantContext';
 
 export default function PortalFooter() {
+  const { tenant, slug, isPlatformRoot, isModuleEnabled } = useTenant();
+
+  const schoolName = tenant?.school_name || (slug ? `${slug.toUpperCase()} School Campus` : isPlatformRoot ? 'NexaCampus Autonomous OS' : 'NexaCampus Partner School');
+  const board = tenant?.affiliation_board || (slug ? 'CBSE' : 'CBSE / CISCE');
+  const motto = tenant?.school_motto || (isPlatformRoot ? 'The Operating System for Next-Gen Autonomous Campuses' : 'Academic Excellence & Innovation');
+  const location = tenant ? `${tenant.city}, ${tenant.state_territory}` : 'Autonomous Campus Network';
+  const phone = tenant?.creator_phone || '+91 6289652321';
+  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : (slug ? `office@${slug}.nexacampus.tech` : 'global@nexacampus.tech');
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="w-full bg-surface-container-lowest border-t border-outline/10 mt-auto pt-6 pb-20 md:pt-10 md:pb-10 transition-colors">
+    <footer className="w-full bg-surface-container-lowest border-t border-outline/10 mt-auto pt-6 pb-20 md:pt-10 md:pb-10 transition-colors font-sans">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-8">
         {/* Top Institutional Header Row */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 pb-5 md:pb-8 border-b border-outline/10">
           <div className="flex items-start md:items-center gap-3">
-            <Link href="/" title="NexaCampus Home" className="flex-shrink-0 flex items-center">
+            <Link href="/" title={schoolName} className="flex-shrink-0 flex items-center">
               <LogoEmblem className="h-9 w-9 md:h-11 md:w-11 shadow-sm" />
             </Link>
             <div>
               <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
                 <span className="text-[15px] md:text-[17px] font-extrabold text-on-surface tracking-tight">
-                  Lions Calcutta Greater Vidya Mandir
+                  {schoolName}
                 </span>
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[9.5px] md:text-[10px] font-bold uppercase tracking-wider">
                   <span className="material-symbols-outlined text-[12px] md:text-[13px]">verified</span>
-                  CISCE Affiliated
+                  {isPlatformRoot ? 'Multi-Tenant Cloud' : `${board} Affiliated`}
                 </span>
               </div>
               <p className="font-body-sm text-[11px] md:text-[12px] text-on-surface-variant mt-0.5 leading-snug">
-                Affiliation No. 2430095 • School Code: 15632 • Academic Session 2026–2027
+                {isPlatformRoot
+                  ? 'Enterprise Education Infrastructure • Instant Subdomain Provisioning in 60s'
+                  : `“${motto}” • Academic Session 2026–2027`}
               </p>
             </div>
           </div>
@@ -35,7 +51,7 @@ export default function PortalFooter() {
             </span>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 md:px-3 md:py-1 rounded-full bg-surface-container text-[10px] md:text-[11px] font-semibold text-on-surface-variant border border-outline/10">
               <span className="material-symbols-outlined text-[13px] md:text-[15px] text-primary">security</span>
-              ISO 27001 Certified
+              Autonomous Multi-Tenant OS
             </span>
           </div>
         </div>
@@ -50,21 +66,26 @@ export default function PortalFooter() {
             <Link href="/home" className="text-on-surface-variant hover:text-primary transition-colors">
               Home Dashboard
             </Link>
-            <Link href="/academics" className="text-on-surface-variant hover:text-primary transition-colors">
-              Subjects &amp; Curriculum
-            </Link>
-            <Link href="/timetable" className="text-on-surface-variant hover:text-primary transition-colors">
-              Class Timetable
-            </Link>
-            <Link href="/exams" className="text-on-surface-variant hover:text-primary transition-colors">
-              Exams &amp; Hall Tickets
-            </Link>
-            <Link href="/diary" className="text-on-surface-variant hover:text-primary transition-colors">
-              Student Diary &amp; Homework
-            </Link>
-            <Link href="/attendance" className="text-on-surface-variant hover:text-primary transition-colors">
-              Monthly Attendance
-            </Link>
+            {isModuleEnabled('timetable') && (
+              <Link href="/timetable" className="text-on-surface-variant hover:text-primary transition-colors">
+                Class Timetable
+              </Link>
+            )}
+            {isModuleEnabled('exams') && (
+              <Link href="/exams" className="text-on-surface-variant hover:text-primary transition-colors">
+                Exams &amp; Results
+              </Link>
+            )}
+            {isModuleEnabled('diary') && (
+              <Link href="/diary" className="text-on-surface-variant hover:text-primary transition-colors">
+                Student Diary &amp; Homework
+              </Link>
+            )}
+            {isModuleEnabled('attendance') && (
+              <Link href="/attendance" className="text-on-surface-variant hover:text-primary transition-colors">
+                Monthly Attendance
+              </Link>
+            )}
           </div>
 
           {/* Column 2: Campus Facilities */}
@@ -72,24 +93,36 @@ export default function PortalFooter() {
             <span className="font-bold text-[12px] uppercase tracking-wider text-outline mb-1">
               Campus &amp; Facilities
             </span>
-            <Link href="/bus" className="text-on-surface-variant hover:text-primary transition-colors">
-              Smart Bus Tracking
-            </Link>
-            <Link href="/canteen" className="text-on-surface-variant hover:text-primary transition-colors">
-              Canteen &amp; Nutrition
-            </Link>
-            <Link href="/library" className="text-on-surface-variant hover:text-primary transition-colors">
-              Digital Library
-            </Link>
-            <Link href="/health" className="text-on-surface-variant hover:text-primary transition-colors">
-              Medical &amp; Infirmary
-            </Link>
-            <Link href="/hallpass" className="text-on-surface-variant hover:text-primary transition-colors">
-              E-Hallpass Portal
-            </Link>
-            <Link href="/store" className="text-on-surface-variant hover:text-primary transition-colors">
-              Uniform &amp; Book Store
-            </Link>
+            {isModuleEnabled('bus') && (
+              <Link href="/bus" className="text-on-surface-variant hover:text-primary transition-colors">
+                Smart Bus Tracking
+              </Link>
+            )}
+            {isModuleEnabled('canteen') && (
+              <Link href="/canteen" className="text-on-surface-variant hover:text-primary transition-colors">
+                Canteen &amp; Nutrition
+              </Link>
+            )}
+            {isModuleEnabled('library') && (
+              <Link href="/library" className="text-on-surface-variant hover:text-primary transition-colors">
+                Digital Library
+              </Link>
+            )}
+            {isModuleEnabled('health') && (
+              <Link href="/health" className="text-on-surface-variant hover:text-primary transition-colors">
+                Medical &amp; Infirmary
+              </Link>
+            )}
+            {isModuleEnabled('hallpass') && (
+              <Link href="/hallpass" className="text-on-surface-variant hover:text-primary transition-colors">
+                E-Hallpass Movement
+              </Link>
+            )}
+            {isModuleEnabled('store') && (
+              <Link href="/store" className="text-on-surface-variant hover:text-primary transition-colors">
+                Uniform &amp; Book Store
+              </Link>
+            )}
           </div>
 
           {/* Column 3: Co-Curricular & Community */}
@@ -97,37 +130,44 @@ export default function PortalFooter() {
             <span className="font-bold text-[12px] uppercase tracking-wider text-outline mb-1">
               Activities &amp; Community
             </span>
-            <Link href="/clubs" className="text-on-surface-variant hover:text-primary transition-colors">
-              Student Activity Clubs
-            </Link>
-            <Link href="/merits" className="text-on-surface-variant hover:text-primary transition-colors">
-              Merits &amp; House Points
-            </Link>
-            <Link href="/gallery" className="text-on-surface-variant hover:text-primary transition-colors">
-              Photo &amp; Video Gallery
-            </Link>
-            <Link href="/lostfound" className="text-on-surface-variant hover:text-primary transition-colors">
-              Lost &amp; Found Desk
-            </Link>
-            <Link href="/notices" className="text-on-surface-variant hover:text-primary transition-colors">
-              School Circulars &amp; Notices
-            </Link>
-            <Link href="/ptm" className="text-on-surface-variant hover:text-primary transition-colors">
-              Parent-Teacher Meetings
-            </Link>
+            {isModuleEnabled('clubs') && (
+              <Link href="/clubs" className="text-on-surface-variant hover:text-primary transition-colors">
+                Student Activity Clubs
+              </Link>
+            )}
+            {isModuleEnabled('merits') && (
+              <Link href="/merits" className="text-on-surface-variant hover:text-primary transition-colors">
+                Merits &amp; House Points
+              </Link>
+            )}
+            {isModuleEnabled('lostfound') && (
+              <Link href="/lostfound" className="text-on-surface-variant hover:text-primary transition-colors">
+                Lost &amp; Found Desk
+              </Link>
+            )}
+            {isModuleEnabled('notices') && (
+              <Link href="/notices" className="text-on-surface-variant hover:text-primary transition-colors">
+                School Circulars &amp; Notices
+              </Link>
+            )}
+            {isModuleEnabled('ptm') && (
+              <Link href="/ptm" className="text-on-surface-variant hover:text-primary transition-colors">
+                Parent-Teacher Meetings
+              </Link>
+            )}
           </div>
 
           {/* Column 4: Contact & Support */}
           <div className="flex flex-col gap-2.5">
             <span className="font-bold text-[12px] uppercase tracking-wider text-outline mb-1">
-              Contact &amp; Help Desk
+              Contact &amp; Campus
             </span>
             <div className="flex items-start gap-2 text-on-surface-variant">
               <span className="material-symbols-outlined text-[17px] text-primary flex-shrink-0 mt-0.5">
                 location_on
               </span>
               <span className="text-[12px] leading-relaxed">
-                Subhasgram, Kolkata, West Bengal — 700147
+                {location}
               </span>
             </div>
             <div className="flex items-center gap-2 text-on-surface-variant">
@@ -135,12 +175,8 @@ export default function PortalFooter() {
                 call
               </span>
               <span className="text-[12px]">
-                <a href="tel:+913324371234" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
-                  +91 33 2437 1234
-                </a>
-                {' / '}
-                <a href="tel:+91917980679513" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
-                  +91 91798 0679513
+                <a href={`tel:${phone}`} className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+                  {phone}
                 </a>
               </span>
             </div>
@@ -148,17 +184,17 @@ export default function PortalFooter() {
               <span className="material-symbols-outlined text-[17px] text-primary flex-shrink-0">
                 mail
               </span>
-              <a href="mailto:office@lcgvm.edu.in" className="text-[12px] hover:text-primary transition-colors underline-offset-2 hover:underline">
-                office@lcgvm.edu.in
+              <a href={`mailto:${email}`} className="text-[12px] hover:text-primary transition-colors underline-offset-2 hover:underline">
+                {email}
               </a>
             </div>
             <div className="mt-2 pt-2 border-t border-outline/10">
               <Link
-                href="/helpdesk"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white text-[12px] font-bold hover:bg-primary/90 transition-colors shadow-sm"
+                href="/maker"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1c2ac8] text-white text-[12px] font-bold hover:bg-[#15209e] transition-colors shadow-sm"
               >
-                <span className="material-symbols-outlined text-[16px]">support_agent</span>
-                <span>Open Parent Desk Ticket</span>
+                <span className="material-symbols-outlined text-[16px]">add_business</span>
+                <span>Launch Your School App</span>
               </Link>
             </div>
           </div>
@@ -167,16 +203,16 @@ export default function PortalFooter() {
         {/* Bottom Legal, Version & Copyright Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 pt-4 md:pt-6 text-[11px] md:text-[12px] text-on-surface-variant">
           <div className="flex items-center gap-1.5 md:gap-2 flex-wrap text-center md:text-left justify-center md:justify-start">
-            <span>© 2026 Lions Calcutta Greater Vidya Mandir (Lions Club of Calcutta Greater Education Trust).</span>
-            <span className="hidden md:inline">•</span>
-            <span className="text-outline">CISCE Affiliation No. 2430095 • School Code: 15632</span>
+            <span>© {year} {schoolName}. Powered by NexaCampus Autonomous OS.</span>
+            {tenant && (
+              <>
+                <span className="hidden md:inline">•</span>
+                <span className="text-outline">Slug: {tenant.subdomain_slug}</span>
+              </>
+            )}
           </div>
 
           <div className="flex items-center gap-2 md:gap-2.5 flex-wrap justify-center font-medium">
-            <Link href="/disclosures" className="text-primary font-bold hover:underline">
-              Mandatory Disclosures
-            </Link>
-            <span>•</span>
             <Link href="/explore" className="text-primary font-bold hover:underline">
               Explore Campuses
             </Link>
@@ -199,10 +235,6 @@ export default function PortalFooter() {
             <span>•</span>
             <Link href="/cookies" className="hover:text-primary transition-colors">
               Cookie Policy
-            </Link>
-            <span>•</span>
-            <Link href="/data-deletion" className="hover:text-rose-500 transition-colors">
-              Data Deletion
             </Link>
           </div>
         </div>
