@@ -9,12 +9,15 @@ import DarkModeToggle from './DarkModeToggle';
 import NotificationPrompt from './NotificationPrompt';
 import { Modal } from './common/Modal';
 import { ErrorBoundary } from './feedback/ErrorBoundary';
+import ModuleGuard from './common/ModuleGuard';
 import { getSession, logoutUser, switchAccount } from '@/lib/session';
+import { useTenant } from '@/lib/context/TenantContext';
 
 interface PortalShellProps {
   title: string;
   subtitle?: string;
   activePath?: string;
+  moduleId?: string;
   children: React.ReactNode;
 }
 
@@ -45,14 +48,49 @@ const MORE_SERVICES = [
   { label: 'Campus Homepage', href: '/', icon: 'domain', desc: 'Executive 15-section portal' },
 ];
 
+const MODULE_KEY_MAP: Record<string, string> = {
+  '/attendance': 'attendance',
+  '/diary': 'homework_diary',
+  '/exams': 'exams_reports',
+  '/library': 'library',
+  '/bus': 'bus_transport',
+  '/canteen': 'canteen',
+  '/clubs': 'clubs_houses',
+  '/hallpass': 'ehallpass',
+  '/health': 'medical_infirmary',
+  '/store': 'store_uniforms',
+  '/lostfound': 'lost_found',
+  '/ptm': 'ptm',
+  '/timetable': 'timetable_bell',
+  '/notices': 'circulars_notices',
+};
+
 export default function PortalShell({
   title,
-  subtitle = 'LCGVM',
+  subtitle,
   activePath,
+  moduleId,
   children,
 }: PortalShellProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { tenant, isModuleEnabled } = useTenant();
+  const effectiveSubtitle = subtitle || tenant?.subdomain_slug?.toUpperCase() || 'LCGVM';
+  const schoolName = tenant?.school_name || 'NexaCampus School';
+
+  const autoModuleId = MODULE_KEY_MAP[pathname] || (activePath ? MODULE_KEY_MAP[`/${activePath}`] : undefined);
+  const effectiveModuleId = moduleId || autoModuleId;
+
+  const filteredNav = PRIMARY_NAV.filter((item) => {
+    const modKey = MODULE_KEY_MAP[item.href];
+    return !modKey || isModuleEnabled(modKey);
+  });
+
+  const filteredServices = MORE_SERVICES.filter((s) => {
+    const modKey = MODULE_KEY_MAP[s.href];
+    return !modKey || isModuleEnabled(modKey);
+  });
+
   const [studentName, setStudentName] = useState('Student');
   const [gradeSection, setGradeSection] = useState('Senior Wing');
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -164,10 +202,10 @@ export default function PortalShell({
     router.prefetch('/academics');
     router.prefetch('/notices');
     router.prefetch('/profile');
-    MORE_SERVICES.forEach((s) => {
+    filteredServices.forEach((s) => {
       router.prefetch(s.href);
     });
-  }, [router]);
+  }, [router, filteredServices]);
 
   useEffect(() => {
     const verifySession = () => {
@@ -206,9 +244,9 @@ export default function PortalShell({
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.title = `${title} | NexaCampus School`;
+      document.title = `${title} | ${schoolName}`;
     }
-  }, [title]);
+  }, [title, schoolName]);
 
   const currentPath = activePath || pathname.replace(/^\//, '') || 'home';
   const firstName = studentName ? studentName.trim().split(/\s+/)[0] : 'Student';
@@ -340,7 +378,7 @@ export default function PortalShell({
             <LogoEmblem className="h-9 w-9 group-hover:scale-105 transition-transform" />
             <div className="flex flex-col min-w-0">
               <span className="font-label-sm text-[10px] text-outline uppercase tracking-wider font-semibold">
-                {subtitle}
+                {effectiveSubtitle}
               </span>
               <span className="font-headline-sm text-[17px] text-on-surface font-bold truncate">
                 {title}
@@ -350,7 +388,7 @@ export default function PortalShell({
 
           {/* Desktop Navigation Links */}
           <nav className="flex items-center gap-2 flex-1 justify-center max-w-xl">
-            {PRIMARY_NAV.map((item) => {
+            {filteredNav.map((item) => {
               const isActive =
                 currentPath === item.path ||
                 pathname === item.href ||
@@ -394,7 +432,7 @@ export default function PortalShell({
                   <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-outline border-b border-outline/10 dark:border-[#222538] mb-1">
                     All Student Services
                   </div>
-                  {MORE_SERVICES.map((s) => (
+                  {filteredServices.map((s) => (
                     <Link
                       key={s.href}
                       href={s.href}
@@ -484,7 +522,7 @@ export default function PortalShell({
             </Link>
             <div className="flex flex-col min-w-0">
               <span className="text-[10px] text-outline uppercase tracking-wider font-bold truncate leading-tight">
-                {subtitle}
+                {effectiveSubtitle}
               </span>
               <span className="text-[15px] font-bold text-on-surface truncate leading-tight">
                 {title}
@@ -522,7 +560,7 @@ export default function PortalShell({
               </Link>
               <div>
                 <span className="text-[9.5px] uppercase font-bold tracking-widest text-primary block">
-                  LCGVM Campus Gateway
+                  {tenant?.school_name || 'LCGVM'} Campus Gateway
                 </span>
                 <span className="text-[14.5px] font-extrabold text-on-surface block leading-tight">
                   All School Services
@@ -549,13 +587,13 @@ export default function PortalShell({
                   Select Campus Service
                 </span>
                 <span className="text-[9.5px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                  16 Modules Available
+                  {filteredServices.length} Modules Available
                 </span>
               </div>
 
               {/* Grid: Exactly 2 blocks per row */}
               <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
-                {MORE_SERVICES.map((s) => {
+                {filteredServices.map((s) => {
                   const isActive = pathname === s.href;
                   return (
                     <Link
@@ -677,7 +715,13 @@ export default function PortalShell({
             <NotificationPrompt variant="banner" />
           </div>
           <ErrorBoundary>
-            {children}
+            {effectiveModuleId ? (
+              <ModuleGuard moduleId={effectiveModuleId} moduleName={title}>
+                {children}
+              </ModuleGuard>
+            ) : (
+              children
+            )}
           </ErrorBoundary>
         </div>
       </main>
