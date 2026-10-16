@@ -1,14 +1,22 @@
+'use client';
+
+import { useEffect } from 'react';
 import Link from 'next/link';
 import LogoEmblem from '@/components/LogoEmblem';
 import PortalFooter from '@/components/PortalFooter';
 import DarkModeToggle from '@/components/DarkModeToggle';
-
-export const metadata = {
-  title: 'Refund & Cancellation Policy | NexaCampus — Lions Calcutta Greater Vidya Mandir',
-  description: 'Official school policy regarding fee refunds, store returns, canteen wallet settlements, and payment disputes.',
-};
+import { useTenant } from '@/lib/context/TenantContext';
 
 export default function RefundPolicyPage() {
+  const { tenant, isPlatformRoot } = useTenant();
+  const schoolName = tenant?.school_name || 'Lions Calcutta Greater Vidya Mandir';
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = `Refund Policy | ${schoolName}`;
+    }
+  }, [schoolName]);
+
   return (
     <div className="min-h-screen bg-surface text-on-surface flex flex-col transition-colors">
       {/* Top Header */}
@@ -18,10 +26,10 @@ export default function RefundPolicyPage() {
             <LogoEmblem className="h-9 w-9 shadow-sm" />
             <div className="flex flex-col">
               <span className="font-extrabold text-[15px] tracking-tight group-hover:text-primary transition-colors">
-                Lions Calcutta Greater Vidya Mandir
+                {isPlatformRoot ? 'NexaCampus Financial Operations' : schoolName}
               </span>
               <span className="text-[11px] text-on-surface-variant font-medium">
-                NexaCampus Institutional Portal
+                {isPlatformRoot ? 'Enterprise Billing Engine' : `${tenant?.affiliation_board || 'CISCE'} Institutional Portal`}
               </span>
             </div>
           </Link>
@@ -51,7 +59,7 @@ export default function RefundPolicyPage() {
             Last Updated: October 12, 2026 • Academic Session 2026–2027
           </p>
           <p className="text-sm text-on-surface-variant mt-1">
-            Governing Body: Lions Club of Calcutta Greater Education Trust • CISCE Affiliation No. 2430095
+            Governing Institution: {schoolName} ({tenant?.subdomain_slug?.toUpperCase() || 'LCGVM'}) • {tenant?.affiliation_board || 'CISCE'} Affiliated
           </p>
         </div>
 

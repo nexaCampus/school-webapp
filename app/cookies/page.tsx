@@ -1,14 +1,22 @@
+'use client';
+
+import { useEffect } from 'react';
 import Link from 'next/link';
 import LogoEmblem from '@/components/LogoEmblem';
 import PortalFooter from '@/components/PortalFooter';
 import DarkModeToggle from '@/components/DarkModeToggle';
-
-export const metadata = {
-  title: 'Cookie Policy | NexaCampus — Lions Calcutta Greater Vidya Mandir',
-  description: 'Detailed disclosure of all cookies, local storage items, and session tokens utilized by the NexaCampus school portal.',
-};
+import { useTenant } from '@/lib/context/TenantContext';
 
 export default function CookiePolicyPage() {
+  const { tenant, isPlatformRoot } = useTenant();
+  const schoolName = tenant?.school_name || 'Lions Calcutta Greater Vidya Mandir';
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = `Cookie Policy | ${schoolName}`;
+    }
+  }, [schoolName]);
+
   return (
     <div className="min-h-screen bg-surface text-on-surface flex flex-col transition-colors">
       {/* Top Header */}
@@ -18,10 +26,10 @@ export default function CookiePolicyPage() {
             <LogoEmblem className="h-9 w-9 shadow-sm" />
             <div className="flex flex-col">
               <span className="font-extrabold text-[15px] tracking-tight group-hover:text-primary transition-colors">
-                Lions Calcutta Greater Vidya Mandir
+                {isPlatformRoot ? 'NexaCampus Cloud' : schoolName}
               </span>
               <span className="text-[11px] text-on-surface-variant font-medium">
-                NexaCampus Institutional Portal
+                {isPlatformRoot ? 'Enterprise Operating System' : `${tenant?.affiliation_board || 'CISCE'} Institutional Portal`}
               </span>
             </div>
           </Link>
