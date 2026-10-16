@@ -27,6 +27,7 @@ import { authService } from '@/lib/services';
 import { student as mockStudent } from '@/lib/data';
 import AuthFooter from '@/components/AuthFooter';
 import DarkModeToggle from '@/components/DarkModeToggle';
+import { useTenant } from '@/lib/context/TenantContext';
 
 const PENDING_SIGNUP_KEY = 'pendingSignupEmail';
 
@@ -34,6 +35,8 @@ type Mode = 'signin' | 'signup';
 
 export default function EmailPage() {
   const router = useRouter();
+  const { tenant } = useTenant();
+  const schoolName = tenant?.school_name || 'Lions Calcutta Greater Vidya Mandir';
 
   const [mode, setModeState] = useState<Mode>('signin');
   const [email, setEmail] = useState('');
@@ -62,9 +65,9 @@ export default function EmailPage() {
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.title = (mode === 'signup' ? 'Create Student Account' : 'Email Sign-In') + ' | NexaCampus School';
+      document.title = (mode === 'signup' ? 'Create Student Account' : 'Email Sign-In') + ` | ${schoolName}`;
     }
-  }, [mode]);
+  }, [mode, schoolName]);
 
   // Completes a returning Google redirect via ONE shared outcome. Calling
   // getRedirectResult separately per effect run discards the first retrieval
@@ -286,7 +289,7 @@ export default function EmailPage() {
           cleanEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
         const studentProfile = studentDoc || {
           ...mockStudent,
-          id: 'LCGVM-' + account.uid.slice(0, 6).toUpperCase(),
+          id: (tenant?.subdomain_slug?.toUpperCase() || 'LCGVM') + '-' + account.uid.slice(0, 6).toUpperCase(),
           name: derivedName,
           displayName: derivedName,
           guardianEmail: account.email,
@@ -350,10 +353,10 @@ export default function EmailPage() {
                   Secure Access
                 </span>
                 <span className="text-[16px] font-extrabold text-white leading-tight block">
-                  Lions Calcutta
+                  {tenant?.school_name || 'Lions Calcutta Greater Vidya Mandir'}
                 </span>
                 <span className="text-[12px] font-semibold text-secondary-fixed">
-                  Gr Vidya Mandir
+                  {tenant ? `${tenant.city || ''} ${tenant.affiliation_board ? `· ${tenant.affiliation_board}` : ''}` : 'CISCE Portal'}
                 </span>
               </div>
             </div>
@@ -390,7 +393,7 @@ export default function EmailPage() {
           </div>
 
           <div className="relative z-10 flex items-center justify-between text-[11px] text-white/70">
-            <span>CISCE Affiliated Gateway</span>
+            <span>{tenant?.affiliation_board ? `${tenant.affiliation_board} Affiliated Gateway` : 'CISCE Affiliated Gateway'}</span>
             <span>v2.5.3</span>
           </div>
         </div>

@@ -8,18 +8,21 @@ import { normalizeAdmissionNumber } from '@/lib/firebase';
 import { authService } from '@/lib/services';
 import DarkModeToggle from '@/components/DarkModeToggle';
 import AuthFooter from '@/components/AuthFooter';
+import { useTenant } from '@/lib/context/TenantContext';
 
 export default function AdmissionPage() {
   const router = useRouter();
+  const { tenant } = useTenant();
+  const schoolName = tenant?.school_name || 'Lions Calcutta Greater Vidya Mandir';
   const [admission, setAdmission] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.title = 'Admission Number Sign-In | NexaCampus School';
+      document.title = `Admission Number Sign-In | ${schoolName}`;
     }
-  }, []);
+  }, [schoolName]);
 
   async function submit() {
     const normalized = normalizeAdmissionNumber(admission);
@@ -65,10 +68,10 @@ export default function AdmissionPage() {
                   Student Verification
                 </span>
                 <span className="text-[16px] font-extrabold text-white leading-tight block">
-                  Lions Calcutta
+                  {tenant?.school_name || 'Lions Calcutta Greater Vidya Mandir'}
                 </span>
                 <span className="text-[12px] font-semibold text-secondary-fixed">
-                  Gr Vidya Mandir
+                  {tenant?.affiliation_board || 'CISCE'} Portal
                 </span>
               </div>
             </div>
@@ -105,7 +108,7 @@ export default function AdmissionPage() {
           </div>
 
           <div className="relative z-10 flex items-center justify-between text-[11px] text-white/70">
-            <span>LCGVM Gateway · CISCE</span>
+            <span>{tenant?.subdomain_slug?.toUpperCase() || 'LCGVM'} Gateway · {tenant?.affiliation_board || 'CISCE'}</span>
             <span>v2.5.3</span>
           </div>
         </div>
