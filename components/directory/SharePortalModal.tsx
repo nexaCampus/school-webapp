@@ -21,7 +21,7 @@ export default function SharePortalModal({
   const [copiedEmbed, setCopiedEmbed] = useState(false);
   const [activeTab, setActiveTab] = useState<'link' | 'qr' | 'embed'>('link');
 
-  const portalUrl = school.url || `https://${school.slug}.nexacampus.com`;
+  const portalUrl = school.url || `https://${school.slug}.nexacampus.tech`;
   const embedCode = `<iframe src="${portalUrl}/embed" width="100%" height="600" frameborder="0" title="${school.name} Portal"></iframe>`;
 
   const handleCopyLink = () => {
@@ -55,9 +55,9 @@ export default function SharePortalModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4 animate-in fade-in font-sans">
-      <div className="bg-white text-slate-900 w-full max-w-lg rounded-xl shadow-2xl overflow-hidden border border-slate-300">
+      <div className="bg-white dark:bg-[#151622] text-slate-900 dark:text-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden border border-slate-300 dark:border-[#262a40] transition-colors">
         {/* Header */}
-        <div className="bg-oxford text-white px-5 py-4 flex items-center justify-between border-b border-slate-800">
+        <div className="bg-oxford dark:bg-[#070913] text-white px-5 py-4 flex items-center justify-between border-b border-slate-800 dark:border-[#1a1d2e]">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
             <h3 className="font-serif font-bold text-base text-amber-200">
@@ -66,7 +66,7 @@ export default function SharePortalModal({
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-slate-400 hover:text-white transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,46 +77,46 @@ export default function SharePortalModal({
 
         {/* School Overview Pill */}
         <div className="p-5 pb-0">
-          <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200 flex items-center justify-between">
+          <div className="bg-slate-50 dark:bg-[#10111a] p-3.5 rounded-lg border border-slate-200 dark:border-[#222538] flex items-center justify-between transition-colors">
             <div>
-              <h4 className="font-serif font-bold text-sm text-oxford">{school.name}</h4>
-              <p className="text-[11px] text-slate-500 font-mono mt-0.5">
+              <h4 className="font-serif font-bold text-sm text-oxford dark:text-white">{school.name}</h4>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
                 {school.affiliation} • {school.location}
               </p>
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 text-amber-900">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300">
               Active Tenant
             </span>
           </div>
 
           {/* Sub tabs */}
-          <div className="flex border-b border-slate-200 mt-4 text-xs font-semibold">
+          <div className="flex border-b border-slate-200 dark:border-[#262a40] mt-4 text-xs font-semibold">
             <button
               onClick={() => setActiveTab('link')}
-              className={`py-2 px-3 border-b-2 transition-all ${
+              className={`py-2 px-3 border-b-2 transition-all cursor-pointer ${
                 activeTab === 'link'
-                  ? 'border-oxford text-oxford font-bold'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'border-oxford dark:border-[#3b49df] text-oxford dark:text-[#bdc2ff] font-bold'
+                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
-              Direct Link & Native Share
+              Direct Link &amp; Native Share
             </button>
             <button
               onClick={() => setActiveTab('qr')}
-              className={`py-2 px-3 border-b-2 transition-all ${
+              className={`py-2 px-3 border-b-2 transition-all cursor-pointer ${
                 activeTab === 'qr'
-                  ? 'border-oxford text-oxford font-bold'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'border-oxford dark:border-[#3b49df] text-oxford dark:text-[#bdc2ff] font-bold'
+                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
               Printable Noticeboard QR
             </button>
             <button
               onClick={() => setActiveTab('embed')}
-              className={`py-2 px-3 border-b-2 transition-all ${
+              className={`py-2 px-3 border-b-2 transition-all cursor-pointer ${
                 activeTab === 'embed'
-                  ? 'border-oxford text-oxford font-bold'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'border-oxford dark:border-[#3b49df] text-oxford dark:text-[#bdc2ff] font-bold'
+                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
               Embed Widget
@@ -128,7 +128,7 @@ export default function SharePortalModal({
         {activeTab === 'link' && (
           <div className="p-5 space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                 Subdomain Public Link
               </label>
               <div className="flex gap-2">
@@ -136,11 +136,11 @@ export default function SharePortalModal({
                   type="text"
                   readOnly
                   value={portalUrl}
-                  className="flex-1 p-2 text-xs font-mono bg-slate-50 border border-slate-300 rounded text-slate-800 select-all"
+                  className="flex-1 p-2 text-xs font-mono bg-slate-50 dark:bg-[#10111a] border border-slate-300 dark:border-[#262a40] rounded text-slate-800 dark:text-slate-200 select-all"
                 />
                 <button
                   onClick={handleCopyLink}
-                  className="px-4 py-2 bg-oxford hover:bg-slate-800 text-white rounded text-xs font-bold transition-colors shadow-xs"
+                  className="px-4 py-2 bg-oxford dark:bg-[#3b49df] hover:bg-slate-800 dark:hover:bg-[#2d38be] text-white rounded text-xs font-bold transition-colors shadow-xs cursor-pointer"
                 >
                   {copied ? 'Copied ✓' : 'Copy'}
                 </button>
@@ -150,9 +150,9 @@ export default function SharePortalModal({
             <div className="pt-2">
               <button
                 onClick={handleNativeShare}
-                className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-2.5 bg-slate-100 dark:bg-[#181a27] hover:bg-slate-200 dark:hover:bg-[#202334] text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-[#262a40] rounded text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer"
               >
-                <svg className="w-4 h-4 text-oxford" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-oxford dark:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                 </svg>
                 <span>Trigger Mobile Share Sheet</span>
@@ -164,7 +164,7 @@ export default function SharePortalModal({
         {/* Tab 2: Printable QR Code */}
         {activeTab === 'qr' && (
           <div className="p-5 text-center space-y-4">
-            <div className="w-48 h-48 mx-auto bg-white p-3 rounded-lg border-2 border-oxford flex flex-col items-center justify-center shadow-xs">
+            <div className="w-48 h-48 mx-auto bg-white p-3 rounded-lg border-2 border-oxford dark:border-[#3b49df] flex flex-col items-center justify-center shadow-xs">
               {/* High-fidelity SVG QR representation */}
               <svg className="w-36 h-36" viewBox="0 0 100 100" fill="currentColor">
                 <rect width="100" height="100" fill="#FFFFFF" />
@@ -183,13 +183,13 @@ export default function SharePortalModal({
               </span>
             </div>
 
-            <p className="text-xs text-slate-500 max-w-xs mx-auto">
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
               Optimized for high-resolution printing on school bulletin boards, fee counters, and admission prospectuses.
             </p>
 
             <button
               onClick={() => window.print()}
-              className="px-4 py-2 bg-oxford text-white rounded text-xs font-bold shadow-xs hover:bg-slate-800"
+              className="px-4 py-2 bg-oxford dark:bg-[#3b49df] hover:bg-slate-800 dark:hover:bg-[#2d38be] text-white rounded text-xs font-bold shadow-xs cursor-pointer transition-colors"
             >
               Print Formal Noticeboard Placard
             </button>
@@ -199,18 +199,18 @@ export default function SharePortalModal({
         {/* Tab 3: Embed Code */}
         {activeTab === 'embed' && (
           <div className="p-5 space-y-3">
-            <label className="block text-xs font-bold text-slate-700">
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
               HTML iFrame Embed Snippet
             </label>
             <textarea
               readOnly
               rows={4}
               value={embedCode}
-              className="w-full p-2.5 text-xs font-mono bg-slate-50 border border-slate-300 rounded text-slate-800 select-all"
+              className="w-full p-2.5 text-xs font-mono bg-slate-50 dark:bg-[#10111a] border border-slate-300 dark:border-[#262a40] rounded text-slate-800 dark:text-slate-200 select-all"
             />
             <button
               onClick={handleCopyEmbed}
-              className="w-full py-2 bg-oxford hover:bg-slate-800 text-white rounded text-xs font-bold shadow-xs"
+              className="w-full py-2 bg-oxford dark:bg-[#3b49df] hover:bg-slate-800 dark:hover:bg-[#2d38be] text-white rounded text-xs font-bold shadow-xs cursor-pointer transition-colors"
             >
               {copiedEmbed ? 'Snippet Copied to Clipboard ✓' : 'Copy Embed Code'}
             </button>
@@ -218,10 +218,10 @@ export default function SharePortalModal({
         )}
 
         {/* Footer */}
-        <div className="bg-slate-50 px-5 py-3 border-t border-slate-200 flex justify-end">
+        <div className="bg-slate-50 dark:bg-[#181a27] px-5 py-3 border-t border-slate-200 dark:border-[#262a40] flex justify-end transition-colors">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900"
+            className="px-4 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer transition-colors"
           >
             Done
           </button>

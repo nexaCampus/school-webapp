@@ -30,7 +30,7 @@ export default function SchoolShowcaseCard({
   onShare: (school: SchoolRecord) => void;
 }) {
   return (
-    <div className="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-xs hover:border-slate-400 hover:shadow-md transition-all flex flex-col justify-between group font-sans">
+    <div className="bg-white dark:bg-[#151622] rounded-xl overflow-hidden border border-slate-200 dark:border-[#262a40] shadow-xs hover:border-slate-400 dark:hover:border-indigo-500/50 hover:shadow-md transition-all flex flex-col justify-between group font-sans">
       <div>
         {/* Card Header & Decorative Top Border */}
         <div
@@ -39,66 +39,66 @@ export default function SchoolShowcaseCard({
         />
 
         {/* Live Preview / Hero Header Banner */}
-        <div className="p-5 bg-slate-50/70 border-b border-slate-100 flex items-start justify-between gap-3">
+        <div className="p-5 bg-slate-50/70 dark:bg-[#181a27] border-b border-slate-100 dark:border-[#262a40] flex items-start justify-between gap-3 transition-colors">
           <div className="flex items-center gap-3">
             <div
-              className="w-12 h-12 rounded-full text-white flex items-center justify-center font-serif font-bold text-base shadow-xs border-2 border-white flex-shrink-0"
+              className="w-12 h-12 rounded-full text-white flex items-center justify-center font-serif font-bold text-base shadow-xs border-2 border-white dark:border-[#262a40] flex-shrink-0"
               style={{ backgroundColor: school.primaryColor || '#0A192F' }}
             >
               {school.crestLetter}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">
+                <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 dark:bg-[#25283d] text-slate-700 dark:text-slate-300">
                   {school.board}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400">
+                <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500">
                   Estd. {school.established}
                 </span>
               </div>
-              <h3 className="font-serif font-bold text-base text-oxford leading-snug mt-1 group-hover:text-burgundy transition-colors line-clamp-1">
+              <h3 className="font-serif font-bold text-base text-oxford dark:text-white leading-snug mt-1 group-hover:text-burgundy dark:group-hover:text-[#bdc2ff] transition-colors line-clamp-1">
                 {school.name}
               </h3>
             </div>
           </div>
 
-          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex-shrink-0">
+          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 flex-shrink-0">
             Active Tenant
           </span>
         </div>
 
         {/* Card Body Metadata */}
         <div className="p-5 space-y-3">
-          <div className="italic font-serif text-xs text-slate-500 line-clamp-1">
+          <div className="italic font-serif text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
             “{school.motto}”
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-xs font-mono pt-1">
-            <div className="bg-slate-50 p-2 rounded border border-slate-100">
-              <span className="text-[10px] text-slate-400 block uppercase">Affiliation</span>
-              <span className="font-bold text-oxford line-clamp-1">{school.affiliation}</span>
+            <div className="bg-slate-50 dark:bg-[#10111a] p-2 rounded border border-slate-100 dark:border-[#222538] transition-colors">
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 block uppercase">Affiliation</span>
+              <span className="font-bold text-oxford dark:text-slate-200 line-clamp-1">{school.affiliation}</span>
             </div>
-            <div className="bg-slate-50 p-2 rounded border border-slate-100">
-              <span className="text-[10px] text-slate-400 block uppercase">Scholars</span>
-              <span className="font-bold text-slate-800">{school.studentStrength}</span>
+            <div className="bg-slate-50 dark:bg-[#10111a] p-2 rounded border border-slate-100 dark:border-[#222538] transition-colors">
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 block uppercase">Scholars</span>
+              <span className="font-bold text-slate-800 dark:text-slate-200">{school.studentStrength}</span>
             </div>
-            <div className="bg-slate-50 p-2 rounded border border-slate-100">
-              <span className="text-[10px] text-slate-400 block uppercase">Location</span>
-              <span className="font-semibold text-slate-700">{school.location}</span>
+            <div className="bg-slate-50 dark:bg-[#10111a] p-2 rounded border border-slate-100 dark:border-[#222538] transition-colors">
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 block uppercase">Location</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">{school.location}</span>
             </div>
-            <div className="bg-slate-50 p-2 rounded border border-slate-100">
-              <span className="text-[10px] text-slate-400 block uppercase">Annual Fee</span>
-              <span className="font-bold text-amber-800">{school.annualFeeRange}</span>
+            <div className="bg-slate-50 dark:bg-[#10111a] p-2 rounded border border-slate-100 dark:border-[#222538] transition-colors">
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 block uppercase">Annual Fee</span>
+              <span className="font-bold text-amber-800 dark:text-amber-400">{school.annualFeeRange}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Card Actions Footer */}
-      <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-2">
+      <div className="p-4 bg-slate-50 dark:bg-[#181a27] border-t border-slate-200 dark:border-[#262a40] flex items-center justify-between gap-2 transition-colors">
         <button
           onClick={() => onShare(school)}
-          className="p-2 text-slate-500 hover:text-oxford hover:bg-slate-200/60 rounded-md transition-colors"
+          className="p-2 text-slate-500 dark:text-slate-400 hover:text-oxford dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-[#25283d] rounded-md transition-colors cursor-pointer"
           title="Share Portal & Printable QR"
           aria-label={`Share portal for ${school.name}`}
         >
@@ -109,8 +109,8 @@ export default function SchoolShowcaseCard({
 
         <div className="flex items-center gap-2">
           <Link
-            href={school.slug === 'lcgvm' ? '/' : `/?tenant=${school.slug}`}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-bold text-white bg-oxford hover:bg-slate-800 transition-colors shadow-xs"
+            href={school.slug === 'lcgvm' ? '/' : (school.portalUrl || `/school/${school.slug}`)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-bold text-white bg-oxford dark:bg-[#3b49df] hover:bg-slate-800 dark:hover:bg-[#2d38be] transition-colors shadow-xs"
           >
             <span>Visit Web Portal</span>
             <svg className="w-3.5 h-3.5 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
