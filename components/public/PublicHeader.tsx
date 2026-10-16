@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTenant } from '@/lib/context/TenantContext';
 import DarkModeToggle from '@/components/DarkModeToggle';
+import LogoEmblem from '@/components/LogoEmblem';
 import SchoolNavDrawer from './SchoolNavDrawer';
 
 interface NavItem {
@@ -168,13 +169,7 @@ export default function PublicHeader() {
         <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
           {/* Institutional Crest and Seal */}
           <Link href="/" className="flex items-center gap-3.5 group">
-            <div className="w-13 h-13 rounded-full bg-oxford dark:bg-[#141829] text-amber-300 flex items-center justify-center p-2.5 shadow-sm border-2 border-amber-500/40 group-hover:border-amber-400 transition-colors">
-              <svg className="w-8 h-8" viewBox="0 0 40 40" fill="none">
-                <path d="M20 3L6 9V19C6 27.5 12 35 20 37C28 35 34 27.5 34 19V9L20 3Z" fill="#0A192F" stroke="#F59E0B" strokeWidth="2" />
-                <path d="M20 10V28M13 18L20 22L27 18" stroke="#F59E0B" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="20" cy="9" r="2.5" fill="#F59E0B" />
-              </svg>
-            </div>
+            <LogoEmblem className="h-11 w-11 drop-shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform" />
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-serif font-bold text-lg md:text-xl text-oxford dark:text-white tracking-tight leading-tight">
@@ -347,10 +342,8 @@ export default function PublicHeader() {
         <div className="lg:hidden fixed inset-0 z-50 flex flex-col bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
           <div className="bg-white dark:bg-[#0f111a] w-full max-h-[85vh] rounded-b-2xl shadow-2xl overflow-y-auto p-5 border-b border-slate-200 dark:border-[#20253b]">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#1c2035]">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-oxford dark:bg-[#171c30] text-amber-300 flex items-center justify-center font-serif font-bold text-xs">
-                  {slug ? slug.slice(0, 3).toUpperCase() : 'NC'}
-                </div>
+              <div className="flex items-center gap-2.5">
+                <LogoEmblem className="h-8 w-8 flex-shrink-0" />
                 <div>
                   <div className="font-serif font-bold text-sm text-oxford dark:text-white">{schoolName}</div>
                   <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
