@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { useTenant } from '@/lib/context/TenantContext';
 
 export interface NoticeItem {
   id: string;
@@ -12,6 +14,37 @@ export interface NoticeItem {
   fileSize: string;
   downloadUrl?: string;
 }
+
+export const PLATFORM_NOTICES: NoticeItem[] = [
+  {
+    id: 'pn-1',
+    gazetteId: 'NEXA/CLOUD/2026/01',
+    title: 'NexaCampus Cloud: Instant Autonomous School Provisioning in 60 Seconds — Build Your School App Now',
+    date: 'Active',
+    category: 'Urgent',
+    isNew: true,
+    fileSize: 'Live Studio',
+    downloadUrl: '/maker',
+  },
+  {
+    id: 'pn-2',
+    gazetteId: 'NEXA/DNS/2026/02',
+    title: 'Multi-Tenant Subdomain Routing Online (*.nexacampus.tech & *.admin.nexacampus.tech)',
+    date: 'Active',
+    category: 'Administrative',
+    isNew: true,
+    fileSize: 'Operational',
+  },
+  {
+    id: 'pn-3',
+    gazetteId: 'NEXA/MOD/2026/03',
+    title: 'Autonomous School OS: 15 Modular Micro-Services with Dynamic School-Level Toggles & Permissions',
+    date: 'Active',
+    category: 'Academic',
+    isNew: false,
+    fileSize: '15 Modules',
+  },
+];
 
 export const SAMPLE_NOTICES: NoticeItem[] = [
   {
@@ -61,13 +94,68 @@ export const SAMPLE_NOTICES: NoticeItem[] = [
   },
 ];
 
-export default function NoticeMarquee({ notices = SAMPLE_NOTICES }: { notices?: NoticeItem[] }) {
+export default function NoticeMarquee({ notices }: { notices?: NoticeItem[] }) {
+  const { tenant, slug, isPlatformRoot } = useTenant();
   const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
   const [activeTab, setActiveTab] = useState<string>('All');
   const [isPaused, setIsPaused] = useState(false);
 
+  // Generate dynamic institutional notices if tenant is active and custom notices weren't provided
+  const prefix = (tenant?.subdomain_slug || slug || 'CAMPUS').toUpperCase();
+  const board = tenant?.affiliation_board || 'Academic Board';
+  const tenantNotices: NoticeItem[] = [
+    {
+      id: `${prefix}-1`,
+      gazetteId: `${prefix}/CIR/2026/042`,
+      title: `Schedule & Guidelines for ${board} 2026 Pre-Board Practical & Theory Examinations`,
+      date: '12 Oct 2026',
+      category: 'Examination',
+      isNew: true,
+      fileSize: '418 KB',
+    },
+    {
+      id: `${prefix}-2`,
+      gazetteId: `${prefix}/ADM/2026/015`,
+      title: 'Admissions 2026-27: First Merit List & Verification Slot Allotment',
+      date: '10 Oct 2026',
+      category: 'Admission',
+      isNew: true,
+      fileSize: '620 KB',
+    },
+    {
+      id: `${prefix}-3`,
+      gazetteId: `${prefix}/SAF/2026/008`,
+      title: 'Mandatory Safety Advisory: Campus Fire Drill & Evacuation Protocol Compliance Report',
+      date: '08 Oct 2026',
+      category: 'Urgent',
+      isNew: false,
+      fileSize: '295 KB',
+    },
+    {
+      id: `${prefix}-4`,
+      gazetteId: `${prefix}/ACAD/2026/031`,
+      title: 'Annual Inter-School Science & Robotics Colloquium 2026 — Registration & Team Roster',
+      date: '05 Oct 2026',
+      category: 'Academic',
+      isNew: false,
+      fileSize: '512 KB',
+    },
+    {
+      id: `${prefix}-5`,
+      gazetteId: `${prefix}/FEE/2026/004`,
+      title: 'Quarter-3 Fee Remittance Deadline Extension & Online Gateway Payment Reconciliation',
+      date: '01 Oct 2026',
+      category: 'Administrative',
+      isNew: false,
+      fileSize: '180 KB',
+    },
+  ];
+
+  const resolvedNotices = notices ? notices : (isPlatformRoot ? PLATFORM_NOTICES : (tenant || slug ? tenantNotices : SAMPLE_NOTICES));
   const filteredNotices =
-    activeTab === 'All' ? notices : notices.filter((n) => n.category === activeTab);
+    activeTab === 'All' ? resolvedNotices : resolvedNotices.filter((n) => n.category === activeTab);
+
+  const authorityName = tenant?.school_name || (isPlatformRoot ? 'NexaCampus Cloud Administration' : 'Autonomous Campus Administration');
 
   return (
     <div className="w-full bg-slate-900 text-slate-100 border-y border-slate-800">
@@ -82,7 +170,7 @@ export default function NoticeMarquee({ notices = SAMPLE_NOTICES }: { notices?: 
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
           </span>
           <span className="font-serif font-bold text-xs uppercase tracking-wider text-amber-300">
-            Official Circulars
+            {isPlatformRoot ? 'Platform Ticker' : 'Official Circulars'}
           </span>
         </div>
 
@@ -97,7 +185,7 @@ export default function NoticeMarquee({ notices = SAMPLE_NOTICES }: { notices?: 
               isPaused ? '' : 'animate-[marquee_35s_linear_infinite]'
             }`}
           >
-            {notices.concat(notices).map((notice, index) => (
+            {resolvedNotices.concat(resolvedNotices).map((notice, index) => (
               <button
                 key={`${notice.id}-${index}`}
                 onClick={() => setSelectedNotice(notice)}
@@ -123,7 +211,7 @@ export default function NoticeMarquee({ notices = SAMPLE_NOTICES }: { notices?: 
         {/* View All / Archive Action */}
         <div className="pl-4 border-l border-slate-700/80 flex-shrink-0">
           <button
-            onClick={() => setSelectedNotice(notices[0])}
+            onClick={() => setSelectedNotice(resolvedNotices[0])}
             className="text-[11px] text-amber-300 hover:text-amber-200 font-semibold underline underline-offset-4 flex items-center gap-1"
           >
             <span>Notice Board</span>
@@ -150,7 +238,7 @@ export default function NoticeMarquee({ notices = SAMPLE_NOTICES }: { notices?: 
 
         {/* Horizontal scroll container */}
         <div className="flex overflow-x-auto space-x-3 pb-1 scrollbar-hide snap-x snap-mandatory">
-          {notices.map((notice) => (
+          {resolvedNotices.map((notice) => (
             <div
               key={notice.id}
               onClick={() => setSelectedNotice(notice)}
@@ -220,7 +308,7 @@ export default function NoticeMarquee({ notices = SAMPLE_NOTICES }: { notices?: 
 
               <div className="bg-parchment p-4 rounded-lg border border-slate-200 text-xs text-slate-700 space-y-2">
                 <p>
-                  <strong>Issuing Authority:</strong> Office of the Principal & Academic Council, Lions Calcutta Greater Vidyamandir.
+                  <strong>Issuing Authority:</strong> Office of the Principal &amp; Academic Council, {authorityName}.
                 </p>
                 <p>
                   <strong>Audience:</strong> All Concerned Students, Guardians & Faculty Members.
