@@ -8,7 +8,9 @@ import DarkModeToggle from '@/components/DarkModeToggle';
 import HeroTypewriter from '@/components/HeroTypewriter';
 import RevealMore from '@/components/common/RevealMore';
 import NoticeMarquee from '@/components/public/NoticeMarquee';
+import SchoolNavDrawer from '@/components/public/SchoolNavDrawer';
 import { getSession } from '@/lib/session';
+import { useTenant } from '@/lib/context/TenantContext';
 
 // 16 Institutional Modules with categories and direct routes
 interface ModuleItem {
@@ -384,6 +386,7 @@ const MODULE_FILTER_TABS: Array<{ id: 'all' | 'academics' | 'logistics' | 'stude
 
 export default function ExecutiveHomePage() {
   const router = useRouter();
+  const { tenant, slug, isPlatformRoot, isModuleEnabled } = useTenant();
   const [activeModuleTab, setActiveModuleTab] = useState<'all' | 'academics' | 'logistics' | 'studentlife' | 'admin'>('all');
   const [mobileVisibleModules, setMobileVisibleModules] = useState<number>(MOBILE_REVEAL_STEP);
   const [mobileVisibleChecks, setMobileVisibleChecks] = useState<number>(MOBILE_REVEAL_STEP);
@@ -392,6 +395,13 @@ export default function ExecutiveHomePage() {
   const [hallPassSeconds, setHallPassSeconds] = useState<number>(765); // 12m 45s
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [schoolDrawerOpen, setSchoolDrawerOpen] = useState(false);
+
+  const schoolName = tenant?.school_name || (slug ? `${slug.toUpperCase()} School Campus` : isPlatformRoot ? 'NexaCampus Autonomous OS' : 'Lions Calcutta Greater Vidya Mandir');
+  const boardName = tenant?.affiliation_board || (slug ? 'CBSE' : isPlatformRoot ? 'All Boards' : 'CISCE');
+  const schoolMotto = tenant?.school_motto || (slug ? 'Autonomous Campus Operating System' : isPlatformRoot ? 'The Operating System for Next-Gen Autonomous Campuses' : 'Knowledge is Power • CISCE Affiliation WB243');
+  const studentSlug = tenant?.subdomain_slug || slug || (isPlatformRoot ? 'DEMO' : 'LCGVM');
+  const studentCode = `${studentSlug.toUpperCase()}-2026-XI-0492`;
 
   // Ref and scroll states for the module tabs
   const moduleTabsRef = useRef<HTMLDivElement>(null);
@@ -400,9 +410,15 @@ export default function ExecutiveHomePage() {
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.title = 'NexaCampus School | Lions Calcutta Greater Vidya Mandir';
+      if (isPlatformRoot) {
+        document.title = 'NexaCampus | Autonomous Multi-Tenant School OS';
+      } else if (tenant) {
+        document.title = `${tenant.school_name} | NexaCampus School OS`;
+      } else {
+        document.title = 'NexaCampus School | Lions Calcutta Greater Vidya Mandir';
+      }
     }
-  }, []);
+  }, [isPlatformRoot, tenant]);
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -495,11 +511,16 @@ export default function ExecutiveHomePage() {
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
+  // Allowed modules based on dynamic school provisioning
+  const allowedModules = useMemo(() => {
+    return MODULES_DATA.filter((m) => isModuleEnabled(m.id));
+  }, [isModuleEnabled]);
+
   // Filtered modules
   const filteredModules = useMemo(() => {
-    if (activeModuleTab === 'all') return MODULES_DATA;
-    return MODULES_DATA.filter((m) => m.category === activeModuleTab);
-  }, [activeModuleTab]);
+    if (activeModuleTab === 'all') return allowedModules;
+    return allowedModules.filter((m) => m.category === activeModuleTab);
+  }, [activeModuleTab, allowedModules]);
 
   // Phones progressively reveal the directory; laptops always render every card.
   const visibleModuleCount = Math.min(mobileVisibleModules, filteredModules.length);
@@ -577,7 +598,7 @@ export default function ExecutiveHomePage() {
                   </span>
                 </div>
                 <span className="text-[11px] text-[#454655] dark:text-[#a0a4c0] font-medium hidden sm:inline-block">
-                  Lions Calcutta Greater Vidya Mandir • CISCE
+                  {isPlatformRoot ? 'Autonomous Multi-Tenant Cloud Platform' : `${schoolName} • ${boardName}`}
                 </span>
               </div>
             </Link>
@@ -613,19 +634,35 @@ export default function ExecutiveHomePage() {
                 </Link>
               ) : (
                 <Link
-                  href="/chooser"
+                  href={tenant?.subdomain_slug ? `/chooser?tenant=${tenant.subdomain_slug}` : '/chooser'}
                   className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white text-[12px] sm:text-[13px] font-bold shadow-sm shadow-[#1c2ac8]/25 active:scale-95 transition-all"
                 >
                   <span className="material-symbols-outlined text-[18px]">login</span>
                   <span>Enter Portal</span>
                 </Link>
               )}
+
+              {/* ONLY FOR SCHOOL: 3-Bars Hamburger Button on Top Right */}
+              {!isPlatformRoot && (
+                <button
+                  type="button"
+                  onClick={() => setSchoolDrawerOpen(true)}
+                  aria-label="Open school navigation menu"
+                  title="School Navigation & Logistics"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center bg-oxford/5 dark:bg-white/10 hover:bg-oxford/10 dark:hover:bg-white/15 text-[#131b2e] dark:text-white border border-[#e2e7ff] dark:border-[#282e4a] active:scale-95 transition-all cursor-pointer shadow-xs ml-0.5 sm:ml-1"
+                >
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.4} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+              )}
+
               {/* Mobile Navigation Drawer Toggle */}
               <button
                 type="button"
-                onClick={() => setMobileMenuOpen(true)}
+                onClick={() => (!isPlatformRoot ? setSchoolDrawerOpen(true) : setMobileMenuOpen(true))}
                 aria-label="Open navigation menu"
-                aria-expanded={mobileMenuOpen}
+                aria-expanded={mobileMenuOpen || schoolDrawerOpen}
                 className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-[#131b2e] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-90 transition-transform flex-shrink-0 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[24px]">menu</span>
@@ -636,6 +673,12 @@ export default function ExecutiveHomePage() {
 
         {/* Official Gazette & Circular Marquee Ticker */}
         <NoticeMarquee />
+
+        {/* School-Specific Navigation & Logistics Slide-Over Drawer */}
+        <SchoolNavDrawer
+          isOpen={schoolDrawerOpen}
+          onClose={() => setSchoolDrawerOpen(false)}
+        />
 
         {/* Accessible Slide-Out Mobile Navigation Drawer */}
         {mobileMenuOpen && (
@@ -660,7 +703,7 @@ export default function ExecutiveHomePage() {
                         NexaCampus
                       </span>
                       <span className="text-[10px] text-[#454655] dark:text-[#a0a4c0] block">
-                        LCGVM • CISCE WB-243
+                        {isPlatformRoot ? 'Platform Root • Cloud OS' : `${studentSlug.toUpperCase()} • ${boardName}`}
                       </span>
                     </div>
                   </Link>
@@ -811,7 +854,11 @@ export default function ExecutiveHomePage() {
               {/* Institutional Pill Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3b49df]/10 dark:bg-[#3b49df]/20 border border-[#3b49df]/20 text-[#1c2ac8] dark:text-[#bdc2ff] text-[12px] font-bold">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Go Engine v1.23 Online • CISCE Affiliation WB243</span>
+                <span>
+                  {isPlatformRoot
+                    ? 'NexaCampus Cloud OS • Multi-Tenant Autonomous Infrastructure'
+                    : `Go Engine v1.23 Online • ${boardName} Affiliation ${studentSlug.toUpperCase()}`}
+                </span>
               </div>
 
               {/* Primary Poppins Headline with Excalidraw Virgil Stylish Annotation & Dynamic Typewriter */}
@@ -824,38 +871,61 @@ export default function ExecutiveHomePage() {
 
               {/* Hand-drawn Virgil stylish text accent */}
               <div className="font-virgil text-lg sm:text-xl text-[#fea619] dark:text-[#ffb95f] rotate-[-1.5deg] font-bold select-none">
-                ✦ Handcrafted for LCGVM Students, Teachers & Parents with &lt;1ms response!
+                {isPlatformRoot
+                  ? '✦ Autonomous School Operating System with Instant 60s Provisioning & <1ms response!'
+                  : `✦ Handcrafted for ${schoolName} Students, Teachers & Parents with <1ms response!`}
               </div>
 
               {/* Subtitle Description */}
               <p className="text-base sm:text-lg text-[#454655] dark:text-[#c4c7e0] leading-relaxed max-w-2xl font-normal">
-                Welcome to the official digital twin of Lions Calcutta Greater Vidya Mandir.
-                Access 16 integrated modules, live transit telemetry, RFID smart dining, and
-                encrypted academic performance trackers within a lightweight 3MB progressive web app.
+                {isPlatformRoot
+                  ? 'Welcome to the NexaCampus Autonomous School Operating System. Instantly provision and orchestrate multi-tenant school web applications, unified student/parent portals, and live logistics.'
+                  : `Welcome to the official digital twin of ${schoolName}. Access ${allowedModules.length} provisioned modules, live transit telemetry, RFID smart dining, and encrypted academic performance trackers within a lightweight progressive web app.`}
               </p>
 
               {/* CTAs */}
               <div className="flex flex-wrap items-center gap-3.5 pt-2 w-full sm:w-auto">
-                <Link
-                  href="/chooser"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white font-bold text-[14px] shadow-lg shadow-[#1c2ac8]/30 hover:shadow-xl hover:shadow-[#1c2ac8]/40 active:scale-95 transition-all"
-                >
-                  <span className="material-symbols-outlined text-[20px]">badge</span>
-                  <span>Student & Parent Chooser</span>
-                </Link>
+                {isPlatformRoot ? (
+                  <>
+                    <Link
+                      href="/maker"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white font-bold text-[14px] shadow-lg shadow-[#1c2ac8]/30 hover:shadow-xl hover:shadow-[#1c2ac8]/40 active:scale-95 transition-all cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">add_business</span>
+                      <span>Launch Your School App</span>
+                    </Link>
+                    <Link
+                      href="/explore"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-full bg-white dark:bg-[#1e202f] hover:bg-[#eaedff] dark:hover:bg-[#25283d] text-[#1c2ac8] dark:text-[#bdc2ff] font-bold text-[14px] border border-[#c6c5d8]/40 dark:border-[#343852] shadow-sm active:scale-95 transition-all cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">travel_explore</span>
+                      <span>Explore Campuses Directory</span>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href={`/chooser?tenant=${studentSlug}`}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white font-bold text-[14px] shadow-lg shadow-[#1c2ac8]/30 hover:shadow-xl hover:shadow-[#1c2ac8]/40 active:scale-95 transition-all"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">badge</span>
+                      <span>Student &amp; Parent Portal</span>
+                    </Link>
+                    <Link
+                      href={`/admin?tenant=${studentSlug}`}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-full bg-white dark:bg-[#1e202f] hover:bg-[#eaedff] dark:hover:bg-[#25283d] text-[#721121] dark:text-rose-400 font-bold text-[14px] border border-[#c6c5d8]/40 dark:border-[#343852] shadow-sm active:scale-95 transition-all"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+                      <span>Admin Portal</span>
+                    </Link>
+                  </>
+                )}
                 <a
                   href="#modules"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-full bg-white dark:bg-[#1e202f] hover:bg-[#eaedff] dark:hover:bg-[#25283d] text-[#1c2ac8] dark:text-[#bdc2ff] font-bold text-[14px] border border-[#c6c5d8]/40 dark:border-[#343852] shadow-sm active:scale-95 transition-all"
-                >
-                  <span className="material-symbols-outlined text-[20px]">grid_view</span>
-                  <span>Explore 16 Services</span>
-                </a>
-                <a
-                  href="#backend-architecture"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-full text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] font-semibold text-[13px] transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[18px]">security</span>
-                  <span>Security Blueprint</span>
+                  <span className="material-symbols-outlined text-[18px]">grid_view</span>
+                  <span>{allowedModules.length} Active Modules</span>
                 </a>
               </div>
 
@@ -900,14 +970,14 @@ export default function ExecutiveHomePage() {
                   <div className="flex items-center justify-between pb-4 border-b border-white/15">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-sm flex items-center justify-center font-black text-amber-300 text-xs">
-                        LC
+                        {studentSlug.slice(0, 2).toUpperCase()}
                       </div>
                       <div>
                         <div className="text-[11px] font-extrabold uppercase tracking-wider text-amber-300">
-                          Lions Calcutta Greater Vidya Mandir
+                          {schoolName}
                         </div>
                         <div className="text-[9px] text-white/70 font-mono">
-                          CISCE AFFILIATED WB-243 • SENIOR WING
+                          {isPlatformRoot ? 'NEXACAMPUS SCHOLAR CARD • DEMO' : `${boardName.toUpperCase()} AFFILIATED • SENIOR WING`}
                         </div>
                       </div>
                     </div>
@@ -954,7 +1024,7 @@ export default function ExecutiveHomePage() {
                   <div className="mt-5 flex items-center justify-between pt-2">
                     <div className="flex flex-col">
                       <span className="text-[8px] uppercase tracking-wider text-white/60 font-mono">RFID ENCRYPTED ID</span>
-                      <span className="text-[11px] font-mono tracking-widest text-white/90">LCGVM-2026-XI-0492</span>
+                      <span className="text-[11px] font-mono tracking-widest text-white/90">{studentCode}</span>
                     </div>
                     <div className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-bold flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
@@ -1730,7 +1800,7 @@ export default function ExecutiveHomePage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#454655] dark:text-[#a0a4c0]">Exam Centre:</span>
-                  <span className="font-bold text-[#131b2e] dark:text-white">LCGVM Senior Hall A</span>
+                  <span className="font-bold text-[#131b2e] dark:text-white">{studentSlug.toUpperCase()} Senior Hall A</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#454655] dark:text-[#a0a4c0]">Reporting Time:</span>
@@ -1847,8 +1917,8 @@ export default function ExecutiveHomePage() {
           {/* Root Node */}
           <div className="flex justify-center mb-8">
             <div className="px-6 py-3 rounded-2xl bg-gradient-to-r from-[#1c2ac8] to-[#3b49df] text-white font-extrabold text-sm sm:text-base shadow-lg shadow-[#1c2ac8]/25 text-center">
-              <div>Senior Secondary CISCE Framework (Classes XI & XII)</div>
-              <div className="text-[11px] font-normal text-white/80 mt-0.5">Lions Calcutta Greater Vidya Mandir</div>
+              <div>Senior Secondary CISCE Framework (Classes XI &amp; XII)</div>
+              <div className="text-[11px] font-normal text-white/80 mt-0.5">{schoolName}</div>
             </div>
           </div>
 
@@ -2382,21 +2452,24 @@ export default function ExecutiveHomePage() {
           <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-[#1c2ac8] via-[#2a38db] to-[#121c87] text-white shadow-2xl relative overflow-hidden mb-16">
             <div className="relative z-10 max-w-3xl">
               <span className="text-amber-300 text-xs font-extrabold uppercase tracking-widest">
-                Lions Calcutta Greater Vidya Mandir
+                {schoolName}
               </span>
               <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight mt-2 text-white">
-                Shaping Ethical Leadership, Academic Rigor & Technological Agility
+                {isPlatformRoot
+                  ? 'Autonomous School OS: Connected Intelligence for Modern Education'
+                  : 'Shaping Ethical Leadership, Academic Rigor & Technological Agility'}
               </h2>
               <p className="text-white/80 text-sm sm:text-base mt-3 leading-relaxed">
-                Affiliated to the Council for the Indian School Certificate Examinations (CISCE), New Delhi.
-                School Affiliation Code: WB-243. Empowering over 2,400 students across Primary, Middle, and Senior wings.
+                {isPlatformRoot
+                  ? 'Autonomous Multi-Tenant Operating System empowering modern educational institutions with instant subdomain routing, 15 modular systems, and real-time synchronization.'
+                  : `Affiliated to ${boardName}. Empowering enrolled scholars across Primary, Middle, and Senior wings with connected intelligence and state-of-the-art campus systems.`}
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
-                  href="/chooser"
+                  href={isPlatformRoot ? '/maker' : `/chooser?tenant=${studentSlug}`}
                   className="px-6 py-3.5 rounded-full bg-white text-[#1c2ac8] font-black text-sm shadow-lg hover:bg-slate-100 transition-all active:scale-95"
                 >
-                  Enter Portal Chooser
+                  {isPlatformRoot ? 'Launch Your School App' : 'Enter Portal Chooser'}
                 </Link>
                 <a
                   href="#hero"
@@ -2419,17 +2492,18 @@ export default function ExecutiveHomePage() {
                 </span>
               </Link>
               <p className="text-[#454655] dark:text-[#a0a4c0] text-xs leading-relaxed max-w-sm">
-                Official high-speed web application for Lions Calcutta Greater Vidya Mandir.
-                Operates at &lt;3MB storage with instant cache warming and zero background battery drain.
+                {isPlatformRoot
+                  ? 'Official multi-tenant engine for autonomous school operating systems. Operates at <3MB storage with instant cache warming.'
+                  : `Official high-speed web application for ${schoolName}. Operates at <3MB storage with instant cache warming and zero background battery drain.`}
               </p>
               <div className="mt-3 flex flex-col gap-1.5 text-xs text-[#454655] dark:text-[#a0a4c0]">
-                <a href="tel:+913324371234" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
+                <a href={`tel:${tenant?.creator_phone || '+913324371234'}`} className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
                   <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]">call</span>
-                  <span>+91 33 2437 1234 / +91 91798 0679513</span>
+                  <span>{tenant?.creator_phone || '+91 33 2437 1234 / +91 91798 0679513'}</span>
                 </a>
-                <a href="mailto:office@lcgvm.edu.in" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
+                <a href={`mailto:${tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : 'office@lcgvm.edu.in'}`} className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
                   <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]">mail</span>
-                  <span>office@lcgvm.edu.in</span>
+                  <span>{tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : 'office@lcgvm.edu.in'}</span>
                 </a>
               </div>
               <div className="mt-4 flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold font-mono">
@@ -2487,7 +2561,7 @@ export default function ExecutiveHomePage() {
           {/* Institutional Compliance & Registration Notice */}
           <div className="mt-12 pt-6 border-t border-[#e2e7ff] dark:border-[#222538] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#454655] dark:text-[#a0a4c0]">
             <p>
-              © {new Date().getFullYear()} Lions Calcutta Greater Vidya Mandir (LCGVM). Managed by Lions Club of Calcutta Greater Education Trust. Affiliation WB-243.
+              © {new Date().getFullYear()} {schoolName}. {isPlatformRoot ? 'Powered by NexaCampus Autonomous OS.' : `Affiliation ${boardName} • ${tenant?.city || 'Kolkata'}.`}
             </p>
             <div className="flex items-center gap-3 flex-wrap">
               <Link href="/privacy" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Privacy</Link>
