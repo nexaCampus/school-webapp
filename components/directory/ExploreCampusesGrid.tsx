@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SchoolShowcaseCard, { SchoolRecord } from './SchoolShowcaseCard';
 import DirectoryFilterDrawer, { FilterState } from './DirectoryFilterDrawer';
 import SharePortalModal, { SchoolShareInfo } from './SharePortalModal';
+import { fetchAllSchools } from '@/lib/api/makerClient';
 
 export const SAMPLE_SCHOOLS: SchoolRecord[] = [
   {
@@ -116,11 +117,21 @@ export const SAMPLE_SCHOOLS: SchoolRecord[] = [
   },
 ];
 
+function toBoardType(b?: string): 'CBSE' | 'ICSE' | 'Cambridge' | 'State Board' {
+  if (!b) return 'ICSE';
+  const upper = b.toUpperCase();
+  if (upper.includes('CBSE')) return 'CBSE';
+  if (upper.includes('ICSE') || upper.includes('CISCE')) return 'ICSE';
+  if (upper.includes('CAMBRIDGE') || upper.includes('IB') || upper.includes('IGCSE')) return 'Cambridge';
+  return 'State Board';
+}
+
 export default function ExploreCampusesGrid({
-  schools = SAMPLE_SCHOOLS,
+  schools: initialSchools = SAMPLE_SCHOOLS,
 }: {
   schools?: SchoolRecord[];
 }) {
+  const [schoolsList, setSchoolsList] = useState<SchoolRecord[]>(initialSchools);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<FilterState>({
     board: 'All Boards',
@@ -130,6 +141,48 @@ export default function ExploreCampusesGrid({
   });
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [shareTarget, setShareTarget] = useState<SchoolShareInfo | null>(null);
+
+  useEffect(() => {
+    async function loadBackendSchools() {
+      try {
+        const backendSchools = await fetchAllSchools();
+        if (backendSchools && backendSchools.length > 0) {
+          const mapped: SchoolRecord[] = backendSchools.map((s, idx) => {
+            const teacherNum = parseInt(String(s.teacher_count || '50'), 10) || 50;
+            const scholarsStr = s.enrolled_scholars ? String(s.enrolled_scholars) : `${teacherNum * 30}`;
+            return {
+              id: `sch-db-${idx}-${s.subdomain_slug}`,
+              name: s.school_name,
+              slug: s.subdomain_slug,
+              affiliation: `${s.affiliation_board || 'CBSE/CISCE'} • ${teacherNum} Faculty`,
+              board: toBoardType(s.affiliation_board),
+              location: `${s.city}, ${s.state_territory}`,
+              state: s.state_territory || 'West Bengal',
+              institutionType: 'Co-ed',
+              studentStrength: `${scholarsStr} Scholars`,
+              established: 2026,
+              annualFeeRange: '₹85K - ₹1.75L',
+              portalUrl: s.subdomain_slug === 'lcgvm' ? '/' : `/school/${s.subdomain_slug}`,
+              crestLetter: (s.school_name || 'N')[0].toUpperCase(),
+              primaryColor: '#0A192F',
+              accentBadge: s.subdomain_slug === 'lcgvm' ? 'Premier Flagship' : 'Autonomous Campus',
+              motto: s.school_motto || 'Knowledge is Light',
+            };
+          });
+
+          const existingSlugs = new Set(mapped.map((m) => m.slug));
+          const combined = [
+            ...mapped,
+            ...initialSchools.filter((s) => !existingSlugs.has(s.slug)),
+          ];
+          setSchoolsList(combined);
+        }
+      } catch (err) {
+        console.warn('Could not load schools from Go backend:', err);
+      }
+    }
+    loadBackendSchools();
+  }, [initialSchools]);
 
   const handleFilterChange = (key: keyof FilterState, val: string) => {
     setFilters((prev) => ({ ...prev, [key]: val }));
@@ -145,7 +198,7 @@ export default function ExploreCampusesGrid({
     setSearchTerm('');
   };
 
-  const filteredSchools = schools.filter((sch) => {
+  const filteredSchools = schoolsList.filter((sch) => {
     const matchesSearch =
       sch.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       sch.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -161,7 +214,7 @@ export default function ExploreCampusesGrid({
   return (
     <div className="w-full font-sans">
       {/* Top Explorer Banner */}
-      <div className="bg-oxford text-white py-12 px-6 border-b border-slate-800">
+      <div className="bg-oxford dark:bg-[#070913] text-white py-12 px-6 border-b border-slate-800 dark:border-[#1a1d2e] transition-colors">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
             <span className="text-amber-400 font-mono text-xs uppercase font-bold tracking-widest">
@@ -170,8 +223,8 @@ export default function ExploreCampusesGrid({
             <h1 className="font-serif font-bold text-3xl md:text-4xl text-white">
               Explore Campuses on NexaCampus Cloud
             </h1>
-            <p className="text-xs md:text-sm text-slate-300 max-w-2xl">
-              Discover accredited Indian & International institutions sharing standardized public portals, verifiable disclosures, and digital admissions on NexaCampus.
+            <p className="text-xs md:text-sm text-slate-300 dark:text-slate-400 max-w-2xl">
+              Discover accredited Indian &amp; International institutions sharing standardized public portals, verifiable disclosures, and digital admissions on NexaCampus.
             </p>
           </div>
 
@@ -197,18 +250,18 @@ export default function ExploreCampusesGrid({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search school name, city, board affiliation..."
-              className="w-full pl-10 pr-4 py-2.5 text-xs md:text-sm bg-white border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-oxford text-slate-900 shadow-2xs"
+              className="w-full pl-10 pr-4 py-2.5 text-xs md:text-sm bg-white dark:bg-[#151622] border border-slate-300 dark:border-[#262a40] rounded-lg focus:outline-hidden focus:ring-2 focus:ring-oxford dark:focus:ring-[#3b49df] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-2xs transition-colors"
             />
-            <svg className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3.5 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
 
           <button
             onClick={() => setMobileFilterOpen(true)}
-            className="lg:hidden px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-oxford flex items-center gap-1.5 shadow-2xs"
+            className="lg:hidden px-3.5 py-2.5 bg-white dark:bg-[#151622] border border-slate-300 dark:border-[#262a40] rounded-lg text-xs font-bold text-oxford dark:text-white flex items-center gap-1.5 shadow-2xs transition-colors"
           >
-            <svg className="w-4 h-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
             <span>Filters</span>
@@ -230,23 +283,23 @@ export default function ExploreCampusesGrid({
 
           {/* Right School Showcase Cards Grid */}
           <div className="lg:col-span-9 space-y-6">
-            <div className="flex items-center justify-between text-xs text-slate-500 font-mono">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-mono">
               <span>Showing {filteredSchools.length} Accredited Institutions</span>
               <span>All Campuses Verified Active</span>
             </div>
 
             {filteredSchools.length === 0 ? (
-              <div className="bg-white p-12 text-center rounded-xl border border-slate-200">
+              <div className="bg-white dark:bg-[#151622] p-12 text-center rounded-xl border border-slate-200 dark:border-[#262a40] shadow-xs">
                 <div className="text-3xl mb-2">🏛️</div>
-                <h3 className="font-serif font-bold text-base text-slate-800">
+                <h3 className="font-serif font-bold text-base text-slate-800 dark:text-white">
                   No Institutions Match Current Filters
                 </h3>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
+                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto mt-1">
                   Try adjusting the board, state, or search terms to explore other accredited schools.
                 </p>
                 <button
                   onClick={handleResetFilters}
-                  className="mt-4 px-4 py-2 bg-oxford text-white rounded text-xs font-bold"
+                  className="mt-4 px-4 py-2 bg-oxford dark:bg-[#3b49df] hover:bg-slate-800 dark:hover:bg-[#2d38be] text-white rounded text-xs font-bold transition-colors"
                 >
                   Reset All Filters
                 </button>
