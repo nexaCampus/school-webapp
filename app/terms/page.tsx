@@ -1,14 +1,22 @@
+'use client';
+
+import { useEffect } from 'react';
 import Link from 'next/link';
 import LogoEmblem from '@/components/LogoEmblem';
 import PortalFooter from '@/components/PortalFooter';
 import DarkModeToggle from '@/components/DarkModeToggle';
-
-export const metadata = {
-  title: 'Terms of Service | NexaCampus — Lions Calcutta Greater Vidya Mandir',
-  description: 'Institutional Terms of Service governing access, portal rules, user conduct, and academic responsibilities.',
-};
+import { useTenant } from '@/lib/context/TenantContext';
 
 export default function TermsOfServicePage() {
+  const { tenant, isPlatformRoot } = useTenant();
+  const schoolName = tenant?.school_name || 'Lions Calcutta Greater Vidya Mandir';
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = `Terms of Service | ${schoolName}`;
+    }
+  }, [schoolName]);
+
   return (
     <div className="min-h-screen bg-surface text-on-surface flex flex-col transition-colors">
       {/* Top Header */}
@@ -18,10 +26,10 @@ export default function TermsOfServicePage() {
             <LogoEmblem className="h-9 w-9 shadow-sm" />
             <div className="flex flex-col">
               <span className="font-extrabold text-[15px] tracking-tight group-hover:text-primary transition-colors">
-                Lions Calcutta Greater Vidya Mandir
+                {isPlatformRoot ? 'NexaCampus Operating System' : schoolName}
               </span>
               <span className="text-[11px] text-on-surface-variant font-medium">
-                NexaCampus Institutional Portal
+                {isPlatformRoot ? 'Enterprise Multi-Tenant Infrastructure' : `${tenant?.affiliation_board || 'CISCE'} Institutional Portal`}
               </span>
             </div>
           </Link>
@@ -51,7 +59,7 @@ export default function TermsOfServicePage() {
             Last Updated: October 12, 2026 • Effective Academic Session 2026–2027
           </p>
           <p className="text-sm text-on-surface-variant mt-1">
-            Governing Institution: Lions Calcutta Greater Vidya Mandir (LCGVM), Subhasgram, Kolkata — 700147
+            Governing Institution: {schoolName} ({tenant?.subdomain_slug?.toUpperCase() || 'LCGVM'}), {tenant?.city || 'Kolkata'}{tenant?.state_territory ? `, ${tenant.state_territory}` : ', West Bengal'}
           </p>
         </div>
 
@@ -154,7 +162,7 @@ export default function TermsOfServicePage() {
               7. Governing Law &amp; Jurisdiction
             </h2>
             <p>
-              These Terms of Service are governed by and construed under the laws of the Republic of India. Any legal dispute, arbitration, or proceeding arising under these Terms shall be subject to the exclusive jurisdiction of the competent courts in Kolkata, West Bengal.
+              These Terms of Service are governed by and construed under the laws of the Republic of India. Any legal dispute, arbitration, or proceeding arising under these Terms shall be subject to the exclusive jurisdiction of the competent courts in {tenant?.city || 'Kolkata'}, {tenant?.state_territory || 'West Bengal'}.
             </p>
           </section>
         </div>
