@@ -6,8 +6,10 @@ import SchoolMakerAuthModal from '@/components/maker/SchoolMakerAuthModal';
 import SchoolMakerWizard, { SchoolAppConfig } from '@/components/maker/SchoolMakerWizard';
 import SchoolMakerGeneratedApp from '@/components/maker/SchoolMakerGeneratedApp';
 import PortalFooter from '@/components/PortalFooter';
+import { useTenant } from '@/lib/context/TenantContext';
 
 export default function SchoolMakerPage() {
+  const { setTenantSlug } = useTenant();
   const [session, setSession] = useState<CreatorSession | null>(null);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [currentSchool, setCurrentSchool] = useState<SchoolAppConfig | null>(null);
@@ -42,10 +44,19 @@ export default function SchoolMakerPage() {
   const handleLogout = () => {
     try {
       localStorage.removeItem('schoolmaker_creator_session');
+      localStorage.removeItem('schoolmaker_current_school');
+      localStorage.removeItem('nexacampus_tenant_slug');
+      if (typeof document !== 'undefined') {
+        document.cookie = 'school_tenant_slug=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'school_session_active=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'school_auth_token=; path=/; max-age=0; SameSite=Lax';
+      }
     } catch (err) {
       console.error(err);
     }
+    setTenantSlug(null);
     setSession(null);
+    setCurrentSchool(null);
     setAuthModalOpen(true);
   };
 
