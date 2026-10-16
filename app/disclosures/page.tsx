@@ -1,14 +1,24 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PublicHeader from '@/components/public/PublicHeader';
 import MandatoryDisclosuresTable from '@/components/public/MandatoryDisclosuresTable';
 import FeeStructureTable from '@/components/public/FeeStructureTable';
 import PortalFooter from '@/components/PortalFooter';
+import { useTenant } from '@/lib/context/TenantContext';
 
 export default function DisclosuresPage() {
+  const { tenant, isPlatformRoot } = useTenant();
+  const schoolName = tenant?.school_name || 'Lions Calcutta Greater Vidyamandir';
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = `Mandatory Public Disclosures | ${schoolName}`;
+    }
+  }, [schoolName]);
+
   return (
-    <div className="min-h-screen bg-parchment flex flex-col justify-between font-sans">
+    <div className="min-h-screen bg-[#faf8ff] dark:bg-[#101119] flex flex-col justify-between font-sans text-[#131b2e] dark:text-[#eaedff] transition-colors">
       <PublicHeader />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-10 space-y-12">
@@ -20,10 +30,10 @@ export default function DisclosuresPage() {
             <span>Affiliation Bye-Laws 2026</span>
           </div>
           <h1 className="font-serif font-bold text-3xl md:text-4xl text-oxford mt-1.5">
-            Mandatory Public Disclosures & Accreditation Hub
+            Mandatory Public Disclosures &amp; Accreditation Hub
           </h1>
           <p className="text-xs md:text-sm text-slate-600 mt-2 max-w-3xl leading-relaxed">
-            In compliance with directives issued by the Central Board of Secondary Education (CBSE) and the Council for the Indian School Certificate Examinations (CISCE), the institutional certifications, safety attestations, and audited fee schedules of Lions Calcutta Greater Vidyamandir are publicly promulgated below.
+            In compliance with directives issued by the Central Board of Secondary Education (CBSE) and the Council for the Indian School Certificate Examinations (CISCE), the institutional certifications, safety attestations, and audited fee schedules of {schoolName} are publicly promulgated below.
           </p>
         </div>
 
@@ -40,27 +50,27 @@ export default function DisclosuresPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
               <div className="bg-slate-50 p-3 rounded border border-slate-100">
                 <span className="text-slate-400 block font-mono text-[10px] uppercase">Name of Institution</span>
-                <span className="font-serif font-bold text-oxford text-sm">Lions Calcutta Greater Vidyamandir</span>
+                <span className="font-serif font-bold text-oxford text-sm">{schoolName}</span>
               </div>
               <div className="bg-slate-50 p-3 rounded border border-slate-100">
                 <span className="text-slate-400 block font-mono text-[10px] uppercase">Affiliation Numbers</span>
-                <span className="font-mono font-bold text-slate-800">CISCE WB-243 / CBSE 1930281</span>
+                <span className="font-mono font-bold text-slate-800">{tenant?.affiliation_board || 'CISCE'} {tenant?.subdomain_slug?.toUpperCase() || 'WB-243'}</span>
               </div>
               <div className="bg-slate-50 p-3 rounded border border-slate-100">
                 <span className="text-slate-400 block font-mono text-[10px] uppercase">School Code</span>
-                <span className="font-mono font-bold text-slate-800">WB-243 (Higher Secondary)</span>
+                <span className="font-mono font-bold text-slate-800">{tenant?.subdomain_slug?.toUpperCase() || 'WB-243'} (Higher Secondary)</span>
               </div>
               <div className="bg-slate-50 p-3 rounded border border-slate-100">
                 <span className="text-slate-400 block font-mono text-[10px] uppercase">Registered Address</span>
-                <span className="font-medium text-slate-700">12, Dr. Rajendra Prasad Sarani, Kolkata 700078</span>
+                <span className="font-medium text-slate-700">{tenant?.city || 'Kolkata'}, {tenant?.state_territory || 'West Bengal'}</span>
               </div>
               <div className="bg-slate-50 p-3 rounded border border-slate-100">
-                <span className="text-slate-400 block font-mono text-[10px] uppercase">Principal & Qualification</span>
-                <span className="font-medium text-slate-700">Dr. S. Mukherjee (M.Sc., Ph.D., B.Ed.)</span>
+                <span className="text-slate-400 block font-mono text-[10px] uppercase">Principal / Leadership</span>
+                <span className="font-medium text-slate-700">{tenant?.creator_name || 'Dr. S. Mukherjee'} ({tenant?.leadership_position || 'Head of Institution'})</span>
               </div>
               <div className="bg-slate-50 p-3 rounded border border-slate-100">
-                <span className="text-slate-400 block font-mono text-[10px] uppercase">Official Helpline & Email</span>
-                <span className="font-mono font-medium text-slate-700">+91 33 2442-8000 / principal@lcgvm.edu.in</span>
+                <span className="text-slate-400 block font-mono text-[10px] uppercase">Official Helpline &amp; Email</span>
+                <span className="font-mono font-medium text-slate-700">{tenant?.creator_phone || '+91 6289 652 321'} / desk@{tenant?.subdomain_slug || 'school'}.nexacampus.tech</span>
               </div>
             </div>
           </div>
