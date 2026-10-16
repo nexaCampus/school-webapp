@@ -5,15 +5,18 @@ import Link from 'next/link';
 import LogoEmblem from '@/components/LogoEmblem';
 import DarkModeToggle from '@/components/DarkModeToggle';
 import PortalFooter from '@/components/PortalFooter';
+import { useTenant } from '@/lib/context/TenantContext';
 
 export default function PrivacyPage() {
+  const { tenant, isPlatformRoot } = useTenant();
+  const schoolName = tenant?.school_name || 'Lions Calcutta Greater Vidya Mandir';
   const [activeTab, setActiveTab] = useState<'privacy' | 'terms'>('privacy');
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.title = 'Privacy Policy & Terms of Service | NexaCampus School';
+      document.title = `Privacy Policy & Terms of Service | ${schoolName}`;
     }
-  }, []);
+  }, [schoolName]);
 
   return (
     <div className="min-h-screen bg-[#faf8ff] dark:bg-[#12131a] text-[#131b2e] dark:text-[#eaedff] flex flex-col justify-between selection:bg-[#3b49df] selection:text-white">
@@ -24,10 +27,10 @@ export default function PrivacyPage() {
             <LogoEmblem className="h-10 w-10 drop-shadow-sm" />
             <div className="flex flex-col">
               <span className="font-extrabold text-[17px] tracking-tight text-[#1c2ac8] dark:text-[#bdc2ff] group-hover:text-[#3b49df] transition-colors">
-                NexaCampus
+                {isPlatformRoot ? 'NexaCampus Cloud' : schoolName}
               </span>
               <span className="text-[11px] text-[#454655] dark:text-[#a0a4c0] font-medium hidden sm:inline-block">
-                Lions Calcutta Greater Vidya Mandir • CISCE
+                {isPlatformRoot ? 'Enterprise Operating System' : `${tenant?.affiliation_board || 'CISCE'} Affiliated • ${tenant?.city || 'Kolkata'}`}
               </span>
             </div>
           </Link>
@@ -59,7 +62,7 @@ export default function PrivacyPage() {
             Institutional Privacy &amp; Terms
           </h1>
           <p className="text-sm text-[#454655] dark:text-[#a0a4c0] mt-2 leading-relaxed">
-            Lions Calcutta Greater Vidya Mandir (LCGVM • Affiliation WB-243) — Student Data Governance, Privacy Safeguards &amp; Acceptable Use Policy.
+            {schoolName} ({tenant?.subdomain_slug?.toUpperCase() || 'LCGVM'} • Affiliation {tenant?.affiliation_board || 'CISCE'}) — Student Data Governance, Privacy Safeguards &amp; Acceptable Use Policy.
           </p>
         </div>
 
@@ -96,7 +99,7 @@ export default function PrivacyPage() {
                 <h2>1. Commitment to Student Privacy</h2>
               </div>
               <p>
-                Lions Calcutta Greater Vidya Mandir is dedicated to protecting the confidentiality, integrity, and accessibility of student, parent, and faculty information. The NexaCampus web application operates in compliance with the Council for the Indian School Certificate Examinations (CISCE) regulations and applicable data protection legislation.
+                {schoolName} is dedicated to protecting the confidentiality, integrity, and accessibility of student, parent, and faculty information. The NexaCampus web application operates in compliance with {tenant?.affiliation_board || 'CISCE'} regulations and applicable data protection legislation.
               </p>
             </section>
 
