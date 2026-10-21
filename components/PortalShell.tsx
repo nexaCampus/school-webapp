@@ -511,11 +511,11 @@ export default function PortalShell({
             <button
               type="button"
               onClick={openMobileServices}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-90 transition-transform flex-shrink-0 cursor-pointer z-30"
+              className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container active:scale-90 transition-transform flex-shrink-0 cursor-pointer z-30"
               aria-label="Open School Services menu"
               title="Open Services"
             >
-              <span className="material-symbols-outlined text-[22px]">menu</span>
+              <span className="material-symbols-outlined text-[24px]">menu</span>
             </button>
             <Link href="/home" title="Go to Home" className="flex-shrink-0 flex items-center">
               <LogoEmblem className="h-7 w-7" />

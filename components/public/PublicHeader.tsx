@@ -151,20 +151,20 @@ export default function PublicHeader() {
           isScrolled ? 'shadow-md dark:shadow-[0_8px_30px_rgb(0,0,0,0.6)] sticky top-0 z-40' : ''
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-4">
           {/* Institutional Crest and Seal */}
-          <Link href="/" className="flex items-center gap-3.5 group">
-            <LogoEmblem className="h-11 w-11 drop-shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform" />
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="font-serif font-bold text-lg md:text-xl text-oxford dark:text-white tracking-tight leading-tight">
+          <Link href="/" className="flex items-center gap-3 sm:gap-3.5 group min-w-0">
+            <LogoEmblem className="h-10 w-10 sm:h-11 sm:w-11 drop-shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform" />
+            <div className="flex flex-col min-w-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="font-serif font-bold text-base md:text-xl text-oxford dark:text-white tracking-tight leading-tight truncate">
                   {schoolName}
                 </span>
                 <span className="hidden xl:inline-block px-1.5 py-0.5 text-[10px] uppercase font-bold tracking-wider bg-slate-100 dark:bg-[#181c2e] text-slate-700 dark:text-slate-300 rounded border border-slate-200 dark:border-[#282e4a]">
                   {isPlatformRoot ? 'Platform Root' : (tenant?.city || 'Campus')}
                 </span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium tracking-wide">
+              <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 font-medium tracking-wide truncate">
                 {isPlatformRoot ? 'Autonomous Campus Operating System' : `${board} Higher Secondary Institution`}
               </p>
             </div>
@@ -285,12 +285,12 @@ export default function PublicHeader() {
           </div>
 
           {/* Mobile Viewport Toggle */}
-          <div className="lg:hidden flex items-center space-x-2">
+          <div className="lg:hidden flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
             <DarkModeToggle className="w-8 h-8" />
             {!isPlatformRoot && (
               <a
                 href={`tel:${phone}`}
-                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900/40 text-xs font-bold"
+                className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-full bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900/40 text-[11px] sm:text-xs font-bold"
                 aria-label="Call school helpline"
               >
                 <svg className="w-3 h-3 text-red-600 dark:text-red-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -302,7 +302,7 @@ export default function PublicHeader() {
 
             <button
               onClick={() => (!isPlatformRoot ? setSchoolDrawerOpen(true) : setMobileMenuOpen(!mobileMenuOpen))}
-              className="p-2 rounded-md text-oxford dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1c2035] transition-colors cursor-pointer"
+              className="w-11 h-11 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-oxford dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#1c2035] transition-colors cursor-pointer flex-shrink-0"
               aria-label="Toggle navigation drawer"
               aria-expanded={mobileMenuOpen || schoolDrawerOpen}
             >
@@ -324,21 +324,21 @@ export default function PublicHeader() {
       {/* MOBILE COLLAPSIBLE DRAWER                                     */}
       {/* ============================================================ */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 flex flex-col bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-[#0f111a] w-full max-h-[85vh] rounded-b-2xl shadow-2xl overflow-y-auto p-5 border-b border-slate-200 dark:border-[#20253b]">
+        <div className="lg:hidden fixed inset-0 z-[60] flex flex-col bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-[#0f111a] w-full h-full sm:h-auto sm:max-h-[85vh] rounded-none sm:rounded-b-2xl shadow-2xl overflow-y-auto p-4 sm:p-5 border-b border-slate-200 dark:border-[#20253b]">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#1c2035]">
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5 min-w-0">
                 <LogoEmblem className="h-8 w-8 flex-shrink-0" />
-                <div>
-                  <div className="font-serif font-bold text-sm text-oxford dark:text-white">{schoolName}</div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                <div className="min-w-0">
+                  <div className="font-serif font-bold text-base sm:text-sm text-oxford dark:text-white truncate">{schoolName}</div>
+                  <div className="text-[11px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-mono truncate">
                     {isPlatformRoot ? 'Platform Root' : `${board} Affiliated`}
                   </div>
                 </div>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-full"
+                className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-full flex-shrink-0"
                 aria-label="Close menu"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -355,7 +355,7 @@ export default function PublicHeader() {
                       <Link
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="font-semibold text-sm text-slate-800 dark:text-slate-200"
+                        className="font-semibold text-base sm:text-sm text-slate-800 dark:text-slate-200"
                       >
                         {item.label}
                       </Link>
@@ -372,7 +372,7 @@ export default function PublicHeader() {
                             key={sub.label}
                             href={sub.href}
                             onClick={() => setMobileMenuOpen(false)}
-                            className="block px-2 py-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-oxford dark:hover:text-white"
+                            className="block px-2 py-2 sm:py-1.5 text-sm sm:text-xs text-slate-600 dark:text-slate-400 hover:text-oxford dark:hover:text-white"
                           >
                             {sub.label}
                           </Link>
@@ -388,14 +388,14 @@ export default function PublicHeader() {
               <Link
                 href={signInUrl}
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2.5 text-center text-xs font-bold text-white bg-oxford dark:bg-[#1c223c] hover:bg-slate-800 dark:hover:bg-[#262e50] rounded-md block shadow-sm border border-transparent dark:border-[#303960]"
+                className="w-full py-3 sm:py-2.5 text-center text-sm sm:text-xs font-bold text-white bg-oxford dark:bg-[#1c223c] hover:bg-slate-800 dark:hover:bg-[#262e50] rounded-md block shadow-sm border border-transparent dark:border-[#303960]"
               >
                 Sign In
               </Link>
               <Link
                 href="/maker"
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2.5 text-center text-xs font-bold text-amber-900 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 rounded-md block"
+                className="py-3 sm:py-2.5 text-center text-sm sm:text-xs font-bold text-amber-900 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 rounded-md block"
               >
                 School Maker Studio
               </Link>
