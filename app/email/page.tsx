@@ -330,6 +330,7 @@ export default function EmailPage() {
 
   return (
     <div className="relative min-h-screen bg-surface flex flex-col justify-between w-full overflow-y-auto">
+      <main id="main-content" className="contents">
       {/* Ambient Backdrop Orbs */}
       <div className="hidden md:block absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
       <div className="hidden md:block absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none" />
@@ -639,6 +640,7 @@ export default function EmailPage() {
 
       {/* Institutional Public Footer */}
       <AuthFooter />
+      </main>
     </div>
   );
 }
