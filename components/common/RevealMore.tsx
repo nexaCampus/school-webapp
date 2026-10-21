@@ -50,7 +50,11 @@ export function RevealMore({
         type="button"
         onClick={onToggle}
         aria-expanded={!hasHidden}
-        aria-label={hasHidden ? `Show next ${nextRevealCount} ${noun}` : `Collapse ${noun}`}
+        aria-label={
+          hasHidden
+            ? `Show ${nextRevealCount} More (${visible}/${total}) - reveal next ${nextRevealCount} ${noun}`
+            : `Show Fewer ${noun}`
+        }
         className={`group inline-flex items-center gap-3 px-6 py-3 rounded-full text-xs font-extrabold active:scale-95 transition-all cursor-pointer select-none ${styles.btn}`}
       >
         <span>
