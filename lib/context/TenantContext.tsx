@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { fetchSchoolBySlug, updateSchoolModules, SchoolTenant } from '@/lib/api/makerClient';
+import { SHARED_COOKIE_DOMAIN } from '@/lib/tenantUrls';
 
 export interface TenantContextType {
   tenant: SchoolTenant | null;
@@ -103,6 +104,18 @@ export const LCGVM_FLAGSHIP: SchoolTenant = {
 
 const TenantContext = createContext<TenantContextType | undefined>(undefined);
 
+/**
+ * Scopes the tenant cookie to the shared parent domain so it survives the
+ * canonical subdomain redirect (platform host -> <slug>.<app-host>).
+ */
+function sharedCookieDomainSuffix(): string {
+  if (typeof window === 'undefined') return '';
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return '';
+  }
+  return `; domain=${SHARED_COOKIE_DOMAIN ?? ''}`;
+}
+
 function extractSlugFromWindow(currentPath?: string): string | null {
   if (typeof window === 'undefined') return null;
 
@@ -115,7 +128,7 @@ function extractSlugFromWindow(currentPath?: string): string | null {
   if ((pathname === '/chooser' || pathname.startsWith('/chooser/')) && !qSlug) {
     try {
       localStorage.removeItem('nexacampus_tenant_slug');
-      document.cookie = 'school_tenant_slug=; path=/; max-age=0; SameSite=Lax';
+      document.cookie = `school_tenant_slug=; path=/; max-age=0; SameSite=Lax${sharedCookieDomainSuffix()}`;
     } catch {}
     return null;
   }
@@ -135,17 +148,30 @@ function extractSlugFromWindow(currentPath?: string): string | null {
 
   // 3. Check hostname subdomains
   const host = window.location.hostname.toLowerCase();
+  const appHost = (
+    process.env.NEXT_PUBLIC_CANONICAL_APP_HOST || 'school-webapp-self.vercel.app'
+  )
+    .toLowerCase()
+    .trim();
+  const appHostPattern = appHost.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const reserved = ['www', 'admin', 'api', 'app', 'maker', 'platform'];
 
   // Localhost admin match: <slug>.admin.localhost
   const localAdminMatch = host.match(/^([a-z0-9-]+)\.admin\.localhost$/);
-  if (localAdminMatch && localAdminMatch[1] && !['www', 'admin', 'api', 'app', 'maker', 'platform'].includes(localAdminMatch[1])) {
+  if (localAdminMatch && localAdminMatch[1] && !reserved.includes(localAdminMatch[1])) {
     return localAdminMatch[1];
   }
 
   // Localhost student match: <slug>.localhost
   const localStudentMatch = host.match(/^([a-z0-9-]+)\.localhost$/);
-  if (localStudentMatch && localStudentMatch[1] && !['www', 'admin', 'api', 'app', 'maker', 'platform'].includes(localStudentMatch[1])) {
+  if (localStudentMatch && localStudentMatch[1] && !reserved.includes(localStudentMatch[1])) {
     return localStudentMatch[1];
+  }
+
+  // Admin app-host match: <slug>.admin.<APP_HOST>  (e.g. greenwood.admin.school-webapp-self.vercel.app)
+  const adminAppHost = host.match(new RegExp(`^([a-z0-9-]+)\\.admin\\.${appHostPattern}$`));
+  if (adminAppHost && adminAppHost[1] && !reserved.includes(adminAppHost[1])) {
+    return adminAppHost[1];
   }
 
   // Admin match: <slug>.admin.nexacampus.tech
@@ -156,9 +182,15 @@ function extractSlugFromWindow(currentPath?: string): string | null {
   const adminVercel = host.match(/^([a-z0-9-]+)-admin-nexacampus\.vercel\.app$/);
   if (adminVercel && adminVercel[1]) return adminVercel[1];
 
+  // Student app-host match: <slug>.<APP_HOST>  (e.g. greenwood.school-webapp-self.vercel.app)
+  const studentAppHost = host.match(new RegExp(`^([a-z0-9-]+)\\.${appHostPattern}$`));
+  if (studentAppHost && studentAppHost[1] && !reserved.includes(studentAppHost[1])) {
+    return studentAppHost[1];
+  }
+
   // Student match: <slug>.nexacampus.tech
   const studentMatch = host.match(/^([a-z0-9-]+)\.nexacampus\.(?:tech|com)$/);
-  if (studentMatch && studentMatch[1] && !['www', 'admin', 'api', 'app', 'maker', 'platform'].includes(studentMatch[1])) {
+  if (studentMatch && studentMatch[1] && !reserved.includes(studentMatch[1])) {
     return studentMatch[1];
   }
 
@@ -255,10 +287,10 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined') {
       if (cleaned) {
         localStorage.setItem('nexacampus_tenant_slug', cleaned);
-        document.cookie = `school_tenant_slug=${cleaned}; path=/; max-age=2592000; SameSite=Lax`;
+        document.cookie = `school_tenant_slug=${cleaned}; path=/; max-age=2592000; SameSite=Lax${sharedCookieDomainSuffix()}`;
       } else {
         localStorage.removeItem('nexacampus_tenant_slug');
-        document.cookie = `school_tenant_slug=; path=/; max-age=0; SameSite=Lax`;
+        document.cookie = `school_tenant_slug=; path=/; max-age=0; SameSite=Lax${sharedCookieDomainSuffix()}`;
       }
     }
     loadTenant(cleaned);

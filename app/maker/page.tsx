@@ -21,7 +21,20 @@ export default function SchoolMakerPage() {
     try {
       const storedSession = localStorage.getItem('schoolmaker_creator_session');
       if (storedSession) {
-        setSession(JSON.parse(storedSession));
+        const parsed = JSON.parse(storedSession) as CreatorSession;
+        setSession(parsed);
+        // Re-issue the signed creator cookie so the admin console stays reachable
+        // after a deploy or a cookie expiry.
+        void fetch('/api/auth/session', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mode: 'creator',
+            phone: parsed.phone,
+            token: parsed.token || localStorage.getItem('schoolmaker_creator_token') || '',
+          }),
+        }).catch(() => {});
       } else {
         // Open the login modal automatically for first-time visitors
         setAuthModalOpen(true);
@@ -54,6 +67,7 @@ export default function SchoolMakerPage() {
     } catch (err) {
       console.error(err);
     }
+    void fetch('/api/auth/session', { method: 'DELETE', credentials: 'include' }).catch(() => {});
     setTenantSlug(null);
     setSession(null);
     setCurrentSchool(null);

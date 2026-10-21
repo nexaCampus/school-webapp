@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { tenantPortalUrls } from '@/lib/tenantUrls';
 
 export interface SchoolRecord {
   id: string;
@@ -110,7 +111,11 @@ export default function SchoolShowcaseCard({
 
         <div className="flex items-center gap-2">
           <Link
-            href={school.slug === 'lcgvm' ? '/' : (school.portalUrl || `/school/${school.slug}`)}
+            href={
+              school.slug === 'lcgvm'
+                ? '/'
+                : (school.portalUrl || tenantPortalUrls(school.slug).appDomain)
+            }
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-bold text-white bg-oxford dark:bg-[#3b49df] hover:bg-slate-800 dark:hover:bg-[#2d38be] transition-colors shadow-xs"
           >
             <span>Visit Web Portal</span>
