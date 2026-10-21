@@ -589,11 +589,11 @@ export default function ExecutiveHomePage() {
         <header className="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-[#151622]/85 border-b border-[#e2e7ff]/70 dark:border-[#222538]/70 px-4 sm:px-6 lg:px-12 py-3 transition-colors">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
             {/* Logo Emblem & School Identity */}
-            <Link href="/" className="flex items-center gap-3 group focus:outline-none">
-              <LogoEmblem className="h-10 w-10 drop-shadow-sm" />
-              <div className="flex flex-col">
+            <Link href="/" className="flex items-center gap-3 group focus:outline-none min-w-0 flex-1 sm:flex-none">
+              <LogoEmblem className="h-10 w-10 drop-shadow-sm flex-shrink-0" />
+              <div className="flex flex-col min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-[17px] tracking-tight text-[#1c2ac8] dark:text-[#bdc2ff] group-hover:text-[#3b49df] transition-colors">
+                  <span className="font-extrabold text-[17px] tracking-tight text-[#1c2ac8] dark:text-[#bdc2ff] group-hover:text-[#3b49df] transition-colors truncate">
                     NexaCampus
                   </span>
                 </div>
@@ -635,10 +635,11 @@ export default function ExecutiveHomePage() {
               ) : (
                 <Link
                   href={tenant?.subdomain_slug ? `/chooser?tenant=${tenant.subdomain_slug}` : '/chooser'}
-                  className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white text-[12px] sm:text-[13px] font-bold shadow-sm shadow-[#1c2ac8]/25 active:scale-95 transition-all"
+                  className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white text-[12px] sm:text-[13px] font-bold shadow-sm shadow-[#1c2ac8]/25 active:scale-95 transition-all whitespace-nowrap"
                 >
                   <span className="material-symbols-outlined text-[18px]">login</span>
-                  <span>Enter Portal</span>
+                  <span className="hidden sm:inline">Enter Portal</span>
+                  <span className="sm:hidden">Portal</span>
                 </Link>
               )}
 
@@ -649,7 +650,7 @@ export default function ExecutiveHomePage() {
                   onClick={() => setSchoolDrawerOpen(true)}
                   aria-label="Open school navigation menu"
                   title="School Navigation & Logistics"
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center bg-oxford/5 dark:bg-white/10 hover:bg-oxford/10 dark:hover:bg-white/15 text-[#131b2e] dark:text-white border border-[#e2e7ff] dark:border-[#282e4a] active:scale-95 transition-all cursor-pointer shadow-xs ml-0.5 sm:ml-1"
+                  className="w-11 h-11 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center bg-oxford/5 dark:bg-white/10 hover:bg-oxford/10 dark:hover:bg-white/15 text-[#131b2e] dark:text-white border border-[#e2e7ff] dark:border-[#282e4a] active:scale-95 transition-all cursor-pointer shadow-xs ml-0.5 sm:ml-1"
                 >
                   <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.4} d="M4 6h16M4 12h16M4 18h16" />
@@ -657,16 +658,18 @@ export default function ExecutiveHomePage() {
                 </button>
               )}
 
-              {/* Mobile Navigation Drawer Toggle */}
-              <button
-                type="button"
-                onClick={() => (!isPlatformRoot ? setSchoolDrawerOpen(true) : setMobileMenuOpen(true))}
-                aria-label="Open navigation menu"
-                aria-expanded={mobileMenuOpen || schoolDrawerOpen}
-                className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center text-[#131b2e] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-90 transition-transform flex-shrink-0 cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[24px]">menu</span>
-              </button>
+              {/* Mobile Navigation Drawer Toggle — platform root only (tenants use the school drawer button above) */}
+              {isPlatformRoot && (
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(true)}
+                  aria-label="Open navigation menu"
+                  aria-expanded={mobileMenuOpen}
+                  className="lg:hidden w-11 h-11 rounded-full flex items-center justify-center text-[#131b2e] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-90 transition-transform flex-shrink-0 cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[26px]">menu</span>
+                </button>
+              )}
             </div>
           </div>
         </header>
@@ -686,23 +689,23 @@ export default function ExecutiveHomePage() {
             role="dialog"
             aria-modal="true"
             aria-label="Main Navigation Menu"
-            className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-end animate-in fade-in duration-200"
+            className="lg:hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex justify-end animate-in fade-in duration-200"
             onClick={() => setMobileMenuOpen(false)}
           >
             <div
-              className="w-full max-w-xs sm:max-w-sm h-full bg-white dark:bg-[#161824] shadow-2xl flex flex-col justify-between p-5 overflow-y-auto animate-in slide-in-from-right duration-200"
+              className="w-full max-w-none sm:max-w-sm h-full bg-white dark:bg-[#161824] shadow-2xl flex flex-col justify-between p-5 overflow-y-auto animate-in slide-in-from-right duration-200"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Drawer Top */}
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-[#e2e7ff] dark:border-[#262a40]">
-                  <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5">
-                    <LogoEmblem className="h-8 w-8" />
-                    <div>
-                      <span className="font-extrabold text-sm text-[#1c2ac8] dark:text-[#bdc2ff] block leading-tight">
+                  <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 min-w-0">
+                    <LogoEmblem className="h-8 w-8 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <span className="font-extrabold text-base sm:text-sm text-[#1c2ac8] dark:text-[#bdc2ff] block leading-tight truncate">
                         NexaCampus
                       </span>
-                      <span className="text-[10px] text-[#454655] dark:text-[#a0a4c0] block">
+                      <span className="text-[11px] sm:text-[10px] text-[#454655] dark:text-[#a0a4c0] block truncate">
                         {isPlatformRoot ? 'Platform Root • Cloud OS' : `${studentSlug.toUpperCase()} • ${boardName}`}
                       </span>
                     </div>
@@ -711,40 +714,40 @@ export default function ExecutiveHomePage() {
                     type="button"
                     onClick={() => setMobileMenuOpen(false)}
                     aria-label="Close navigation menu"
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-[#454655] dark:text-[#a0a4c0] hover:bg-black/5 dark:hover:bg-white/10 active:scale-90 transition-transform cursor-pointer"
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-[#454655] dark:text-[#a0a4c0] hover:bg-black/5 dark:hover:bg-white/10 active:scale-90 transition-transform cursor-pointer flex-shrink-0"
                   >
-                    <span className="material-symbols-outlined text-[20px]">close</span>
+                    <span className="material-symbols-outlined text-[22px]">close</span>
                   </button>
                 </div>
 
                 {/* Institutional Public & Multi-Tenant Portals */}
                 <div className="py-3 border-b border-[#e2e7ff] dark:border-[#262a40]">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-2 px-1">
+                  <p className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-2 px-1">
                     Institutional Hub
                   </p>
-                  <div className="grid grid-cols-3 gap-2 text-xs font-semibold">
+                  <div className="grid grid-cols-3 gap-2 text-sm sm:text-xs font-semibold">
                     <Link
                       href="/explore"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200 border border-amber-200/60 dark:border-amber-800/40 flex items-center justify-center gap-1.5"
+                      className="p-3 sm:p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200 border border-amber-200/60 dark:border-amber-800/40 flex items-center justify-center gap-1.5"
                     >
-                      <span className="material-symbols-outlined text-[16px] text-amber-600">apartment</span>
+                      <span className="material-symbols-outlined text-[18px] sm:text-[16px] text-amber-600">apartment</span>
                       <span>Campuses</span>
                     </Link>
                     <Link
                       href="/apply"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center justify-center gap-1.5"
+                      className="p-3 sm:p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center justify-center gap-1.5"
                     >
-                      <span className="material-symbols-outlined text-[16px] text-primary">how_to_reg</span>
+                      <span className="material-symbols-outlined text-[18px] sm:text-[16px] text-primary">how_to_reg</span>
                       <span>Admissions</span>
                     </Link>
                     <Link
                       href="/maker"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center justify-center gap-1.5"
+                      className="p-3 sm:p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center justify-center gap-1.5"
                     >
-                      <span className="material-symbols-outlined text-[16px] text-primary">build</span>
+                      <span className="material-symbols-outlined text-[18px] sm:text-[16px] text-primary">build</span>
                       <span>Maker SaaS</span>
                     </Link>
                   </div>
@@ -752,10 +755,10 @@ export default function ExecutiveHomePage() {
 
                 {/* Section Navigation Links */}
                 <div className="py-4">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-2 px-1">
+                  <p className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-2 px-1">
                     On-Page Sections
                   </p>
-                  <nav className="flex flex-col gap-1 text-sm font-semibold">
+                  <nav className="flex flex-col gap-1 text-base sm:text-sm font-semibold">
                     {[
                       { label: '16 Integrated Modules', href: '#modules', icon: 'apps' },
                       { label: 'Backend Architecture', href: '#backend-architecture', icon: 'dns' },
@@ -768,9 +771,9 @@ export default function ExecutiveHomePage() {
                         key={item.href}
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-on-surface hover:bg-[#eaedff] dark:hover:bg-[#202334] hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] transition-colors"
+                        className="flex items-center gap-3 px-3 py-3 sm:py-2.5 rounded-xl text-on-surface hover:bg-[#eaedff] dark:hover:bg-[#202334] hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] transition-colors"
                       >
-                        <span className="material-symbols-outlined text-[19px] text-[#1c2ac8] dark:text-[#bdc2ff]">
+                        <span className="material-symbols-outlined text-[21px] sm:text-[19px] text-[#1c2ac8] dark:text-[#bdc2ff]">
                           {item.icon}
                         </span>
                         <span>{item.label}</span>
@@ -781,40 +784,40 @@ export default function ExecutiveHomePage() {
 
                 {/* Quick Student Portal Shortcuts */}
                 <div className="py-3 border-t border-[#e2e7ff] dark:border-[#262a40]">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-2 px-1">
+                  <p className="text-xs sm:text-[11px] font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-2 px-1">
                     Student Portals
                   </p>
-                  <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+                  <div className="grid grid-cols-2 gap-2 text-sm sm:text-xs font-semibold">
                     <Link
                       href="/home"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
+                      className="p-3 sm:p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
                     >
-                      <span className="material-symbols-outlined text-[16px] text-primary">dashboard</span>
+                      <span className="material-symbols-outlined text-[18px] sm:text-[16px] text-primary">dashboard</span>
                       <span>Dashboard</span>
                     </Link>
                     <Link
                       href="/timetable"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
+                      className="p-3 sm:p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
                     >
-                      <span className="material-symbols-outlined text-[16px] text-primary">schedule</span>
+                      <span className="material-symbols-outlined text-[18px] sm:text-[16px] text-primary">schedule</span>
                       <span>Timetable</span>
                     </Link>
                     <Link
                       href="/notices"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
+                      className="p-3 sm:p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
                     >
-                      <span className="material-symbols-outlined text-[16px] text-primary">campaign</span>
+                      <span className="material-symbols-outlined text-[18px] sm:text-[16px] text-primary">campaign</span>
                       <span>Notices</span>
                     </Link>
                     <Link
                       href="/helpdesk"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
+                      className="p-3 sm:p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
                     >
-                      <span className="material-symbols-outlined text-[16px] text-primary">support_agent</span>
+                      <span className="material-symbols-outlined text-[18px] sm:text-[16px] text-primary">support_agent</span>
                       <span>Parent Desk</span>
                     </Link>
                   </div>
@@ -826,12 +829,12 @@ export default function ExecutiveHomePage() {
                 <Link
                   href="/chooser"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-3 rounded-full bg-[#1c2ac8] text-white text-center font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-full bg-[#1c2ac8] text-white text-center font-bold text-sm sm:text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[18px]">login</span>
                   <span>Enter Student Portal</span>
                 </Link>
-                <div className="flex items-center justify-between text-[11px] text-outline px-1">
+                <div className="flex items-center justify-between text-xs sm:text-[11px] text-outline px-1">
                   <Link href="/privacy" onClick={() => setMobileMenuOpen(false)} className="hover:text-primary">
                     Privacy Policy
                   </Link>

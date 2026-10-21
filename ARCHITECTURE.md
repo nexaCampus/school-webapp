@@ -206,6 +206,22 @@ Surface tokens are defined as `background-color: var(--color-surface, #faf8ff)` 
   2. the institution name on its **own full-width row**, at `text-lg` with `break-words` and **no line clamp**.
   The name is deliberately never truncated: long institution names (e.g. "Lions Calcutta Greater Vidyamandir", "Delhi Public Academy & Senior Secondary") wrap to two lines and stay fully legible instead of collapsing to "Lions…" / "Delhi…". `Estd. <year>` carries `whitespace-nowrap` so the year never wraps away from its label.
 
+### 4.9. Phone-First Navigation Surfaces
+
+Every hamburger opens a **full-screen** surface on phones — no half-height sheet, no narrow side strip.
+
+| Surface | Phone (< `sm`) | `sm` and up |
+|---|---|---|
+| Landing drawer (`app/page.tsx`) | `w-full max-w-none` | `max-w-sm` right-hand sheet |
+| `PublicHeader` drawer (`components/public/PublicHeader.tsx`) | `h-full`, no bottom rounding | `max-h-[85vh]` bottom sheet |
+| `SchoolNavDrawer` (`components/public/SchoolNavDrawer.tsx`) | `w-full max-w-none` | `max-w-md`/`max-w-lg` side sheet |
+| `PortalShell` services menu (`components/PortalShell.tsx`) | already `fixed inset-0` | n/a (mobile-only) |
+
+- **Stacking contract**: nav drawers render at `z-[60]`; the cookie banner (`components/CookieConsentBanner.tsx`) and the PWA install prompt (`components/PWARegistration.tsx`) sit at `z-40` so they can never float on top of an open menu; toasts stay at `z-50` so notifications remain visible. A drawer rendered inside a stacking context (e.g. the header) cannot out-rank a root-level overlay unless the overlay's `z` is lowered — that is why the banner and the install prompt were dropped to `z-40`.
+- **Phone-only type scale**: inside the drawers, labels use the larger phone size and fall back to the compact size from `sm:` up (section headings `text-xs sm:text-[11px]`, item titles `text-sm sm:text-xs`, sub-items `text-sm sm:text-xs`, CTA buttons `text-sm sm:text-xs`). Icon tiles grow to `w-9 h-9 sm:w-8 sm:h-8` and link rows to `p-3 sm:p-2.5`.
+- **Tap targets**: every hamburger is at least 40×40 px (`w-11 h-11` on phones, `w-10 h-10` on `sm` and up).
+- **Header rows never overflow**: brand blocks are `min-w-0` with `truncate` so the school name yields space instead of pushing the menu button off-screen; the landing header drops the duplicate platform menu button for school tenants (the school drawer button already covers it) and shortens `Enter Portal` to `Portal` on phones.
+
 ---
 
 ## 5. Security & Defensive Design

@@ -29,7 +29,7 @@ export default function CookieConsentBanner() {
   return (
     <aside
       aria-label="Cookie consent banner"
-      className="fixed bottom-3 left-3 right-3 sm:bottom-6 sm:right-6 sm:left-auto sm:max-w-md z-50 animate-in fade-in slide-in-from-bottom-5 duration-300"
+      className="fixed bottom-3 left-3 right-3 sm:bottom-6 sm:right-6 sm:left-auto sm:max-w-md z-40 animate-in fade-in slide-in-from-bottom-5 duration-300"
     >
       {/* Light: liquid glass at 10% transparency with a heavy blur, so high-contrast
           backdrops average into a soft tint instead of streaking through. Dark stays

@@ -74,7 +74,7 @@ export default function PWARegistration() {
   if (!isInstallable || dismissed) return null;
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 md:bottom-6 md:left-auto md:right-6 md:max-w-sm z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <div className="fixed bottom-20 left-4 right-4 md:bottom-6 md:left-auto md:right-6 md:max-w-sm z-40 animate-in fade-in slide-in-from-bottom-4 duration-300">
       <div className="bg-white dark:bg-[#151622] border border-primary/30 dark:border-[#222538] shadow-[0_12px_28px_-6px_rgba(28,42,200,0.35)] rounded-2xl p-3.5 flex items-center justify-between gap-3 backdrop-blur-xl">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-[#2a38e8] text-white flex items-center justify-center flex-shrink-0 shadow-sm">
