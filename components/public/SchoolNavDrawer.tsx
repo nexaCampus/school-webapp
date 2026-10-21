@@ -118,7 +118,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                   <span className="material-symbols-outlined text-[18px]">account_balance</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                     Principal&apos;s Desk &amp; Vision
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -137,7 +137,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                   <span className="material-symbols-outlined text-[18px]">groups</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                     Faculty &amp; Academic Leadership
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -156,7 +156,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                   <span className="material-symbols-outlined text-[18px]">policy</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                     Statutory Board Disclosures
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -175,7 +175,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                   <span className="material-symbols-outlined text-[18px]">build_circle</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                     School Maker Studio
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -207,7 +207,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                   <span className="material-symbols-outlined text-[18px]">menu_book</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                     Curriculum &amp; Streams
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -227,7 +227,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                     <span className="material-symbols-outlined text-[18px]">workspace_premium</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                       Board Examinations &amp; Marks
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -248,7 +248,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                     <span className="material-symbols-outlined text-[18px]">edit_note</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                       Homework &amp; Daily Diary
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -269,7 +269,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                     <span className="material-symbols-outlined text-[18px]">fact_check</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                       Attendance System
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -289,7 +289,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                   <span className="material-symbols-outlined text-[18px]">schedule</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                     Live Timetable &amp; Bell Stream
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -322,7 +322,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                     <span className="material-symbols-outlined text-[18px]">directions_bus</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                       Bus GPS Radar &amp; Telemetry
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -343,7 +343,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                     <span className="material-symbols-outlined text-[18px]">restaurant</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                       Smart RFID Canteen Wallet
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -364,7 +364,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                     <span className="material-symbols-outlined text-[18px]">local_library</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                       Digital Library Catalog
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -385,7 +385,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                     <span className="material-symbols-outlined text-[18px]">medical_services</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                       Campus Infirmary &amp; Clinic
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -405,7 +405,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                   <span className="material-symbols-outlined text-[18px]">sports_soccer</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                     Campus Facilities &amp; Labs
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -456,7 +456,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                   <span className="material-symbols-outlined text-[18px]">swap_horiz</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8] dark:group-hover:text-[#7b89ff]">
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#7b89ff]">
                     Switch School Campus
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
