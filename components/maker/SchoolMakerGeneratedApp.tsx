@@ -216,7 +216,7 @@ export default function SchoolMakerGeneratedApp({
                   </span>
                 </div>
 
-                <h3 className="font-serif font-bold text-base text-[#131b2e] dark:text-white group-hover:text-[#1c2ac8] dark:group-hover:text-[#bdc2ff] transition-colors">
+                <h3 className="font-serif font-bold text-base text-[#131b2e] dark:text-white group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#bdc2ff] transition-colors">
                   {mod.title}
                 </h3>
                 <p className="text-xs text-[#454655] dark:text-[#a0a4c0] mt-1.5 leading-relaxed">
