@@ -609,11 +609,11 @@ export default function ExecutiveHomePage() {
                 <span>Explore Campuses</span>
                 <span className="text-[10px] bg-amber-500/15 text-amber-700 dark:text-amber-300 px-1.5 py-0.5 rounded font-mono">Directory</span>
               </Link>
-              <Link href="/apply" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">
+              <Link href="/apply" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors">
                 Admissions 2026
               </Link>
-              <a href="#modules" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">16 Modules</a>
-              <a href="#timetable-stream" className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors">Timetable</a>
+              <a href="#modules" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors">16 Modules</a>
+              <a href="#timetable-stream" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors">Timetable</a>
               <Link href="/maker" className="text-amber-700 dark:text-amber-400 font-bold hover:underline flex items-center gap-1">
                 <span>School Maker</span>
                 <span className="text-[9px] bg-amber-500/15 text-amber-700 dark:text-amber-300 px-1 rounded font-mono">SaaS</span>
@@ -922,7 +922,7 @@ export default function ExecutiveHomePage() {
                 )}
                 <a
                   href="#modules"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-full text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] font-semibold text-[13px] transition-colors"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-full text-[#454655] dark:text-[#a0a4c0] hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] font-semibold text-[13px] transition-colors"
                 >
                   <span className="material-symbols-outlined text-[18px]">grid_view</span>
                   <span>{allowedModules.length} Active Modules</span>
@@ -1280,7 +1280,7 @@ export default function ExecutiveHomePage() {
                     {item.badge}
                   </span>
                 </div>
-                <h3 className="text-base font-extrabold text-[#131b2e] dark:text-white group-hover:text-[#1c2ac8] dark:group-hover:text-[#bdc2ff] transition-colors">
+                <h3 className="text-base font-extrabold text-[#131b2e] dark:text-white group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#bdc2ff] transition-colors">
                   {item.name}
                 </h3>
                 <p className="text-[12px] text-[#454655] dark:text-[#a0a4c0] mt-1.5 leading-relaxed font-normal">
@@ -1342,7 +1342,7 @@ export default function ExecutiveHomePage() {
                 <div className="text-[10px] text-[#454655] dark:text-[#a0a4c0] mt-1">3MB Chrome PWA</div>
               </div>
 
-              <div className="hidden md:flex justify-center text-[#1c2ac8]">
+              <div className="hidden md:flex justify-center text-[#1c2ac8]dark:text-[#bdc2ff]">
                 <span className="material-symbols-outlined">trending_flat</span>
               </div>
 
@@ -1351,7 +1351,7 @@ export default function ExecutiveHomePage() {
                 <div className="text-[10px] text-[#454655] dark:text-[#a0a4c0] mt-1">school_auth_token</div>
               </div>
 
-              <div className="hidden md:flex justify-center text-[#1c2ac8]">
+              <div className="hidden md:flex justify-center text-[#1c2ac8]dark:text-[#bdc2ff]">
                 <span className="material-symbols-outlined">trending_flat</span>
               </div>
 
@@ -1360,7 +1360,7 @@ export default function ExecutiveHomePage() {
                 <div className="text-[10px] text-blue-600 dark:text-blue-400 mt-1">TinyLFU &lt;0.8ms</div>
               </div>
 
-              <div className="hidden md:flex justify-center text-[#1c2ac8]">
+              <div className="hidden md:flex justify-center text-[#1c2ac8]dark:text-[#bdc2ff]">
                 <span className="material-symbols-outlined">trending_flat</span>
               </div>
 
@@ -1715,9 +1715,9 @@ export default function ExecutiveHomePage() {
 
           {/* Route Radar Visual SVG Graphic */}
           <div className="lg:col-span-7 p-6 rounded-3xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40]">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#454655] dark:text-[#a0a4c0] mb-4">
               EM Bypass Corridors (Route 14-A Active Tracking)
-            </h4>
+            </h3>
 
             {/* SVG Visual Track */}
             <div className="relative py-4">
@@ -1810,7 +1810,7 @@ export default function ExecutiveHomePage() {
 
               <div className="p-3 rounded-xl bg-[#faf8ff] dark:bg-[#141520] border border-[#e2e7ff] dark:border-[#24283d] flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[20px] text-[#1c2ac8]">qr_code_2</span>
+                  <span className="material-symbols-outlined text-[20px] text-[#1c2ac8]dark:text-[#bdc2ff]">qr_code_2</span>
                   <span className="text-[10px] text-[#454655] dark:text-[#a0a4c0]">HMAC Digital Seal Attached</span>
                 </div>
                 <Link
@@ -2498,12 +2498,12 @@ export default function ExecutiveHomePage() {
                   : `Official high-speed web application for ${schoolName}. Operates at <3MB storage with instant cache warming and zero background battery drain.`}
               </p>
               <div className="mt-3 flex flex-col gap-1.5 text-xs text-[#454655] dark:text-[#a0a4c0]">
-                <a href={`tel:${tenant?.creator_phone || '+913324371234'}`} className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]">call</span>
+                <a href={`tel:${tenant?.creator_phone || '+913324371234'}`} className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]dark:text-[#bdc2ff]">call</span>
                   <span>{tenant?.creator_phone || '+91 33 2437 1234 / +91 91798 0679513'}</span>
                 </a>
-                <a href={`mailto:${tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : 'office@lcgvm.edu.in'}`} className="hover:text-[#1c2ac8] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]">mail</span>
+                <a href={`mailto:${tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : 'office@lcgvm.edu.in'}`} className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]dark:text-[#bdc2ff]">mail</span>
                   <span>{tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : 'office@lcgvm.edu.in'}</span>
                 </a>
               </div>
@@ -2514,46 +2514,46 @@ export default function ExecutiveHomePage() {
             </div>
 
             <div>
-              <h4 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Academics</h4>
+              <h3 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Academics</h3>
               <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
-                <li><Link href="/attendance" className="hover:text-[#1c2ac8]">Attendance Tracker</Link></li>
-                <li><Link href="/diary" className="hover:text-[#1c2ac8]">Homework &amp; Diary</Link></li>
-                <li><Link href="/exams" className="hover:text-[#1c2ac8]">Exams &amp; Results</Link></li>
-                <li><Link href="/library" className="hover:text-[#1c2ac8]">Digital Library</Link></li>
-                <li><Link href="/timetable" className="hover:text-[#1c2ac8]">Class Timetable</Link></li>
+                <li><Link href="/attendance" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Attendance Tracker</Link></li>
+                <li><Link href="/diary" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Homework &amp; Diary</Link></li>
+                <li><Link href="/exams" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Exams &amp; Results</Link></li>
+                <li><Link href="/library" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Digital Library</Link></li>
+                <li><Link href="/timetable" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Class Timetable</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Campus Life</h4>
+              <h3 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Campus Life</h3>
               <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
-                <li><Link href="/canteen" className="hover:text-[#1c2ac8]">Smart Canteen RFID</Link></li>
-                <li><Link href="/bus" className="hover:text-[#1c2ac8]">Bus GPS Radar</Link></li>
-                <li><Link href="/clubs" className="hover:text-[#1c2ac8]">Clubs &amp; Societies</Link></li>
-                <li><Link href="/merits" className="hover:text-[#1c2ac8]">House Merits</Link></li>
-                <li><Link href="/gallery" className="hover:text-[#1c2ac8]">Photo Gallery</Link></li>
+                <li><Link href="/canteen" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Smart Canteen RFID</Link></li>
+                <li><Link href="/bus" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Bus GPS Radar</Link></li>
+                <li><Link href="/clubs" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Clubs &amp; Societies</Link></li>
+                <li><Link href="/merits" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">House Merits</Link></li>
+                <li><Link href="/gallery" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Photo Gallery</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Institutional</h4>
+              <h3 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Institutional</h3>
               <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
-                <li><Link href="/health" className="hover:text-[#1c2ac8]">Clinic &amp; Vitals</Link></li>
-                <li><Link href="/helpdesk" className="hover:text-[#1c2ac8]">Parent Desk &amp; PTM</Link></li>
-                <li><Link href="/notices" className="hover:text-[#1c2ac8]">Circulars &amp; Notices</Link></li>
-                <li><Link href="/store" className="hover:text-[#1c2ac8]">Campus Store</Link></li>
-                <li><Link href="/chooser" className="hover:text-[#1c2ac8]">Role Switcher</Link></li>
+                <li><Link href="/health" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Clinic &amp; Vitals</Link></li>
+                <li><Link href="/helpdesk" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Parent Desk &amp; PTM</Link></li>
+                <li><Link href="/notices" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Circulars &amp; Notices</Link></li>
+                <li><Link href="/store" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Campus Store</Link></li>
+                <li><Link href="/chooser" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Role Switcher</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Legal &amp; Compliance</h4>
+              <h3 className="font-bold text-sm text-[#131b2e] dark:text-white mb-3">Legal &amp; Compliance</h3>
               <ul className="space-y-2 text-[#454655] dark:text-[#c4c7e0]">
-                <li><Link href="/privacy" className="hover:text-[#1c2ac8]">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-[#1c2ac8]">Terms of Service</Link></li>
-                <li><Link href="/refund" className="hover:text-[#1c2ac8]">Refund &amp; Billing</Link></li>
-                <li><Link href="/cookies" className="hover:text-[#1c2ac8]">Cookie Inventory</Link></li>
-                <li><Link href="/data-deletion" className="hover:text-[#1c2ac8]">Data Deletion (Right to Erasure)</Link></li>
+                <li><Link href="/privacy" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Terms of Service</Link></li>
+                <li><Link href="/refund" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Refund &amp; Billing</Link></li>
+                <li><Link href="/cookies" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Cookie Inventory</Link></li>
+                <li><Link href="/data-deletion" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff]">Data Deletion (Right to Erasure)</Link></li>
               </ul>
             </div>
 
@@ -2565,15 +2565,15 @@ export default function ExecutiveHomePage() {
               © {new Date().getFullYear()} {schoolName}. {isPlatformRoot ? 'Powered by NexaCampus Autonomous OS.' : `Affiliation ${boardName} • ${tenant?.city || 'Kolkata'}.`}
             </p>
             <div className="flex items-center gap-3 flex-wrap">
-              <Link href="/privacy" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Privacy</Link>
+              <Link href="/privacy" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] underline-offset-2 hover:underline">Privacy</Link>
               <span>•</span>
-              <Link href="/terms" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Terms</Link>
+              <Link href="/terms" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] underline-offset-2 hover:underline">Terms</Link>
               <span>•</span>
-              <Link href="/refund" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Refunds</Link>
+              <Link href="/refund" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] underline-offset-2 hover:underline">Refunds</Link>
               <span>•</span>
-              <Link href="/cookies" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Cookies</Link>
+              <Link href="/cookies" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] underline-offset-2 hover:underline">Cookies</Link>
               <span>•</span>
-              <Link href="/data-deletion" className="hover:text-[#1c2ac8] underline-offset-2 hover:underline">Data Deletion</Link>
+              <Link href="/data-deletion" className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] underline-offset-2 hover:underline">Data Deletion</Link>
             </div>
           </div>
 

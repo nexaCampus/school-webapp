@@ -185,7 +185,7 @@ function UniversalChooserContent() {
                         {sch.subdomain_slug}.nexacampus.tech • {sch.city}
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-[#1c2ac8]">Select →</span>
+                    <span className="text-xs font-bold text-[#1c2ac8]dark:text-[#bdc2ff]">Select →</span>
                   </button>
                 ))}
               </div>
@@ -444,7 +444,7 @@ function UniversalChooserContent() {
                             </div>
                           </div>
                         </div>
-                        <span className="text-xs font-bold text-[#1c2ac8] group-hover:translate-x-1 transition-transform">
+                        <span className="text-xs font-bold text-[#1c2ac8]dark:text-[#bdc2ff] group-hover:translate-x-1 transition-transform">
                           Select →
                         </span>
                       </div>
