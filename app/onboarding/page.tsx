@@ -205,7 +205,7 @@ function OnboardingForm() {
   }
 
   return (
-    <>
+    <main id="main-content">
       <div className="flex items-center gap-2">
         <button
           aria-label="Back"
@@ -452,7 +452,7 @@ function OnboardingForm() {
         )}
       </button>
       <div className="min-h-4" />
-    </>
+    </main>
   );
 }
 
