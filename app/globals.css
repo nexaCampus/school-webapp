@@ -27,8 +27,8 @@
 }
 
 /* Tailwind v4 derives the spacing scale from CSS variables. The institutional
-   spacing tokens (space-xs ΓÇª space-xl) are declared here so the legacy
-   `p-space-md`, `gap-space-sm`, ΓÇª utilities keep working. */
+   spacing tokens (space-xs to space-xl) are declared here so the legacy
+   `p-space-md`, `gap-space-sm`, ... utilities keep working. */
 @theme {
   --spacing-space-xs: 0.5rem;
   --spacing-space-sm: 0.75rem;

@@ -27,7 +27,7 @@ export default function DiaryPage() {
   const [student, setStudent] = useState({
     name: 'Student',
     section: 'Sec E',
-    details: 'Class 12-E â€¢ Roll No. 20',
+    details: 'Class 12-E • Roll No. 20',
     initials: 'ST',
   });
   const [diaryTasks, setDiaryTasks] = useState<DiaryTask[]>(DEFAULT_DIARY_TASKS);
@@ -57,7 +57,7 @@ export default function DiaryPage() {
     setStudent({
       name,
       section: `Sec ${section}`,
-      details: `Class ${grade}-${section} â€¢ Roll No. ${roll}`,
+      details: `Class ${grade}-${section} • Roll No. ${roll}`,
       initials,
     });
 
