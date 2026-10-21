@@ -576,7 +576,7 @@ export default function ExecutiveHomePage() {
 
   return (
     <div className="min-h-screen bg-[#faf8ff] dark:bg-[#12131a] text-[#131b2e] dark:text-[#eaedff] selection:bg-[#3b49df] selection:text-white transition-colors duration-200">
-      
+      <main id="main-content">
       {/* =========================================================================
           DIV 1: EXECUTIVE 3D INTERACTIVE HERO SECTION
           ========================================================================= */}
@@ -2441,6 +2441,7 @@ export default function ExecutiveHomePage() {
 
         </div>
       </div>
+      </main>
 
       {/* =========================================================================
           DIV 15: GRAND INSTITUTIONAL CTA, LEADERSHIP MESSAGE & CAMPUS FOOTER
