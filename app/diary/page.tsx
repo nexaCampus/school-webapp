@@ -215,7 +215,7 @@ export default function DiaryPage() {
                 <button
                   onClick={() => setActiveFilter('All')}
                   className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-label-md whitespace-nowrap transition-transform active:scale-95 flex items-center gap-1 sm:gap-1.5 ${
-                    activeFilter === 'All' ? 'bg-white text-primary shadow-sm font-bold' : 'bg-white/15 text-white'
+                    activeFilter === 'All' ? 'bg-white dark:bg-[#1a1c2b] text-primary dark:text-[#bdc2ff] shadow-sm font-bold' : 'bg-white/15 text-white'
                   }`}
                 >
                   <span>All Tasks</span>
@@ -226,7 +226,7 @@ export default function DiaryPage() {
                 <button
                   onClick={() => setActiveFilter('Pending')}
                   className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-label-md whitespace-nowrap transition-transform active:scale-95 flex items-center gap-1 sm:gap-1.5 ${
-                    activeFilter === 'Pending' ? 'bg-white text-primary shadow-sm font-bold' : 'bg-white/15 text-white'
+                    activeFilter === 'Pending' ? 'bg-white dark:bg-[#1a1c2b] text-primary dark:text-[#bdc2ff] shadow-sm font-bold' : 'bg-white/15 text-white'
                   }`}
                 >
                   <span>Pending</span>
@@ -237,7 +237,7 @@ export default function DiaryPage() {
                 <button
                   onClick={() => setActiveFilter('Submitted')}
                   className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-label-md whitespace-nowrap transition-transform active:scale-95 flex items-center gap-1 sm:gap-1.5 ${
-                    activeFilter === 'Submitted' ? 'bg-white text-primary shadow-sm font-bold' : 'bg-white/15 text-white'
+                    activeFilter === 'Submitted' ? 'bg-white dark:bg-[#1a1c2b] text-primary dark:text-[#bdc2ff] shadow-sm font-bold' : 'bg-white/15 text-white'
                   }`}
                 >
                   <span>Submitted</span>
@@ -272,7 +272,7 @@ export default function DiaryPage() {
                 EXAM: { bg: 'bg-error/10 border-error/20', text: 'text-error', icon: 'history_edu' },
                 EVENT: { bg: 'bg-primary/10 border-primary/20', text: 'text-primary', icon: 'celebration' },
                 PTM: { bg: 'bg-[#5b3fb5]/10 border-[#5b3fb5]/20', text: 'text-[#5b3fb5]', icon: 'groups' },
-                FEE: { bg: 'bg-secondary-container/20 border-secondary/20', text: 'text-secondary', icon: 'payments' },
+                FEE: { bg: 'bg-secondary-container/20 border-secondary/20', text: 'text-secondary dark:text-[#ffb95f]', icon: 'payments' },
                 HOLIDAY: { bg: 'bg-tertiary/10 border-tertiary/20', text: 'text-tertiary', icon: 'beach_access' },
               };
               const style = tagColors[item.tag] || tagColors.EVENT;
