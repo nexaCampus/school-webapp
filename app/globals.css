@@ -397,3 +397,73 @@ textarea {
   -webkit-font-smoothing: antialiased;
   font-display: swap;
 }
+
+/* ================================================================
+   OPACITY-MODIFIER COMPATIBILITY LAYER
+   ------------------------------------------------------------
+   Colors backed by CSS variables (primary, surface, outline,
+   tertiary, ...) cannot receive Tailwind's `/opacity` modifier, so
+   utilities such as `bg-primary/10` or `border-outline/10` are
+   never emitted by the compiler and silently do nothing.
+
+   The rules below re-declare them with `color-mix()`, which keeps
+   every one of them bound to the live design-token value and
+   therefore automatically correct in both light and dark themes.
+   ================================================================ */
+.bg-primary\/5 { background-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 5%, transparent); }
+.bg-primary\/10 { background-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 10%, transparent); }
+.bg-primary\/15 { background-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 15%, transparent); }
+.bg-primary-container\/10 { background-color: color-mix(in srgb, var(--color-primary-container, #3b49df) 10%, transparent); }
+.bg-surface\/80 { background-color: color-mix(in srgb, var(--color-surface, #faf8ff) 80%, transparent); }
+.bg-surface\/90 { background-color: color-mix(in srgb, var(--color-surface, #faf8ff) 90%, transparent); }
+.bg-surface-container\/60 { background-color: color-mix(in srgb, var(--color-surface-container, #eaedff) 60%, transparent); }
+.bg-surface-container-high\/40 { background-color: color-mix(in srgb, var(--color-surface-container-high, #e2e7ff) 40%, transparent); }
+.bg-surface-container-low\/70 { background-color: color-mix(in srgb, var(--color-surface-container-low, #f2f3ff) 70%, transparent); }
+.bg-surface-container-lowest\/80 { background-color: color-mix(in srgb, var(--color-surface-container-lowest, #ffffff) 80%, transparent); }
+.bg-surface-container-lowest\/95 { background-color: color-mix(in srgb, var(--color-surface-container-lowest, #ffffff) 95%, transparent); }
+.bg-tertiary\/10 { background-color: color-mix(in srgb, var(--color-tertiary, #005036) 10%, transparent); }
+.bg-tertiary\/15 { background-color: color-mix(in srgb, var(--color-tertiary, #005036) 15%, transparent); }
+.bg-tertiary\/20 { background-color: color-mix(in srgb, var(--color-tertiary, #005036) 20%, transparent); }
+.bg-tertiary\/90 { background-color: color-mix(in srgb, var(--color-tertiary, #005036) 90%, transparent); }
+.bg-tertiary-container\/15 { background-color: color-mix(in srgb, var(--color-tertiary-container, #006b49) 15%, transparent); }
+.bg-tertiary-container\/30 { background-color: color-mix(in srgb, var(--color-tertiary-container, #006b49) 30%, transparent); }
+.bg-on-surface\/50 { background-color: color-mix(in srgb, var(--color-on-surface, #131b2e) 50%, transparent); }
+.bg-outline\/10 { background-color: color-mix(in srgb, var(--color-outline, #757687) 10%, transparent); }
+.bg-outline\/25 { background-color: color-mix(in srgb, var(--color-outline, #757687) 25%, transparent); }
+.bg-outline\/30 { background-color: color-mix(in srgb, var(--color-outline, #757687) 30%, transparent); }
+.hover\:bg-primary\/10:hover { background-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 10%, transparent); }
+.hover\:bg-primary\/15:hover { background-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 15%, transparent); }
+.hover\:bg-primary\/90:hover { background-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 90%, transparent); }
+.hover\:bg-tertiary\/90:hover { background-color: color-mix(in srgb, var(--color-tertiary, #005036) 90%, transparent); }
+.hover\:bg-surface-container\/60:hover { background-color: color-mix(in srgb, var(--color-surface-container, #eaedff) 60%, transparent); }
+.group-hover\:bg-primary\/20:is(:where(.group):hover *) { background-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 20%, transparent); }
+.text-outline\/50 { color: color-mix(in srgb, var(--color-outline, #757687) 50%, transparent); }
+.text-outline\/70 { color: color-mix(in srgb, var(--color-outline, #757687) 70%, transparent); }
+.border-outline\/5 { border-color: color-mix(in srgb, var(--color-outline, #757687) 5%, transparent); }
+.border-outline\/10 { border-color: color-mix(in srgb, var(--color-outline, #757687) 10%, transparent); }
+.border-outline\/15 { border-color: color-mix(in srgb, var(--color-outline, #757687) 15%, transparent); }
+.border-outline\/20 { border-color: color-mix(in srgb, var(--color-outline, #757687) 20%, transparent); }
+.border-outline\/30 { border-color: color-mix(in srgb, var(--color-outline, #757687) 30%, transparent); }
+.border-primary\/20 { border-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 20%, transparent); }
+.border-primary\/25 { border-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 25%, transparent); }
+.border-primary\/30 { border-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 30%, transparent); }
+.border-primary\/40 { border-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 40%, transparent); }
+.border-tertiary\/20 { border-color: color-mix(in srgb, var(--color-tertiary, #005036) 20%, transparent); }
+.border-tertiary\/25 { border-color: color-mix(in srgb, var(--color-tertiary, #005036) 25%, transparent); }
+.border-tertiary\/30 { border-color: color-mix(in srgb, var(--color-tertiary, #005036) 30%, transparent); }
+.border-tertiary\/40 { border-color: color-mix(in srgb, var(--color-tertiary, #005036) 40%, transparent); }
+.hover\:border-primary\/20:hover { border-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 20%, transparent); }
+.hover\:border-primary\/30:hover { border-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 30%, transparent); }
+.hover\:border-primary\/40:hover { border-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 40%, transparent); }
+.divide-outline\/10 > :not([hidden]) ~ :not([hidden]) { border-color: color-mix(in srgb, var(--color-outline, #757687) 10%, transparent); }
+.ring-primary\/20 { --tw-ring-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 20%, transparent); }
+.ring-tertiary\/20 { --tw-ring-color: color-mix(in srgb, var(--color-tertiary, #005036) 20%, transparent); }
+.focus\:ring-primary\/30:focus { --tw-ring-color: color-mix(in srgb, var(--color-primary, #1c2ac8) 30%, transparent); }
+.from-primary\/10 { --tw-gradient-from: color-mix(in srgb, var(--color-primary, #1c2ac8) 10%, transparent) var(--tw-gradient-from-position); --tw-gradient-to: transparent var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+.from-primary\/30 { --tw-gradient-from: color-mix(in srgb, var(--color-primary, #1c2ac8) 30%, transparent) var(--tw-gradient-from-position); --tw-gradient-to: transparent var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+.from-tertiary\/10 { --tw-gradient-from: color-mix(in srgb, var(--color-tertiary, #005036) 10%, transparent) var(--tw-gradient-from-position); --tw-gradient-to: transparent var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+.from-tertiary\/15 { --tw-gradient-from: color-mix(in srgb, var(--color-tertiary, #005036) 15%, transparent) var(--tw-gradient-from-position); --tw-gradient-to: transparent var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+.via-tertiary\/10 { --tw-gradient-via-position: 50%; --tw-gradient-stops: var(--tw-gradient-from), color-mix(in srgb, var(--color-tertiary, #005036) 10%, transparent) var(--tw-gradient-via-position), var(--tw-gradient-to); }
+.via-surface-container-lowest\/90 { --tw-gradient-via-position: 50%; --tw-gradient-stops: var(--tw-gradient-from), color-mix(in srgb, var(--color-surface-container-lowest, #ffffff) 90%, transparent) var(--tw-gradient-via-position), var(--tw-gradient-to); }
+.to-primary\/10 { --tw-gradient-to: color-mix(in srgb, var(--color-primary, #1c2ac8) 10%, transparent) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+.to-surface-container-low\/80 { --tw-gradient-to: color-mix(in srgb, var(--color-surface-container-low, #f2f3ff) 80%, transparent) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
