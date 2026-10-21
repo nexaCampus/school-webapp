@@ -93,10 +93,11 @@ export default function HelpdeskPage() {
                   <span className="text-error">*</span>
                 </label>
                 <div className="relative">
-                  <select
-                    className="w-full h-12 pl-11 pr-10 appearance-none bg-surface-container-low text-on-surface font-body-md text-body-md rounded-DEFAULT focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                    defaultValue="teacher"
-                  >
+                <select
+                  aria-label="Staff role"
+                  className="w-full h-12 pl-11 pr-10 appearance-none bg-surface-container-low text-on-surface font-body-md text-body-md rounded-DEFAULT focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  defaultValue="teacher"
+                >
                     <option value="teacher">Class Teacher (Grade 12-E • Mrs. S. Roy)</option>
                     <option value="principal">Principal Desk (Dr. M. Banerjee)</option>
                     <option value="exams">Examination &amp; Report Card Dept</option>

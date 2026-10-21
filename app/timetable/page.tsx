@@ -183,14 +183,14 @@ export default function TimetablePage() {
                         : p.accent === 'tertiary'
                         ? 'bg-tertiary/15 text-tertiary font-bold'
                         : p.accent === 'secondary'
-                        ? 'bg-secondary/15 text-secondary font-bold'
+                        ? 'bg-secondary/15 text-secondary dark:text-[#ffb95f] font-bold'
                         : 'bg-primary/10 text-primary'
                     }`}
                   >
                     {p.isLive && (
-                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-ping" />
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white dark:bg-[#151622] animate-ping" />
                     )}
-                    {p.isLive ? `LIVE NOW Â· ${p.period}` : p.period}
+                    {p.isLive ? `LIVE NOW · ${p.period}` : p.period}
                   </span>
                   <span className="text-[11px] sm:text-[12px] text-on-surface-variant font-medium flex items-center gap-1">
                     <span className="material-symbols-outlined text-[13px] sm:text-[15px] text-outline">
