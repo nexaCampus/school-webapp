@@ -105,7 +105,7 @@ export default function SplashView({
         {/* Footer info */}
         <div className="mt-6 md:mt-8 flex flex-col items-center gap-2 w-full pt-4 border-t border-outline/5">
           <div className="flex items-center gap-2 bg-surface-container-low rounded-full px-4 py-1.5 shadow-sm">
-            <span className="material-symbols-outlined text-secondary text-[15px]">auto_awesome</span>
+            <span className="material-symbols-outlined text-secondary dark:text-[#ffb95f] text-[15px]">auto_awesome</span>
             <span className="font-label-sm text-[12px] font-semibold text-on-surface-variant">
               Crafted with care by Vastavik Learning
             </span>

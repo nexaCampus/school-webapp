@@ -218,19 +218,19 @@ export default function PtmPage() {
               </div>
               <ul className="space-y-2.5 text-[12px] text-on-surface-variant">
                 <li className="flex items-start gap-2">
-                  <span className="material-symbols-outlined text-secondary text-[16px] mt-0.5">schedule</span>
+                  <span className="material-symbols-outlined text-secondary dark:text-[#ffb95f] text-[16px] mt-0.5">schedule</span>
                   <span>Please arrive 5 minutes prior to your allocated time. Slots are fixed at 10 minutes.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="material-symbols-outlined text-secondary text-[16px] mt-0.5">badge</span>
+                  <span className="material-symbols-outlined text-secondary dark:text-[#ffb95f] text-[16px] mt-0.5">badge</span>
                   <span>Carry the digital Student ID pass on your phone or printed hall pass.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="material-symbols-outlined text-secondary text-[16px] mt-0.5">place</span>
+                  <span className="material-symbols-outlined text-secondary dark:text-[#ffb95f] text-[16px] mt-0.5">place</span>
                   <span>Senior Block B, 3rd &amp; 4th Floors. Elevators reserved for senior citizens.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="material-symbols-outlined text-secondary text-[16px] mt-0.5">local_cafe</span>
+                  <span className="material-symbols-outlined text-secondary dark:text-[#ffb95f] text-[16px] mt-0.5">local_cafe</span>
                   <span>Tea and light refreshments served at the Central Quadrangle lounge.</span>
                 </li>
               </ul>
@@ -261,7 +261,7 @@ export default function PtmPage() {
                   className="flex items-center justify-between p-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors text-[12px] font-semibold text-on-surface"
                 >
                   <span className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-secondary text-[18px]">fact_check</span>
+                    <span className="material-symbols-outlined text-secondary dark:text-[#ffb95f] text-[18px]">fact_check</span>
                     Attendance Log (94.2%)
                   </span>
                   <span className="material-symbols-outlined text-[16px]">chevron_right</span>
