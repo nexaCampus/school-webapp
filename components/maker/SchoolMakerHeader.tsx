@@ -30,7 +30,7 @@ export default function SchoolMakerHeader({
             <LogoEmblem className="h-9 w-9 flex-shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform" />
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-serif font-bold text-base md:text-lg text-[#131b2e] dark:text-white tracking-tight group-hover:text-[#1c2ac8] dark:group-hover:text-[#bdc2ff] transition-colors">
+                <span className="font-serif font-bold text-base md:text-lg text-[#131b2e] dark:text-white tracking-tight group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] dark:group-hover:text-[#bdc2ff] transition-colors">
                   NexaCampus SchoolMaker
                 </span>
                 <span className="hidden sm:inline-block px-1.5 py-0.5 text-[9px] uppercase font-mono font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 rounded border border-amber-500/30">
@@ -48,7 +48,7 @@ export default function SchoolMakerHeader({
         <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="text-xs text-[#454655] hover:text-[#1c2ac8] dark:text-[#a0a4c0] dark:hover:text-[#bdc2ff] transition-colors hidden sm:flex items-center gap-1 font-semibold"
+            className="text-xs text-[#454655] hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:text-[#a0a4c0] dark:hover:text-[#bdc2ff] transition-colors hidden sm:flex items-center gap-1 font-semibold"
           >
             <span>← Public Portal</span>
           </Link>
