@@ -52,8 +52,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: 'cover',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#1c2ac8' },
@@ -82,13 +80,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Caveat:wght@500;700&display=swap"
-        />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        {/*
+          Poppins and Merriweather are already self-hosted through next/font,
+          so only the optional display face and the icon ligature set are
+          pulled from Google. They are injected asynchronously so a slow font
+          CDN can never delay the first paint.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var f=['https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap','https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_balance,account_balance_wallet,account_circle,add_business,add_card,add_circle,add_shopping_cart,admin_panel_settings,apartment,apparel,apps,architecture,arrow_back,arrow_downward,arrow_forward,arrow_forward_ios,assessment,assignment,assignment_turned_in,attach_file,auto_awesome,auto_read_pause,auto_stories,backpack,badge,balance,beach_access,biotech,bloodtype,bolt,build,build_circle,cake,calculate,calendar_month,calendar_today,call,campaign,category,celebration,check,check_circle,checklist,checkroom,chevron_left,chevron_right,close,cloud_done,cloud_sync,code,confirmation_number,contact_support,contactless,cookie,credit_card,currency_exchange,dark_mode,dashboard,data_object,database,delete_forever,description,developer_mode,directions_bus,dns,domain,done_all,download,download_for_offline,eco,edit_note,emoji_events,error,event,event_available,event_note,expand_more,explore_off,face_3,fact_check,family_restroom,file_download,fitness_center,flight,folder_special,forum,function,functions,gavel,grid_view,groups,groups_2,handshake,history_edu,home,how_to_reg,info,key,keyboard_arrow_down,labs,laptop_chromebook,light_mode,lightbulb,link,local_cafe,local_fire_department,local_hospital,local_library,location_on,lock,lock_reset,login,logout,lunch_dining,mail,mark_chat_unread,mark_email_read,medical_services,meeting_room,menu,menu_book,military_tech,music_note,notifications,notifications_active,palette,payments,person,person_remove,phone_iphone,photo_library,picture_as_pdf,pin_drop,place,policy,priority_high,production_quantity_limits,progress_activity,psychology,qr_code_2,receipt,receipt_long,restaurant,satellite_alt,save,schedule,schema,school,science,search,search_check,security,send,shield,shopping_bag,shopping_cart,smart_toy,sms,speed,sports_soccer,star,stars,sticky_note_2,storefront,straighten,styler,support_agent,swap_horiz,switch_account,sync_alt,sync_problem,table_chart,tag,terminal,title,travel_explore,trending_flat,trending_up,tune,upload_file,verified,verified_user,videocam,visibility,volume_up,volunteer_activism,wallet,warning,watch,widgets,workspace_premium&display=swap'];for(var i=0;i<f.length;i++){var l=document.createElement('link');l.rel='stylesheet';l.href=f[i];l.media='print';l.onload=function(){this.media='all'};document.head.appendChild(l);}})();`,
+          }}
         />
       </head>
       <body className={`${poppins.className} font-sans antialiased bg-surface text-on-surface`}>
