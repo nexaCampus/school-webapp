@@ -555,6 +555,7 @@ export default function SchoolMakerWizard({
                 Affiliation Board *
               </label>
               <select
+                aria-label="Affiliation board"
                 value={board}
                 onChange={(e) => setBoard(e.target.value)}
                 className="w-full p-2.5 bg-[#faf8ff] dark:bg-[#101119] border border-[#c6c5d8] dark:border-[#2b2f4a] rounded-xl focus:bg-white dark:focus:bg-[#101119] focus:ring-2 focus:ring-[#1c2ac8] dark:focus:ring-[#3b49df] text-[#131b2e] dark:text-white font-medium"
