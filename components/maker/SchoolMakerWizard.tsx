@@ -726,7 +726,7 @@ export default function SchoolMakerWizard({
                   className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-start gap-3.5 ${
                     isEnabled
                       ? 'border-[#1c2ac8] dark:border-[#3b49df] bg-[#eef0ff]/70 dark:bg-[#3b49df]/15 shadow-xs'
-                      : 'border-[#e2e7ff] dark:border-[#222538] hover:border-[#bdc2ff] dark:hover:border-[#3b49df]/40 bg-white dark:bg-[#151622] opacity-75'
+                      : 'border-[#e2e7ff] dark:border-[#222538] hover:border-[#bdc2ff] dark:hover:border-[#3b49df]/40 bg-white/70 dark:bg-[#151622]/70'
                   }`}
                 >
                   <div className="pt-0.5 flex-shrink-0">
