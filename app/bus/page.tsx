@@ -70,7 +70,7 @@ export default function BusPage() {
 
           <div className="bg-surface-container-lowest rounded-[20px] shadow-sm p-5 flex items-center gap-3">
             <span className="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center flex-shrink-0">
-              <span className="material-symbols-outlined text-secondary text-[24px]">pin_drop</span>
+              <span className="material-symbols-outlined text-secondary dark:text-[#ffb95f] text-[24px]">pin_drop</span>
             </span>
             <div>
               <p className="text-[15px] font-bold text-on-surface">Your Stop: {myStop}</p>
