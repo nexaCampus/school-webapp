@@ -234,18 +234,19 @@ export default function TenantCmsPreview() {
                     value={newNoticeRef}
                     onChange={(e) => setNewNoticeRef(e.target.value)}
                     placeholder="e.g. SCV/CIR/2026/04"
-                    className="w-full p-2.5 bg-white border border-slate-300 rounded font-mono text-slate-900"
+                    className="w-full p-2.5 bg-white dark:bg-[#151622] border border-slate-300 dark:border-[#2b2f48] rounded font-mono text-slate-900 dark:text-[#eaedff]"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block font-bold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                     Category
                   </label>
                   <select
+                    aria-label="Notice category"
                     value={newNoticeCategory}
                     onChange={(e) => setNewNoticeCategory(e.target.value)}
-                    className="w-full p-2.5 bg-white border border-slate-300 rounded text-slate-800"
+                    className="w-full p-2.5 bg-white dark:bg-[#151622] border border-slate-300 dark:border-[#2b2f48] rounded text-slate-800 dark:text-[#dfe2f4]"
                   >
                     <option>Examination</option>
                     <option>Academic</option>
@@ -378,11 +379,12 @@ export default function TenantCmsPreview() {
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-700">Filter Status:</span>
+                <span className="text-xs font-bold text-slate-700 dark:text-[#c4c7e0]">Filter Status:</span>
                 <select
+                  aria-label="Filter leads"
                   value={leadFilter}
                   onChange={(e) => setLeadFilter(e.target.value)}
-                  className="p-1.5 text-xs bg-white border border-slate-300 rounded text-slate-800"
+                  className="p-1.5 text-xs bg-white dark:bg-[#151622] border border-slate-300 dark:border-[#2b2f48] rounded text-slate-800 dark:text-[#dfe2f4]"
                 >
                   <option>All</option>
                   <option>Interview Allotted</option>
