@@ -12,7 +12,7 @@
 export const API_ENDPOINTS = {
   AUTH: {
     SESSION: '/api/v1/auth/session',
-    REFRESH: '/v1/auth/refresh',
+    REFRESH: '/api/v1/auth/refresh',
   },
   STUDENTS: {
     PROFILE: '/api/v1/studentData',
