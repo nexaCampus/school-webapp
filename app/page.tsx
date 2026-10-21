@@ -734,7 +734,7 @@ export default function ExecutiveHomePage() {
                     <Link
                       href="/apply"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center justify-center gap-1.5"
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center justify-center gap-1.5"
                     >
                       <span className="material-symbols-outlined text-[16px] text-primary">how_to_reg</span>
                       <span>Admissions</span>
@@ -742,7 +742,7 @@ export default function ExecutiveHomePage() {
                     <Link
                       href="/maker"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center justify-center gap-1.5"
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center justify-center gap-1.5"
                     >
                       <span className="material-symbols-outlined text-[16px] text-primary">build</span>
                       <span>Maker SaaS</span>
@@ -768,7 +768,7 @@ export default function ExecutiveHomePage() {
                         key={item.href}
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-on-surface hover:bg-[#eaedff] dark:hover:bg-[#202334] hover:text-[#1c2ac8] transition-colors"
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-on-surface hover:bg-[#eaedff] dark:hover:bg-[#202334] hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] transition-colors"
                       >
                         <span className="material-symbols-outlined text-[19px] text-[#1c2ac8] dark:text-[#bdc2ff]">
                           {item.icon}
@@ -788,7 +788,7 @@ export default function ExecutiveHomePage() {
                     <Link
                       href="/home"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
                     >
                       <span className="material-symbols-outlined text-[16px] text-primary">dashboard</span>
                       <span>Dashboard</span>
@@ -796,7 +796,7 @@ export default function ExecutiveHomePage() {
                     <Link
                       href="/timetable"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
                     >
                       <span className="material-symbols-outlined text-[16px] text-primary">schedule</span>
                       <span>Timetable</span>
@@ -804,7 +804,7 @@ export default function ExecutiveHomePage() {
                     <Link
                       href="/notices"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
                     >
                       <span className="material-symbols-outlined text-[16px] text-primary">campaign</span>
                       <span>Notices</span>
@@ -812,7 +812,7 @@ export default function ExecutiveHomePage() {
                     <Link
                       href="/helpdesk"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8] flex items-center gap-2"
+                      className="p-2.5 rounded-xl bg-surface-container dark:bg-[#202334] text-on-surface hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] flex items-center gap-2"
                     >
                       <span className="material-symbols-outlined text-[16px] text-primary">support_agent</span>
                       <span>Parent Desk</span>
@@ -2081,10 +2081,10 @@ export default function ExecutiveHomePage() {
                       title={cell.tooltip}
                       className={`h-8 sm:h-9 rounded-lg flex items-center justify-center font-mono text-[10px] sm:text-[11px] font-bold transition-transform hover:scale-105 cursor-pointer ${
                         cell.status === 'present'
-                          ? 'bg-emerald-500 text-white shadow-sm'
+                          ? 'bg-emerald-700 text-white shadow-sm'
                           : cell.status === 'leave'
                           ? 'bg-amber-400 text-amber-950'
-                          : 'bg-slate-200 dark:bg-[#25283d] text-slate-500'
+                          : 'bg-slate-200 dark:bg-[#25283d] text-slate-600 dark:text-slate-400'
                       }`}
                     >
                       {cell.dayOfMonth}
@@ -2467,7 +2467,7 @@ export default function ExecutiveHomePage() {
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
                   href={isPlatformRoot ? '/maker' : `/chooser?tenant=${studentSlug}`}
-                  className="px-6 py-3.5 rounded-full bg-white text-[#1c2ac8] font-black text-sm shadow-lg hover:bg-slate-100 transition-all active:scale-95"
+                  className="px-6 py-3.5 rounded-full bg-[#ffffff] dark:bg-[#eaedff] text-[#1c2ac8] dark:text-[#101c9c] font-black text-sm shadow-lg hover:bg-slate-100 dark:hover:bg-[#f2f3ff] transition-all active:scale-95"
                 >
                   {isPlatformRoot ? 'Launch Your School App' : 'Enter Portal Chooser'}
                 </Link>
@@ -2627,7 +2627,7 @@ export default function ExecutiveHomePage() {
             {BANNER_DOTS.map((d, i) => (
               <span
                 key={`d-${d.left}-${i}`}
-                className={`absolute ${d.round ? 'rounded-full' : ''} bg-white ${ARTIFACT_SCALE} ${d.wide ? 'hidden sm:block' : ''}`}
+                className={`absolute ${d.round ? 'rounded-full' : ''} bg-[#ffffff] ${ARTIFACT_SCALE} ${d.wide ? 'hidden sm:block' : ''}`}
                 style={{
                   left: d.left,
                   top: d.top,
