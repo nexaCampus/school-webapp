@@ -94,15 +94,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    function ({ addUtilities }) {
-      addUtilities({
-        '.scrollbar-hide': {
-          '-ms-overflow-style': 'none',
-          'scrollbar-width': 'none',
-          '&::-webkit-scrollbar': { display: 'none' },
-        },
-      });
-    },
-  ],
+  plugins: [],
 };
