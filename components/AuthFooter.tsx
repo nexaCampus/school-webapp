@@ -51,23 +51,23 @@ export default function AuthFooter({ className = '' }: { className?: string }) {
           <div className="flex items-center gap-2 text-outline text-[10px] flex-wrap justify-center sm:justify-end">
             <span>© {new Date().getFullYear()} {isPlatformRoot ? "NexaCampus" : (tenant?.subdomain_slug?.toUpperCase() || "LCGVM")}</span>
             <span>•</span>
-            <Link href="/privacy" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+            <Link href="/privacy" className="inline-block py-1.5 hover:text-primary transition-colors underline-offset-2 hover:underline">
               Privacy
             </Link>
             <span>•</span>
-            <Link href="/terms" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+            <Link href="/terms" className="inline-block py-1.5 hover:text-primary transition-colors underline-offset-2 hover:underline">
               Terms
             </Link>
             <span>•</span>
-            <Link href="/refund" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+            <Link href="/refund" className="inline-block py-1.5 hover:text-primary transition-colors underline-offset-2 hover:underline">
               Refunds
             </Link>
             <span>•</span>
-            <Link href="/cookies" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+            <Link href="/cookies" className="inline-block py-1.5 hover:text-primary transition-colors underline-offset-2 hover:underline">
               Cookies
             </Link>
             <span>•</span>
-            <Link href="/data-deletion" className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+            <Link href="/data-deletion" className="inline-block py-1.5 hover:text-primary transition-colors underline-offset-2 hover:underline">
               Data Deletion
             </Link>
             <span>•</span>
