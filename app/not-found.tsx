@@ -96,28 +96,28 @@ export default function NotFound() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-bold">
               <Link
                 href="/timetable"
-                className="p-3 rounded-xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/40 hover:text-[#1c2ac8] transition-all flex items-center justify-center gap-1.5"
+                className="p-3 rounded-xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/40 hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] transition-all flex items-center justify-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-[16px] text-primary">calendar_month</span>
                 <span>Timetable</span>
               </Link>
               <Link
                 href="/notices"
-                className="p-3 rounded-xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/40 hover:text-[#1c2ac8] transition-all flex items-center justify-center gap-1.5"
+                className="p-3 rounded-xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/40 hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] transition-all flex items-center justify-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-[16px] text-primary">campaign</span>
                 <span>Notices</span>
               </Link>
               <Link
                 href="/attendance"
-                className="p-3 rounded-xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/40 hover:text-[#1c2ac8] transition-all flex items-center justify-center gap-1.5"
+                className="p-3 rounded-xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/40 hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] transition-all flex items-center justify-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-[16px] text-primary">event_available</span>
                 <span>Attendance</span>
               </Link>
               <Link
                 href="/helpdesk"
-                className="p-3 rounded-xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/40 hover:text-[#1c2ac8] transition-all flex items-center justify-center gap-1.5"
+                className="p-3 rounded-xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#1c2ac8]/40 hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] transition-all flex items-center justify-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-[16px] text-primary">support_agent</span>
                 <span>Help Desk</span>
