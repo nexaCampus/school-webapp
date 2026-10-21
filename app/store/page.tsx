@@ -208,7 +208,7 @@ export default function StorePage() {
                         <span className="material-symbols-outlined text-primary text-[24px]">{prod.icon}</span>
                       </div>
                       {prod.badge && (
-                        <span className="px-2 py-0.5 rounded-full bg-secondary-container text-secondary text-[10px] font-bold tracking-wide uppercase">
+                        <span className="px-2 py-0.5 rounded-full bg-secondary-container text-secondary dark:text-[#ffb95f] text-[10px] font-bold tracking-wide uppercase">
                           {prod.badge}
                         </span>
                       )}
@@ -298,7 +298,7 @@ export default function StorePage() {
             {/* Store Counter Details */}
             <div className="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline/10">
               <div className="flex items-center gap-2 mb-3">
-                <span className="material-symbols-outlined text-secondary text-[20px]">storefront</span>
+                <span className="material-symbols-outlined text-secondary dark:text-[#ffb95f] text-[20px]">storefront</span>
                 <h3 className="font-headline-sm text-[14px] text-on-surface font-bold">Counter Pickup Info</h3>
               </div>
               <ul className="space-y-2.5 text-[12px] text-on-surface-variant">

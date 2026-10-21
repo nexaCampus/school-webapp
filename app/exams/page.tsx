@@ -136,7 +136,7 @@ export default function ExamsPage() {
                   </p>
                 </div>
                 <span className="w-12 h-12 rounded-[12px] bg-secondary-container/20 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-secondary text-[24px]">
+                  <span className="material-symbols-outlined text-secondary dark:text-[#ffb95f] text-[24px]">
                     workspace_premium
                   </span>
                 </span>

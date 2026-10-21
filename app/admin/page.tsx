@@ -232,7 +232,7 @@ function AdminDashboardContent() {
                         }`}
                       >
                         <div
-                          className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                          className={`w-4 h-4 rounded-full bg-[#ffffff] dark:bg-[#eaedff] transition-transform ${
                             isEnabled ? 'translate-x-4' : 'translate-x-0'
                           }`}
                         />
