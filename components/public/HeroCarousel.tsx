@@ -95,7 +95,7 @@ export default function HeroCarousel() {
 
             {/* Scholastic Quote */}
             {slide.quoteAuthor && (
-              <div className="border-l-2 border-amber-400/60 pl-4 py-1 italic font-serif text-xs md:text-sm text-slate-400">
+              <div className="border-l-2 border-amber-400/60 pl-4 py-1 italic font-serif text-xs md:text-sm text-slate-400 dark:text-[#8a8fa8]">
                 {slide.quoteAuthor}
               </div>
             )}
@@ -123,7 +123,7 @@ export default function HeroCarousel() {
 
           {/* Quick Action Institutional Cards Column */}
           <div className="lg:col-span-4 space-y-3">
-            <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 font-mono flex items-center justify-between">
+            <div className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-[#8a8fa8] mb-2 font-mono flex items-center justify-between">
               <span>Fast-Track Institutional Hub</span>
               <span className="text-[10px] text-amber-300 bg-amber-500/20 px-1.5 py-0.5 rounded">
                 Portal
@@ -146,10 +146,10 @@ export default function HeroCarousel() {
                     <h2 className="text-sm font-serif font-bold text-white group-hover:text-amber-300 transition-colors">
                       Admissions 2026-27 Open
                     </h2>
-                    <p className="text-[11px] text-slate-400">Nursery to Class XI • Interactive Wizard</p>
+                    <p className="text-[11px] text-slate-400 dark:text-[#8a8fa8]">Nursery to Class XI • Interactive Wizard</p>
                   </div>
                 </div>
-                <svg className="w-4 h-4 text-slate-500 group-hover:text-amber-300 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-on-surface-variant group-hover:text-amber-300 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -171,10 +171,10 @@ export default function HeroCarousel() {
                     <h2 className="text-sm font-serif font-bold text-white group-hover:text-emerald-300 transition-colors">
                       Fee Structure & Due Schedule
                     </h2>
-                    <p className="text-[11px] text-slate-400">Class-wise breakdown & digital receipts</p>
+                    <p className="text-[11px] text-slate-400 dark:text-[#8a8fa8]">Class-wise breakdown & digital receipts</p>
                   </div>
                 </div>
-                <svg className="w-4 h-4 text-slate-500 group-hover:text-emerald-300 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-on-surface-variant group-hover:text-emerald-300 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -196,10 +196,10 @@ export default function HeroCarousel() {
                     <h2 className="text-sm font-serif font-bold text-white group-hover:text-red-300 transition-colors">
                       Board Results & Merit Wall
                     </h2>
-                    <p className="text-[11px] text-slate-400">ICSE/ISC 100% record & topper accolades</p>
+                    <p className="text-[11px] text-slate-400 dark:text-[#8a8fa8]">ICSE/ISC 100% record & topper accolades</p>
                   </div>
                 </div>
-                <svg className="w-4 h-4 text-slate-500 group-hover:text-red-300 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-on-surface-variant group-hover:text-red-300 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -221,10 +221,10 @@ export default function HeroCarousel() {
                     <h2 className="text-sm font-serif font-bold text-white group-hover:text-blue-300 transition-colors">
                       Explore All Campuses
                     </h2>
-                    <p className="text-[11px] text-slate-400">Multi-tenant institutional directory</p>
+                    <p className="text-[11px] text-slate-400 dark:text-[#8a8fa8]">Multi-tenant institutional directory</p>
                   </div>
                 </div>
-                <svg className="w-4 h-4 text-slate-500 group-hover:text-blue-300 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-on-surface-variant group-hover:text-blue-300 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
