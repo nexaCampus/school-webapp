@@ -119,7 +119,7 @@ export default function ProvisioningWizard() {
   };
 
   return (
-    <div className="w-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden font-sans">
+    <div className="w-full bg-white dark:bg-[#151622] rounded-xl shadow-sm border border-slate-200 dark:border-[#222538] overflow-hidden font-sans">
       {/* Top Banner */}
       <div className="bg-oxford text-white p-6 md:p-8 border-b border-slate-800">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -144,7 +144,7 @@ export default function ProvisioningWizard() {
       </div>
 
       {/* Wizard Step Progression Bar */}
-      <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+      <div className="bg-slate-50 dark:bg-[#101119] px-6 py-4 border-b border-slate-200 dark:border-[#222538]">
         <div className="max-w-4xl mx-auto flex items-center justify-between text-xs">
           {[
             { num: 1, label: 'Identity' },
@@ -163,14 +163,14 @@ export default function ProvisioningWizard() {
                       ? 'bg-emerald-700 text-white'
                       : isCurrent
                       ? 'bg-oxford text-amber-300 ring-2 ring-amber-400'
-                      : 'bg-slate-200 text-slate-600'
+                      : 'bg-slate-200 dark:bg-[#222538] text-slate-600 dark:text-[#a0a4c0]'
                   }`}
                 >
                   {isCompleted ? '✓' : st.num}
                 </div>
                 <span
                   className={`hidden sm:inline font-semibold ${
-                    isCurrent ? 'text-oxford' : 'text-slate-500'
+                    isCurrent ? 'text-oxford dark:text-[#eaedff]' : 'text-on-surface-variant'
                   }`}
                 >
                   {st.label}
@@ -189,20 +189,20 @@ export default function ProvisioningWizard() {
         {currentStep === 1 && (
           <div className="space-y-6 animate-in fade-in">
             <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy dark:text-[#f2a5b5]">
                 Step 1 of 5
               </span>
-              <h2 className="font-serif font-bold text-xl md:text-2xl text-oxford mt-0.5">
+              <h2 className="font-serif font-bold text-xl md:text-2xl text-oxford dark:text-[#eaedff] mt-0.5">
                 Institutional Identity & Accreditation
               </h2>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-on-surface-variant mt-1">
                 Enter your official school name and government board affiliation details.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               <div className="md:col-span-2">
-                <label className="block font-bold text-slate-700 mb-1">
+                <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                   Full Registered Name of School / Vidyapeeth *
                 </label>
                 <input
@@ -232,7 +232,7 @@ export default function ProvisioningWizard() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">
+                <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                   Board Affiliation / School Code *
                 </label>
                 <input
@@ -240,12 +240,12 @@ export default function ProvisioningWizard() {
                   value={form.affiliationNumber}
                   onChange={(e) => setForm({ ...form, affiliationNumber: e.target.value })}
                   placeholder="e.g. 1930492 or WB-243"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white focus:ring-1 focus:ring-oxford font-mono text-slate-800"
+                  className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white focus:ring-1 focus:ring-oxford dark:focus:ring-[#3b49df] font-mono text-slate-800 dark:text-[#dfe2f4]"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">
+                <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                   Head of School / Principal Name *
                 </label>
                 <input
@@ -253,12 +253,12 @@ export default function ProvisioningWizard() {
                   value={form.principalName}
                   onChange={(e) => setForm({ ...form, principalName: e.target.value })}
                   placeholder="e.g. Dr. Rameshwar Shastry"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white text-slate-800"
+                  className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white text-slate-800 dark:text-[#dfe2f4]"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">
+                <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                   Official Institutional Email *
                 </label>
                 <input
@@ -266,12 +266,12 @@ export default function ProvisioningWizard() {
                   value={form.officialEmail}
                   onChange={(e) => setForm({ ...form, officialEmail: e.target.value })}
                   placeholder="principal@scv.edu.in"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white text-slate-800"
+                  className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white text-slate-800 dark:text-[#dfe2f4]"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">
+                <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                   City & State *
                 </label>
                 <div className="flex gap-2">
@@ -280,20 +280,20 @@ export default function ProvisioningWizard() {
                     value={form.city}
                     onChange={(e) => setForm({ ...form, city: e.target.value })}
                     placeholder="City"
-                    className="w-1/2 p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white text-slate-800"
+                    className="w-1/2 p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white text-slate-800 dark:text-[#dfe2f4]"
                   />
                   <input
                     type="text"
                     value={form.state}
                     onChange={(e) => setForm({ ...form, state: e.target.value })}
                     placeholder="State"
-                    className="w-1/2 p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white text-slate-800"
+                    className="w-1/2 p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white text-slate-800 dark:text-[#dfe2f4]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">
+                <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                   Primary Helpline Contact *
                 </label>
                 <input
@@ -301,7 +301,7 @@ export default function ProvisioningWizard() {
                   value={form.contactPhone}
                   onChange={(e) => setForm({ ...form, contactPhone: e.target.value })}
                   placeholder="+91 (033) 2490-1122"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white text-slate-800 font-mono"
+                  className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white text-slate-800 dark:text-[#dfe2f4] font-mono"
                 />
               </div>
             </div>
@@ -314,24 +314,24 @@ export default function ProvisioningWizard() {
         {currentStep === 2 && (
           <div className="space-y-6 animate-in fade-in">
             <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy dark:text-[#f2a5b5]">
                 Step 2 of 5
               </span>
-              <h2 className="font-serif font-bold text-xl md:text-2xl text-oxford mt-0.5">
+              <h2 className="font-serif font-bold text-xl md:text-2xl text-oxford dark:text-[#eaedff] mt-0.5">
                 Claim Subdomain Slug
               </h2>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-on-surface-variant mt-1">
                 Your institution will receive an instantly accessible, secure subdomain on the NexaCampus high-speed edge network.
               </p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className="block text-xs font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                   Subdomain Slug Address *
                 </label>
-                <div className="flex items-center rounded-lg border border-slate-300 overflow-hidden bg-white shadow-2xs focus-within:ring-2 focus-within:ring-oxford">
-                  <span className="px-3 py-2.5 text-xs text-slate-400 font-mono bg-slate-100 border-r border-slate-200">
+                <div className="flex items-center rounded-lg border border-slate-300 dark:border-[#2b2f48] overflow-hidden bg-white dark:bg-[#151622] shadow-2xs focus-within:ring-2 focus-within:ring-oxford">
+                  <span className="px-3 py-2.5 text-xs text-slate-400 dark:text-[#8a8fa8] font-mono bg-slate-100 dark:bg-[#1a1c2b] border-r border-slate-200 dark:border-[#222538]">
                     https://
                   </span>
                   <input
@@ -344,9 +344,9 @@ export default function ProvisioningWizard() {
                       })
                     }
                     placeholder="my-school"
-                    className="flex-1 px-3 py-2.5 text-sm font-mono font-bold text-oxford focus:outline-hidden"
+                    className="flex-1 px-3 py-2.5 text-sm font-mono font-bold text-oxford dark:text-[#eaedff] focus:outline-hidden"
                   />
-                  <span className="px-3 py-2.5 text-xs text-slate-500 font-mono bg-slate-100 border-l border-slate-200 font-bold">
+                  <span className="px-3 py-2.5 text-xs text-on-surface-variant font-mono bg-slate-100 dark:bg-[#1a1c2b] border-l border-slate-200 dark:border-[#222538] font-bold">
                     .nexacampus.com
                   </span>
                 </div>
@@ -371,15 +371,15 @@ export default function ProvisioningWizard() {
                     </span>
                   </div>
                 ) : (
-                  <div className="p-3 bg-slate-50 text-slate-600 rounded-lg border border-slate-200">
+                  <div className="p-3 bg-slate-50 dark:bg-[#101119] text-slate-600 dark:text-[#a0a4c0] rounded-lg border border-slate-200 dark:border-[#222538]">
                     Enter at least 3 alphanumeric characters (hyphens allowed).
                   </div>
                 )}
               </div>
 
               {/* Apex Domain Note */}
-              <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs text-slate-600 space-y-1">
-                <div className="font-bold text-oxford">Need a Custom Apex Domain?</div>
+              <div className="bg-slate-50 dark:bg-[#101119] p-4 rounded-lg border border-slate-200 dark:border-[#222538] text-xs text-slate-600 dark:text-[#a0a4c0] space-y-1">
+                <div className="font-bold text-oxford dark:text-[#eaedff]">Need a Custom Apex Domain?</div>
                 <p>
                   You can bind your own apex domain (e.g. <code>www.scvkolkata.edu.in</code>) with free automatic SSL provisioning directly from your Tenant Admin Dashboard after initial setup.
                 </p>
@@ -394,13 +394,13 @@ export default function ProvisioningWizard() {
         {currentStep === 3 && (
           <div className="space-y-6 animate-in fade-in">
             <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy dark:text-[#f2a5b5]">
                 Step 3 of 5
               </span>
-              <h2 className="font-serif font-bold text-xl md:text-2xl text-oxford mt-0.5">
+              <h2 className="font-serif font-bold text-xl md:text-2xl text-oxford dark:text-[#eaedff] mt-0.5">
                 Institutional Branding & Heritage Palette
               </h2>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-on-surface-variant mt-1">
                 Conform your digital presence to institutional heraldry, mottos, and dignified academic color schemes.
               </p>
             </div>
@@ -409,7 +409,7 @@ export default function ProvisioningWizard() {
               {/* Crest Monogram Letter */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                     Crest Monogram Character *
                   </label>
                   <input
@@ -417,15 +417,15 @@ export default function ProvisioningWizard() {
                     maxLength={2}
                     value={form.crestLetter}
                     onChange={(e) => setForm({ ...form, crestLetter: e.target.value.toUpperCase() })}
-                    className="w-24 p-2.5 bg-slate-50 border border-slate-300 rounded font-serif font-bold text-center text-lg text-oxford uppercase"
+                    className="w-24 p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded font-serif font-bold text-center text-lg text-oxford dark:text-[#eaedff] uppercase"
                   />
-                  <p className="text-[11px] text-slate-400 mt-1">
+                  <p className="text-[11px] text-slate-400 dark:text-[#8a8fa8] mt-1">
                     Initials for your verified heraldic shield stamp.
                   </p>
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                     Institutional Latin / Sanskrit Motto *
                   </label>
                   <input
@@ -433,14 +433,14 @@ export default function ProvisioningWizard() {
                     value={form.motto}
                     onChange={(e) => setForm({ ...form, motto: e.target.value })}
                     placeholder="e.g. Tamaso Ma Jyotirgamaya"
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded font-serif italic text-slate-800"
+                    className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded font-serif italic text-slate-800 dark:text-[#dfe2f4]"
                   />
                 </div>
               </div>
 
               {/* Grounded Institutional Palette Picker */}
               <div>
-                <label className="block font-bold text-slate-700 mb-2">
+                <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-2">
                   Select Institutional Color Hierarchy:
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -450,8 +450,8 @@ export default function ProvisioningWizard() {
                       onClick={() => setForm({ ...form, palette: pal.id as any })}
                       className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-start gap-3 ${
                         form.palette === pal.id
-                          ? 'border-oxford bg-slate-50 shadow-xs'
-                          : 'border-slate-200 hover:border-slate-300'
+                          ? 'border-oxford bg-slate-50 dark:bg-[#101119] shadow-xs'
+                          : 'border-slate-200 dark:border-[#222538] hover:border-slate-300 dark:hover:border-[#343a55]'
                       }`}
                     >
                       <div className="flex -space-x-2 pt-1 flex-shrink-0">
@@ -465,10 +465,10 @@ export default function ProvisioningWizard() {
                         />
                       </div>
                       <div>
-                        <div className="font-serif font-bold text-xs text-slate-900">
+                        <div className="font-serif font-bold text-xs text-slate-900 dark:text-[#eaedff]">
                           {pal.label}
                         </div>
-                        <div className="text-[11px] text-slate-500 mt-0.5 leading-snug">
+                        <div className="text-[11px] text-on-surface-variant mt-0.5 leading-snug">
                           {pal.desc}
                         </div>
                       </div>
@@ -486,13 +486,13 @@ export default function ProvisioningWizard() {
         {currentStep === 4 && (
           <div className="space-y-6 animate-in fade-in">
             <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy dark:text-[#f2a5b5]">
                 Step 4 of 5
               </span>
-              <h2 className="font-serif font-bold text-xl md:text-2xl text-oxford mt-0.5">
+              <h2 className="font-serif font-bold text-xl md:text-2xl text-oxford dark:text-[#eaedff] mt-0.5">
                 Select Architectural Page Template
               </h2>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-on-surface-variant mt-1">
                 Choose the information layout model tailored to your school curriculum and heritage.
               </p>
             </div>
@@ -504,22 +504,22 @@ export default function ProvisioningWizard() {
                   onClick={() => setForm({ ...form, template: tmpl.id as any })}
                   className={`p-5 rounded-xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
                     form.template === tmpl.id
-                      ? 'border-oxford bg-slate-50 shadow-sm'
-                      : 'border-slate-200 hover:border-slate-300 bg-white'
+                      ? 'border-oxford bg-slate-50 dark:bg-[#101119] shadow-sm'
+                      : 'border-slate-200 dark:border-[#222538] hover:border-slate-300 dark:hover:border-[#343a55] bg-white dark:bg-[#151622]'
                   }`}
                 >
                   <div>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-200 dark:bg-[#222538] text-slate-700 dark:text-[#c4c7e0]">
                       {tmpl.badge}
                     </span>
-                    <h3 className="font-serif font-bold text-base text-oxford mt-2">
+                    <h3 className="font-serif font-bold text-base text-oxford dark:text-[#eaedff] mt-2">
                       {tmpl.title}
                     </h3>
-                    <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-[#a0a4c0] mt-2 leading-relaxed">
                       {tmpl.desc}
                     </p>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-slate-200 text-xs font-bold text-oxford flex items-center justify-between">
+                  <div className="mt-4 pt-3 border-t border-slate-200 dark:border-[#222538] text-xs font-bold text-oxford dark:text-[#eaedff] flex items-center justify-between">
                     <span>{form.template === tmpl.id ? 'Selected ✓' : 'Select'}</span>
                   </div>
                 </div>
@@ -533,49 +533,49 @@ export default function ProvisioningWizard() {
         {/* ============================================================ */}
         {currentStep === 5 && (
           <div className="space-y-6 animate-in fade-in text-center my-auto py-6">
-            <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto text-2xl font-bold shadow-sm">
+            <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-200 flex items-center justify-center mx-auto text-2xl font-bold shadow-sm">
               ✓
             </div>
 
             <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-widest text-emerald-800">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-emerald-800 dark:text-emerald-200">
                 Institutional Tenant Provisioned
               </span>
-              <h2 className="font-serif font-bold text-2xl md:text-3xl text-oxford mt-1">
+              <h2 className="font-serif font-bold text-2xl md:text-3xl text-oxford dark:text-[#eaedff] mt-1">
                 {form.officialName} is Live
               </h2>
-              <p className="text-xs text-slate-600 max-w-lg mx-auto mt-2">
+              <p className="text-xs text-slate-600 dark:text-[#a0a4c0] max-w-lg mx-auto mt-2">
                 Your web portal has been successfully provisioned on the NexaCampus Multi-Tenant Cloud. All compliance tables, fee calculators, and digital admission wizards are operational.
               </p>
             </div>
 
             {/* Live Subdomain URL Box */}
-            <div className="bg-slate-50 max-w-md mx-auto p-4 rounded-xl border border-slate-200 space-y-2 text-left text-xs font-mono">
-              <div className="flex justify-between items-center pb-2 border-b border-slate-200">
-                <span className="text-slate-500">Live URL:</span>
-                <span className="font-bold text-oxford">
+            <div className="bg-slate-50 dark:bg-[#101119] max-w-md mx-auto p-4 rounded-xl border border-slate-200 dark:border-[#222538] space-y-2 text-left text-xs font-mono">
+              <div className="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-[#222538]">
+                <span className="text-on-surface-variant">Live URL:</span>
+                <span className="font-bold text-oxford dark:text-[#eaedff]">
                   https://{cleanSlug}.nexacampus.com
                 </span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b border-slate-200">
-                <span className="text-slate-500">Board Affiliation:</span>
-                <span className="font-bold text-slate-800">
+              <div className="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-[#222538]">
+                <span className="text-on-surface-variant">Board Affiliation:</span>
+                <span className="font-bold text-slate-800 dark:text-[#dfe2f4]">
                   {form.board} ({form.affiliationNumber})
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-500">SSL Certificate:</span>
-                <span className="text-emerald-700 font-bold">Auto-Provisioned (TLS 1.3)</span>
+                <span className="text-on-surface-variant">SSL Certificate:</span>
+                <span className="text-emerald-700 dark:text-emerald-300 font-bold">Auto-Provisioned (TLS 1.3)</span>
               </div>
             </div>
 
             {/* DNS Instructions for Custom Apex Domain */}
-            <div className="bg-parchment max-w-md mx-auto p-4 rounded-xl border border-slate-200 text-left text-xs text-slate-700 space-y-1">
-              <div className="font-bold text-oxford">Optional: DNS CNAME Delegation</div>
-              <p className="text-[11px] text-slate-600">
+            <div className="bg-parchment dark:bg-[#101119] max-w-md mx-auto p-4 rounded-xl border border-slate-200 dark:border-[#222538] text-left text-xs text-slate-700 dark:text-[#c4c7e0] space-y-1">
+              <div className="font-bold text-oxford dark:text-[#eaedff]">Optional: DNS CNAME Delegation</div>
+              <p className="text-[11px] text-slate-600 dark:text-[#a0a4c0]">
                 To point your custom domain (e.g. <code>portal.yourinstitution.edu.in</code>), create a CNAME record pointing to:
               </p>
-              <div className="font-mono bg-white p-2 rounded border border-slate-200 text-[11px] text-oxford font-bold">
+              <div className="font-mono bg-white dark:bg-[#151622] p-2 rounded border border-slate-200 dark:border-[#222538] text-[11px] text-oxford dark:text-[#eaedff] font-bold">
                 CNAME → cname.nexacampus.com
               </div>
             </div>
@@ -590,7 +590,7 @@ export default function ProvisioningWizard() {
               </Link>
               <Link
                 href={`/?tenant=${cleanSlug}`}
-                className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-md text-xs font-bold border border-slate-300"
+                className="px-5 py-2.5 bg-slate-100 dark:bg-[#1a1c2b] hover:bg-slate-200 text-slate-800 dark:text-[#dfe2f4] rounded-md text-xs font-bold border border-slate-300 dark:border-[#2b2f48]"
               >
                 Preview Live Web Portal
               </Link>
@@ -600,14 +600,14 @@ export default function ProvisioningWizard() {
 
         {/* Wizard Footer Controls */}
         {currentStep < 5 && (
-          <div className="pt-6 border-t border-slate-200 flex items-center justify-between">
+          <div className="pt-6 border-t border-slate-200 dark:border-[#222538] flex items-center justify-between">
             <button
               onClick={handlePrev}
               disabled={currentStep === 1}
-              className={`px-4 py-2 text-xs font-semibold rounded-md border border-slate-300 ${
+              className={`px-4 py-2 text-xs font-semibold rounded-md border border-slate-300 dark:border-[#2b2f48] ${
                 currentStep === 1
-                  ? 'opacity-40 cursor-not-allowed text-slate-400'
-                  : 'text-slate-700 hover:bg-slate-100'
+                  ? 'opacity-40 cursor-not-allowed text-slate-400 dark:text-[#8a8fa8]'
+                  : 'text-slate-700 dark:text-[#c4c7e0] hover:bg-slate-100 dark:hover:bg-[#222538]'
               }`}
             >
               ← Previous Step
