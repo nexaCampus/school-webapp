@@ -64,7 +64,7 @@ export default function NotificationPrompt({
     setFeedback(null);
     try {
       const sent = await sendTestNotification(
-        'NexaCampus Alert ðŸ“¢',
+        'NexaCampus Alert 📢',
         'Term practical exams & circulars are live! Web push notification test successful.',
         '/notices'
       );
