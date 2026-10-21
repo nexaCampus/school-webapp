@@ -106,26 +106,26 @@ export default function CalendarWidget() {
       case 'Examination':
         return 'bg-red-50 text-red-700 border-red-200';
       case 'Holiday':
-        return 'bg-slate-100 text-slate-700 border-slate-300';
+        return 'bg-slate-100 dark:bg-[#1a1c2b] text-slate-700 dark:text-[#c4c7e0] border-slate-300 dark:border-[#2b2f48]';
       case 'Term Event':
-        return 'bg-emerald-50 text-emerald-800 border-emerald-200';
+        return 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-200 border-emerald-200 dark:border-emerald-500/30';
       case 'PTM & Meeting':
-        return 'bg-amber-50 text-amber-800 border-amber-200';
+        return 'bg-amber-50 dark:bg-amber-500/15 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-500/30';
       default:
-        return 'bg-slate-50 text-slate-700 border-slate-200';
+        return 'bg-slate-50 dark:bg-[#101119] text-slate-700 dark:text-[#c4c7e0] border-slate-200 dark:border-[#222538]';
     }
   };
 
   return (
-    <section className="w-full bg-white py-14 px-6 border-b border-slate-200">
+    <section className="w-full bg-white dark:bg-[#151622] py-14 px-6 border-b border-slate-200 dark:border-[#222538]">
       <div className="max-w-7xl mx-auto">
         {/* Header Bar */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-slate-200 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-slate-200 dark:border-[#222538] gap-4">
           <div>
-            <div className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy">
+            <div className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy dark:text-[#f2a5b5]">
               Official Institutional Gazette
             </div>
-            <h2 className="font-serif font-bold text-2xl md:text-3xl text-oxford mt-1">
+            <h2 className="font-serif font-bold text-2xl md:text-3xl text-oxford dark:text-[#eaedff] mt-1">
               Academic Calendar & Term Dates 2026-27
             </h2>
           </div>
@@ -139,7 +139,7 @@ export default function CalendarWidget() {
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                   selectedCategory === cat
                     ? 'bg-oxford text-white shadow-sm'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-slate-100 dark:bg-[#1a1c2b] text-slate-600 dark:text-[#a0a4c0] hover:bg-slate-200'
                 }`}
               >
                 {cat}
@@ -153,7 +153,7 @@ export default function CalendarWidget() {
           {filteredEvents.map((evt) => (
             <div
               key={evt.id}
-              className="bg-white rounded-lg p-5 border border-slate-200/90 hover:border-slate-400 hover:shadow-md transition-all flex flex-col justify-between"
+              className="bg-white dark:bg-[#151622] rounded-lg p-5 border border-slate-200/90 hover:border-slate-400 hover:shadow-md transition-all flex flex-col justify-between"
             >
               <div>
                 {/* Date Tag & Category Badge */}
@@ -168,8 +168,8 @@ export default function CalendarWidget() {
                       </span>
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-slate-800">{evt.day}</div>
-                      <div className="text-[11px] text-slate-400 font-mono">{evt.year}</div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-[#dfe2f4]">{evt.day}</div>
+                      <div className="text-[11px] text-slate-400 dark:text-[#8a8fa8] font-mono">{evt.year}</div>
                     </div>
                   </div>
 
@@ -182,27 +182,27 @@ export default function CalendarWidget() {
                   </span>
                 </div>
 
-                <h3 className="font-serif font-bold text-sm text-slate-900 leading-snug line-clamp-2">
+                <h3 className="font-serif font-bold text-sm text-slate-900 dark:text-[#eaedff] leading-snug line-clamp-2">
                   {evt.title}
                 </h3>
               </div>
 
               {/* Event Metadata */}
-              <div className="mt-4 pt-3 border-t border-slate-100 space-y-1 text-[11px] text-slate-600">
+              <div className="mt-4 pt-3 border-t border-slate-100 dark:border-[#1e2133] space-y-1 text-[11px] text-slate-600 dark:text-[#a0a4c0]">
                 <div className="flex items-center justify-between">
-                  <span className="font-medium text-slate-500">Target Group:</span>
-                  <span className="font-semibold text-oxford">{evt.targetGrades}</span>
+                  <span className="font-medium text-on-surface-variant">Target Group:</span>
+                  <span className="font-semibold text-oxford dark:text-[#eaedff]">{evt.targetGrades}</span>
                 </div>
                 {evt.time && (
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-slate-500">Schedule:</span>
+                    <span className="font-medium text-on-surface-variant">Schedule:</span>
                     <span>{evt.time}</span>
                   </div>
                 )}
                 {evt.venue && (
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-slate-500">Venue:</span>
-                    <span className="text-slate-700">{evt.venue}</span>
+                    <span className="font-medium text-on-surface-variant">Venue:</span>
+                    <span className="text-slate-700 dark:text-[#c4c7e0]">{evt.venue}</span>
                   </div>
                 )}
               </div>
@@ -211,14 +211,14 @@ export default function CalendarWidget() {
         </div>
 
         {/* Footer Actions */}
-        <div className="mt-8 pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
+        <div className="mt-8 pt-4 border-t border-slate-200 dark:border-[#222538] flex flex-col sm:flex-row items-center justify-between text-xs text-on-surface-variant gap-3">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
             <span>All calendar items are synchronized with CISCE & CBSE official notification dates.</span>
           </div>
           <button
             onClick={() => alert('Simulated iCal Export: Academic Calendar 2026-27 downloaded.')}
-            className="text-oxford hover:text-burgundy font-bold inline-flex items-center gap-1.5 underline underline-offset-4"
+            className="text-oxford dark:text-[#eaedff] hover:text-burgundy font-bold inline-flex items-center gap-1.5 underline underline-offset-4"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
