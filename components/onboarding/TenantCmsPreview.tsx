@@ -143,7 +143,7 @@ export default function TenantCmsPreview() {
   };
 
   return (
-    <div className="w-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden font-sans">
+    <div className="w-full bg-white dark:bg-[#151622] rounded-xl shadow-sm border border-slate-200 dark:border-[#222538] overflow-hidden font-sans">
       {/* CMS Admin Top Bar */}
       <div className="bg-oxford text-white p-6 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -202,9 +202,9 @@ export default function TenantCmsPreview() {
         {/* ============================================================ */}
         {activeTab === 'notices' && (
           <div className="space-y-6">
-            <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
-              <h3 className="font-serif font-bold text-base text-oxford mb-3 flex items-center gap-2">
-                <svg className="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="bg-slate-50 dark:bg-[#101119] p-6 rounded-xl border border-slate-200 dark:border-[#222538]">
+              <h3 className="font-serif font-bold text-base text-oxford dark:text-[#eaedff] mb-3 flex items-center gap-2">
+                <svg className="w-4 h-4 text-amber-600 dark:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
                 <span>Publish Official Circular to Public Web Portal</span>
@@ -212,7 +212,7 @@ export default function TenantCmsPreview() {
 
               <form onSubmit={handleAddNotice} className="grid grid-cols-1 md:grid-cols-12 gap-3 text-xs">
                 <div className="md:col-span-5">
-                  <label className="block font-bold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                     Notice Headline / Circular Title *
                   </label>
                   <input
@@ -221,12 +221,12 @@ export default function TenantCmsPreview() {
                     value={newNoticeTitle}
                     onChange={(e) => setNewNoticeTitle(e.target.value)}
                     placeholder="e.g. Schedule for Pre-Board Practical Examinations"
-                    className="w-full p-2.5 bg-white border border-slate-300 rounded focus:ring-1 focus:ring-oxford text-slate-900"
+                    className="w-full p-2.5 bg-white dark:bg-[#151622] border border-slate-300 dark:border-[#2b2f48] rounded focus:ring-1 focus:ring-oxford dark:focus:ring-[#3b49df] text-slate-900 dark:text-[#eaedff]"
                   />
                 </div>
 
                 <div className="md:col-span-3">
-                  <label className="block font-bold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                     Gazette / Reference Code
                   </label>
                   <input
@@ -267,36 +267,36 @@ export default function TenantCmsPreview() {
             </div>
 
             {/* List of Published Notices */}
-            <div className="border border-slate-200 rounded-xl overflow-hidden">
-              <div className="p-3 bg-slate-100 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-600 flex justify-between">
+            <div className="border border-slate-200 dark:border-[#222538] rounded-xl overflow-hidden">
+              <div className="p-3 bg-slate-100 dark:bg-[#1a1c2b] border-b border-slate-200 dark:border-[#222538] text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-[#a0a4c0] flex justify-between">
                 <span>Currently Live Institutional Circulars</span>
                 <span>{notices.length} Promulgated</span>
               </div>
-              <div className="divide-y divide-slate-100 text-xs">
+              <div className="divide-y divide-slate-100 dark:divide-[#222538] text-xs">
                 {notices.map((n) => (
-                  <div key={n.id} className="p-4 hover:bg-slate-50 flex items-center justify-between gap-4">
+                  <div key={n.id} className="p-4 hover:bg-slate-50 dark:hover:bg-[#1a1c2b] flex items-center justify-between gap-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">
+                        <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 dark:bg-[#222538] text-slate-700 dark:text-[#c4c7e0]">
                           {n.refId}
                         </span>
                         <span className="px-1.5 py-0.2 rounded text-[10px] font-bold uppercase bg-red-100 text-red-800">
                           {n.category}
                         </span>
-                        <span className="text-[11px] text-slate-400 font-mono">
+                        <span className="text-[11px] text-slate-400 dark:text-[#8a8fa8] font-mono">
                           Published: {n.date}
                         </span>
                       </div>
-                      <h4 className="font-serif font-bold text-sm text-oxford">
+                      <h4 className="font-serif font-bold text-sm text-oxford dark:text-[#eaedff]">
                         {n.title}
                       </h4>
-                      <p className="text-[11px] text-slate-500">
+                      <p className="text-[11px] text-on-surface-variant">
                         Audience: {n.audience}
                       </p>
                     </div>
 
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-1 rounded border border-emerald-200">
+                      <span className="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold bg-emerald-50 dark:bg-emerald-500/15 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-500/30">
                         ● Publicly Live
                       </span>
                     </div>
@@ -312,7 +312,7 @@ export default function TenantCmsPreview() {
         {/* ============================================================ */}
         {activeTab === 'blocks' && (
           <div className="space-y-4">
-            <div className="text-xs text-slate-600">
+            <div className="text-xs text-slate-600 dark:text-[#a0a4c0]">
               Drag or use arrows to reorder content sections appearing on your school homepage. Toggle sections off to hide them during vacations or revisions.
             </div>
 
@@ -322,19 +322,19 @@ export default function TenantCmsPreview() {
                   key={block.id}
                   className={`p-4 rounded-lg border transition-all flex items-center justify-between gap-4 ${
                     block.enabled
-                      ? 'bg-white border-slate-200 shadow-2xs'
-                      : 'bg-slate-50 border-slate-200 opacity-60'
+                      ? 'bg-white dark:bg-[#151622] border-slate-200 dark:border-[#222538] shadow-2xs'
+                      : 'bg-slate-50 dark:bg-[#101119] border-slate-200 dark:border-[#222538] opacity-60'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded bg-slate-100 text-oxford font-mono font-bold text-xs flex items-center justify-center">
+                    <div className="w-7 h-7 rounded bg-slate-100 dark:bg-[#1a1c2b] text-oxford dark:text-[#eaedff] font-mono font-bold text-xs flex items-center justify-center">
                       {index + 1}
                     </div>
                     <div>
-                      <div className="font-serif font-bold text-sm text-slate-900">
+                      <div className="font-serif font-bold text-sm text-slate-900 dark:text-[#eaedff]">
                         {block.title}
                       </div>
-                      <div className="text-xs text-slate-500">{block.desc}</div>
+                      <div className="text-xs text-on-surface-variant">{block.desc}</div>
                     </div>
                   </div>
 
@@ -342,7 +342,7 @@ export default function TenantCmsPreview() {
                     <button
                       onClick={() => handleMoveBlock(index, 'up')}
                       disabled={index === 0}
-                      className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-20 text-slate-600"
+                      className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-[#222538] disabled:opacity-20 text-slate-600 dark:text-[#a0a4c0]"
                       title="Move Up"
                     >
                       ▲
@@ -350,7 +350,7 @@ export default function TenantCmsPreview() {
                     <button
                       onClick={() => handleMoveBlock(index, 'down')}
                       disabled={index === blocks.length - 1}
-                      className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-20 text-slate-600"
+                      className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-[#222538] disabled:opacity-20 text-slate-600 dark:text-[#a0a4c0]"
                       title="Move Down"
                     >
                       ▼
@@ -359,8 +359,8 @@ export default function TenantCmsPreview() {
                       onClick={() => handleToggleBlock(block.id)}
                       className={`px-3 py-1 rounded text-xs font-bold ${
                         block.enabled
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : 'bg-slate-200 text-slate-600'
+                          ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-200'
+                          : 'bg-slate-200 dark:bg-[#222538] text-slate-600 dark:text-[#a0a4c0]'
                       }`}
                     >
                       {block.enabled ? 'Enabled' : 'Hidden'}
@@ -406,10 +406,10 @@ export default function TenantCmsPreview() {
             </div>
 
             {/* Table */}
-            <div className="border border-slate-200 rounded-lg overflow-x-auto">
+            <div className="border border-slate-200 dark:border-[#222538] rounded-lg overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold uppercase text-[10px]">
+                  <tr className="bg-slate-100 dark:bg-[#1a1c2b] border-b border-slate-200 dark:border-[#222538] text-slate-700 dark:text-[#c4c7e0] font-bold uppercase text-[10px]">
                     <th className="py-2.5 px-3">Docket ID</th>
                     <th className="py-2.5 px-3">Candidate</th>
                     <th className="py-2.5 px-3">Grade</th>
@@ -419,31 +419,31 @@ export default function TenantCmsPreview() {
                     <th className="py-2.5 px-3">Verification Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-800">
+                <tbody className="divide-y divide-slate-100 dark:divide-[#222538] text-slate-800 dark:text-[#dfe2f4]">
                   {filteredLeads.map((lead) => (
-                    <tr key={lead.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-3 px-3 font-mono font-bold text-oxford">
+                    <tr key={lead.id} className="hover:bg-slate-50 dark:hover:bg-[#1a1c2b] transition-colors">
+                      <td className="py-3 px-3 font-mono font-bold text-oxford dark:text-[#eaedff]">
                         {lead.id}
                       </td>
-                      <td className="py-3 px-3 font-semibold text-slate-900">
+                      <td className="py-3 px-3 font-semibold text-slate-900 dark:text-[#eaedff]">
                         {lead.candidateName}
                       </td>
                       <td className="py-3 px-3">{lead.grade}</td>
-                      <td className="py-3 px-3 font-mono font-bold text-slate-700">
+                      <td className="py-3 px-3 font-mono font-bold text-slate-700 dark:text-[#c4c7e0]">
                         {lead.scorePercent}
                       </td>
-                      <td className="py-3 px-3 font-mono text-slate-600">
+                      <td className="py-3 px-3 font-mono text-slate-600 dark:text-[#a0a4c0]">
                         {lead.parentPhone}
                       </td>
-                      <td className="py-3 px-3 text-slate-500">{lead.date}</td>
+                      <td className="py-3 px-3 text-on-surface-variant">{lead.date}</td>
                       <td className="py-3 px-3">
                         <span
                           className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                             lead.status === 'Enrolled'
-                              ? 'bg-emerald-100 text-emerald-800'
+                              ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-200'
                               : lead.status === 'Interview Allotted'
-                              ? 'bg-amber-100 text-amber-900'
-                              : 'bg-slate-100 text-slate-700'
+                              ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-900'
+                              : 'bg-slate-100 dark:bg-[#1a1c2b] text-slate-700 dark:text-[#c4c7e0]'
                           }`}
                         >
                           {lead.status}
