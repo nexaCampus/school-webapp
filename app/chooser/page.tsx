@@ -117,7 +117,7 @@ function UniversalChooserContent() {
   const location = selectedSchool ? `${selectedSchool.city}, ${selectedSchool.state_territory}` : 'Pan-India Campuses';
 
   return (
-    <>
+    <main id="main-content">
       {/* ========================================================
           MOBILE VIEW (< 768px): Dynamic Bottom Sheet Layout
           ======================================================== */}
@@ -596,7 +596,7 @@ function UniversalChooserContent() {
         {/* Global Footer */}
         <AuthFooter />
       </div>
-    </>
+    </main>
   );
 }
 
