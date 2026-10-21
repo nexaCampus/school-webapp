@@ -122,26 +122,26 @@ export default function CampusMediaGallery() {
   const [activeTab, setActiveTab] = useState<'gallery' | 'magazines' | 'alumni'>('gallery');
 
   return (
-    <section className="w-full bg-white py-14 px-6 border-b border-slate-200 font-sans">
+    <section className="w-full bg-white dark:bg-[#151622] py-14 px-6 border-b border-slate-200 dark:border-[#222538] font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Header & Sub-Navigation */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-slate-200 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-slate-200 dark:border-[#222538] gap-4">
           <div>
-            <div className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy">
+            <div className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy dark:text-[#f2a5b5]">
               Media, Publications & Legacy
             </div>
-            <h2 className="font-serif font-bold text-2xl md:text-3xl text-oxford mt-1">
+            <h2 className="font-serif font-bold text-2xl md:text-3xl text-oxford dark:text-[#eaedff] mt-1">
               Campus Life, Literary Chronicles & Alumni
             </h2>
           </div>
 
-          <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+          <div className="flex bg-slate-100 dark:bg-[#1a1c2b] p-1 rounded-lg border border-slate-200 dark:border-[#222538]">
             <button
               onClick={() => setActiveTab('gallery')}
               className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
                 activeTab === 'gallery'
                   ? 'bg-oxford text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-slate-600 dark:text-[#a0a4c0] hover:text-slate-900 dark:hover:text-[#eaedff]'
               }`}
             >
               Photo & Video Gallery
@@ -151,7 +151,7 @@ export default function CampusMediaGallery() {
               className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
                 activeTab === 'magazines'
                   ? 'bg-oxford text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-slate-600 dark:text-[#a0a4c0] hover:text-slate-900 dark:hover:text-[#eaedff]'
               }`}
             >
               Magazines & Gazettes
@@ -161,7 +161,7 @@ export default function CampusMediaGallery() {
               className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
                 activeTab === 'alumni'
                   ? 'bg-oxford text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-slate-600 dark:text-[#a0a4c0] hover:text-slate-900 dark:hover:text-[#eaedff]'
               }`}
             >
               Distinguished Alumni
@@ -175,7 +175,7 @@ export default function CampusMediaGallery() {
             {MEDIA_GALLERY.map((item) => (
               <div
                 key={item.id}
-                className="bg-slate-50 rounded-xl overflow-hidden border border-slate-200 shadow-xs hover:border-slate-400 hover:shadow-md transition-all group flex flex-col justify-between"
+                className="bg-slate-50 dark:bg-[#101119] rounded-xl overflow-hidden border border-slate-200 dark:border-[#222538] shadow-xs hover:border-slate-400 hover:shadow-md transition-all group flex flex-col justify-between"
               >
                 <div>
                   {/* Photo Frame Placeholder with Stately Academic Aspect Ratio */}
@@ -190,11 +190,11 @@ export default function CampusMediaGallery() {
                   </div>
 
                   <div className="p-4 space-y-2">
-                    <div className="text-[10px] text-slate-400 font-mono">{item.date}</div>
-                    <h3 className="font-serif font-bold text-sm text-oxford leading-snug group-hover:text-burgundy transition-colors">
+                    <div className="text-[10px] text-slate-400 dark:text-[#8a8fa8] font-mono">{item.date}</div>
+                    <h3 className="font-serif font-bold text-sm text-oxford dark:text-[#eaedff] leading-snug group-hover:text-burgundy transition-colors">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-[#a0a4c0] line-clamp-2 leading-relaxed">
                       {item.description}
                     </p>
                   </div>
@@ -203,7 +203,7 @@ export default function CampusMediaGallery() {
                 <div className="p-4 pt-0">
                   <button
                     onClick={() => alert(`Viewing high-res album for: ${item.title}`)}
-                    className="text-xs font-bold text-oxford hover:underline flex items-center gap-1"
+                    className="text-xs font-bold text-oxford dark:text-[#eaedff] hover:underline flex items-center gap-1"
                   >
                     <span>View Archival Album</span>
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -222,17 +222,17 @@ export default function CampusMediaGallery() {
             {SCHOOL_MAGAZINES.map((mag) => (
               <div
                 key={mag.id}
-                className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs hover:border-slate-400 transition-all flex flex-col justify-between"
+                className="bg-white dark:bg-[#151622] rounded-xl p-6 border border-slate-200 dark:border-[#222538] shadow-xs hover:border-slate-400 transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center justify-between text-xs text-slate-400 font-mono mb-2">
+                  <div className="flex items-center justify-between text-xs text-slate-400 dark:text-[#8a8fa8] font-mono mb-2">
                     <span>{mag.volume}</span>
                     <span>{mag.date}</span>
                   </div>
-                  <h3 className="font-serif font-bold text-lg text-oxford leading-snug">
+                  <h3 className="font-serif font-bold text-lg text-oxford dark:text-[#eaedff] leading-snug">
                     {mag.issueTitle}
                   </h3>
-                  <div className="mt-4 p-3 bg-parchment rounded border border-slate-200 text-xs text-slate-600 flex items-center justify-between font-mono">
+                  <div className="mt-4 p-3 bg-parchment dark:bg-[#101119] rounded border border-slate-200 dark:border-[#222538] text-xs text-slate-600 dark:text-[#a0a4c0] flex items-center justify-between font-mono">
                     <span>Format: {mag.pageCount}</span>
                     <span>Size: {mag.fileSize}</span>
                   </div>
@@ -258,7 +258,7 @@ export default function CampusMediaGallery() {
             {NOTABLE_ALUMNI.map((alum) => (
               <div
                 key={alum.id}
-                className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs hover:border-slate-400 transition-all space-y-3"
+                className="bg-white dark:bg-[#151622] rounded-xl p-6 border border-slate-200 dark:border-[#222538] shadow-xs hover:border-slate-400 transition-all space-y-3"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-oxford text-amber-300 flex items-center justify-center font-serif font-bold text-sm">
@@ -269,19 +269,19 @@ export default function CampusMediaGallery() {
                       .join('')}
                   </div>
                   <div>
-                    <h3 className="font-serif font-bold text-base text-oxford">{alum.name}</h3>
-                    <div className="text-[11px] font-mono text-burgundy font-semibold">
+                    <h3 className="font-serif font-bold text-base text-oxford dark:text-[#eaedff]">{alum.name}</h3>
+                    <div className="text-[11px] font-mono text-burgundy dark:text-[#f2a5b5] font-semibold">
                       {alum.batch}
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-slate-50 p-3 rounded border border-slate-200 text-xs space-y-1">
-                  <div className="font-bold text-slate-900">{alum.designation}</div>
-                  <div className="text-slate-600 font-medium">{alum.organization}</div>
+                <div className="bg-slate-50 dark:bg-[#101119] p-3 rounded border border-slate-200 dark:border-[#222538] text-xs space-y-1">
+                  <div className="font-bold text-slate-900 dark:text-[#eaedff]">{alum.designation}</div>
+                  <div className="text-slate-600 dark:text-[#a0a4c0] font-medium">{alum.organization}</div>
                 </div>
 
-                <p className="text-xs text-slate-500 italic">“{alum.achievement}”</p>
+                <p className="text-xs text-on-surface-variant italic">“{alum.achievement}”</p>
               </div>
             ))}
           </div>
