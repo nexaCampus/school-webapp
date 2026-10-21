@@ -104,9 +104,9 @@ export default function SchoolMakerAuthModal({
                 <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-300 block">
                   NexaCampus SchoolMaker
                 </span>
-                <h3 className="font-serif font-bold text-lg text-white">
+                <h2 className="font-serif font-bold text-lg text-white">
                   Creator Verification
-                </h3>
+                </h2>
               </div>
             </div>
             {onClose && (
