@@ -1,6 +1,42 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Tailwind v4 keeps the legacy JS config in play so the existing design
+   tokens (colors, fonts, radii, spacing) keep their exact semantics. */
+@config "../tailwind.config.js";
+
+/* Class-based dark mode. `:is()` (instead of the v3 `:where()`) keeps the
+   variant at (0,2,0) specificity so an explicit `dark:` utility always wins
+   over the light-mode fallback rules further down this file. */
+@custom-variant dark (&:is(.dark, .dark *));
+
+/* Tailwind v4 replaces JavaScript plugins with CSS-first utilities. */
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Tailwind v4 derives the spacing scale from CSS variables. The institutional
+   spacing tokens (space-xs ΓÇª space-xl) are declared here so the legacy
+   `p-space-md`, `gap-space-sm`, ΓÇª utilities keep working. */
+@theme {
+  --spacing-space-xs: 0.5rem;
+  --spacing-space-sm: 0.75rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2rem;
+  --spacing-margin: 1rem;
+}
 
 :root {
   --color-surface: #faf8ff;
