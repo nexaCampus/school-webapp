@@ -70,16 +70,6 @@ export default function PublicHeader() {
       ],
     },
     {
-      label: 'Campus Logistics',
-      href: '/facilities',
-      dropdown: [
-        ...(isModuleEnabled('bus') ? [{ label: 'Bus GPS Radar', href: '/bus', desc: 'Live route telemetry & supervisor contacts' }] : []),
-        ...(isModuleEnabled('canteen') ? [{ label: 'Smart RFID Canteen', href: '/canteen', desc: 'Cashless meal wallet & dietary tracking' }] : []),
-        ...(isModuleEnabled('library') ? [{ label: 'Digital Library', href: '/library', desc: 'Online catalog & automated book reservation' }] : []),
-        ...(isModuleEnabled('health') ? [{ label: 'Health Infirmary', href: '/health', desc: 'Campus clinic records & vital telemetry' }] : []),
-      ],
-    },
-    {
       label: 'Explore Campuses',
       href: '/explore',
       badge: 'Directory',
