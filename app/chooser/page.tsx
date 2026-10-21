@@ -436,7 +436,7 @@ function UniversalChooserContent() {
                             {sch.subdomain_slug.slice(0, 2).toUpperCase()}
                           </div>
                           <div>
-                            <div className="font-bold text-xs text-on-surface group-hover:text-[#1c2ac8] transition-colors">
+                            <div className="font-bold text-xs text-on-surface group-hover:text-[#1c2ac8]dark:group-hover:text-[#bdc2ff] transition-colors">
                               {sch.school_name}
                             </div>
                             <div className="text-[11px] text-on-surface-variant font-mono">
