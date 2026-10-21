@@ -28,7 +28,7 @@ const MERIT_AWARDS = [
     details: 'Sep 18 · Full squad athletic contribution',
     icon: 'sports_soccer',
     accentBg: 'bg-secondary/10',
-    accentColor: 'text-secondary',
+    accentColor: 'text-secondary dark:text-[#ffb95f]',
   },
   {
     pts: '+15',
@@ -52,7 +52,7 @@ const MERIT_AWARDS = [
     details: 'Aug 01 · Zero unexcused absences',
     icon: 'verified',
     accentBg: 'bg-secondary-container/20',
-    accentColor: 'text-secondary',
+    accentColor: 'text-secondary dark:text-[#ffb95f]',
   },
 ];
 
