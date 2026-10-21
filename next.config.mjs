@@ -29,7 +29,8 @@ const nextConfig = {
       // Images: self, data:, blob:, and external HTTPS domains (Unsplash, Firebase, avatars)
       "img-src 'self' data: blob: https:",
       // Connect: self, Go backend API, Firebase, Razorpay, WebSockets
-      "connect-src 'self' https: wss:",
+      // (loopback origins are allowed so the local Go orchestrator on :8080 works)
+      "connect-src 'self' https: wss: http://localhost:* http://127.0.0.1:*",
       // Frames: Razorpay checkout modal
       "frame-src 'self' https://checkout.razorpay.com https://*.razorpay.com",
       // Prevent object/embed plugins
