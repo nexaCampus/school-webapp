@@ -68,7 +68,7 @@ export default function HallPassPage() {
           </p>
           <div className="h-2 rounded-full bg-white/25 mt-space-sm overflow-hidden">
             <div
-              className={`h-full rounded-full bg-white ${isPassActive ? 'animate-pulse' : ''}`}
+              className={`h-full rounded-full bg-white dark:bg-[#151622] ${isPassActive ? 'animate-pulse' : ''}`}
               style={{ width: `${Math.round((secondsLeft / 900) * 100)}%` }}
             ></div>
           </div>

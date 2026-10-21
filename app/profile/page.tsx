@@ -364,10 +364,10 @@ export default function ProfilePage() {
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-body-sm p-1.5 rounded-lg bg-[#1c2ac8]/10">
-                      <span className="text-[#1c2ac8] flex items-center gap-2 font-label-md font-bold text-[13px]">
+                      <span className="text-[#1c2ac8]dark:text-[#bdc2ff] flex items-center gap-2 font-label-md font-bold text-[13px]">
                         <span className="w-3 h-3 rounded-full bg-[#1c2ac8]"></span> Official Holiday
                       </span>
-                      <span className="font-headline-sm text-body-md font-extrabold text-[#1c2ac8]">
+                      <span className="font-headline-sm text-body-md font-extrabold text-[#1c2ac8]dark:text-[#bdc2ff]">
                         5 Days
                       </span>
                     </div>
@@ -412,8 +412,8 @@ export default function ProfilePage() {
                     <div title="Oct 1: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">1</div>
                     <div title="Oct 2: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">2</div>
                     {/* Oct 3-4 (Weekend Holiday - Blue) */}
-                    <div title="Oct 3: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">3</div>
-                    <div title="Oct 4: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">4</div>
+                    <div title="Oct 3: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8]dark:text-[#bdc2ff] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">3</div>
+                    <div title="Oct 4: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8]dark:text-[#bdc2ff] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">4</div>
 
                     {/* Oct 5-8 (Present - Green), Oct 9 (Absent - Red), Oct 10-11 (Holiday - Blue) */}
                     <div title="Oct 5: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">5</div>
@@ -421,8 +421,8 @@ export default function ProfilePage() {
                     <div title="Oct 7: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">7</div>
                     <div title="Oct 8: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">8</div>
                     <div title="Oct 9: Absent (Sick Leave)" className="h-8 rounded-lg bg-[#ba1a1a]/20 text-[#ba1a1a] border border-[#ba1a1a]/40 flex items-center justify-center font-extrabold ring-1 ring-[#ba1a1a]/30">9</div>
-                    <div title="Oct 10: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">10</div>
-                    <div title="Oct 11: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">11</div>
+                    <div title="Oct 10: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8]dark:text-[#bdc2ff] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">10</div>
+                    <div title="Oct 11: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8]dark:text-[#bdc2ff] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">11</div>
 
                     {/* Oct 12-16 (Present - Green), Oct 17-18 (Holiday - Blue) */}
                     <div title="Oct 12: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">12</div>
@@ -430,8 +430,8 @@ export default function ProfilePage() {
                     <div title="Oct 14: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">14</div>
                     <div title="Oct 15: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">15</div>
                     <div title="Oct 16: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">16</div>
-                    <div title="Oct 17: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">17</div>
-                    <div title="Oct 18: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">18</div>
+                    <div title="Oct 17: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8]dark:text-[#bdc2ff] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">17</div>
+                    <div title="Oct 18: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8]dark:text-[#bdc2ff] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">18</div>
 
                     {/* Oct 19-23 (Present - Green), Oct 24-25 (Holiday - Blue) */}
                     <div title="Oct 19: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">19</div>
@@ -439,8 +439,8 @@ export default function ProfilePage() {
                     <div title="Oct 21: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">21</div>
                     <div title="Oct 22: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">22</div>
                     <div title="Oct 23: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">23</div>
-                    <div title="Oct 24: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">24</div>
-                    <div title="Oct 25: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">25</div>
+                    <div title="Oct 24: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8]dark:text-[#bdc2ff] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">24</div>
+                    <div title="Oct 25: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8]dark:text-[#bdc2ff] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">25</div>
 
                     {/* Oct 26-30 (Present - Green), Oct 31 (Holiday - Blue) */}
                     <div title="Oct 26: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">26</div>
@@ -448,7 +448,7 @@ export default function ProfilePage() {
                     <div title="Oct 28: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">28</div>
                     <div title="Oct 29: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">29</div>
                     <div title="Oct 30: Present" className="h-8 rounded-lg bg-[#006b49]/15 text-[#006b49] border border-[#006b49]/30 flex items-center justify-center font-bold">30</div>
-                    <div title="Oct 31: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">31</div>
+                    <div title="Oct 31: Official Holiday" className="h-8 rounded-lg bg-[#1c2ac8]/15 text-[#1c2ac8]dark:text-[#bdc2ff] border border-[#1c2ac8]/30 flex items-center justify-center font-bold">31</div>
                   </div>
                 </div>
 
