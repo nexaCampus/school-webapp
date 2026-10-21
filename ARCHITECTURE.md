@@ -80,7 +80,11 @@ school-webapp/
 │   └── globals.css               # Design tokens & global styles
 ├── components/
 │   ├── common/                   # UI primitives: Modal, Badge, Button, RevealMore (+ index barrel)
+│   ├── directory/                # Campus directory: ExploreCampusesGrid, SchoolShowcaseCard,
+│   │                             #   DirectoryFilterDrawer, SharePortalModal
 │   ├── feedback/                 # ErrorBoundary and other resilience surfaces
+│   ├── public/                   # Public chrome: PublicHeader, SchoolNavDrawer, hero carousel,
+│   │                             #   marquee, faculty & transit directories
 │   ├── PortalShell.tsx           # Institutional portal chrome (desktop nav, mobile tabs)
 │   └── QueryProvider.tsx         # TanStack Query provider, BootSplash, Toasts, PWA
 ├── hooks/                        # Feature-scoped React Query hooks (useAttendance, useAuth, …)
@@ -192,6 +196,15 @@ school-webapp/
 ### 4.7. Tailwind Token Caveat (opacity modifiers)
 
 Surface tokens are defined as `background-color: var(--color-surface, #faf8ff)` with **no `--tw-bg-opacity`**, so Tailwind cannot apply an opacity modifier to them — `bg-surface/90` silently generates no CSS and the element ships with no background at all (this once made the cookie panel fully transparent). When transparency is needed, spell out a colour Tailwind can decompose, e.g. `bg-[#faf8ff]/90`. After any change involving `/opacity` utilities, confirm the rule exists in the built stylesheet; a missing rule produces no build error.
+
+### 4.8. Public Header Navigation & Campus Directory
+
+- **Header nav is tenant-derived** (`components/public/PublicHeader.tsx`): the same `NAV_ITEMS` array drives the desktop nav and the mobile drawer. Platform root renders `Platform Overview` + `Academics`; a school tenant renders `About School` + `Academics` with module-aware sub-items.
+- **The `Explore Campuses` entry is no longer part of the header.** The `/explore` route stays public and unchanged — it is reachable from the landing-page top bar and module grid, the `SchoolNavDrawer` ("Section 4: Explore Campuses"), the hero carousel, the portal footer, and by direct URL.
+- **Campus cards (`components/directory/SchoolShowcaseCard.tsx`)** are laid out in two header rows:
+  1. crest + board badge + `Estd. <year>` on the left, `Active Tenant` pill on the right;
+  2. the institution name on its **own full-width row**, at `text-lg` with `break-words` and **no line clamp**.
+  The name is deliberately never truncated: long institution names (e.g. "Lions Calcutta Greater Vidyamandir", "Delhi Public Academy & Senior Secondary") wrap to two lines and stay fully legible instead of collapsing to "Lions…" / "Delhi…". `Estd. <year>` carries `whitespace-nowrap` so the year never wraps away from its label.
 
 ---
 

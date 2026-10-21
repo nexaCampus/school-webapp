@@ -39,32 +39,33 @@ export default function SchoolShowcaseCard({
         />
 
         {/* Live Preview / Hero Header Banner */}
-        <div className="p-5 bg-slate-50/70 dark:bg-[#181a27] border-b border-slate-100 dark:border-[#262a40] flex items-start justify-between gap-3 transition-colors">
-          <div className="flex items-center gap-3">
-            <div
-              className="w-12 h-12 rounded-full text-white flex items-center justify-center font-serif font-bold text-base shadow-xs border-2 border-white dark:border-[#262a40] flex-shrink-0"
-              style={{ backgroundColor: school.primaryColor || '#0A192F' }}
-            >
-              {school.crestLetter}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
+        <div className="p-5 bg-slate-50/70 dark:bg-[#181a27] border-b border-slate-100 dark:border-[#262a40] flex flex-col gap-3 transition-colors">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div
+                className="w-12 h-12 rounded-full text-white flex items-center justify-center font-serif font-bold text-base shadow-xs border-2 border-white dark:border-[#262a40] flex-shrink-0"
+                style={{ backgroundColor: school.primaryColor || '#0A192F' }}
+              >
+                {school.crestLetter}
+              </div>
+              <div className="flex items-center gap-2 flex-wrap min-w-0">
                 <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 dark:bg-[#25283d] text-slate-700 dark:text-slate-300">
                   {school.board}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500">
+                <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 whitespace-nowrap">
                   Estd. {school.established}
                 </span>
               </div>
-              <h2 className="font-serif font-bold text-base text-oxford dark:text-white leading-snug mt-1 group-hover:text-burgundy dark:group-hover:text-[#bdc2ff] transition-colors line-clamp-1">
-                {school.name}
-              </h2>
             </div>
+
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 flex-shrink-0">
+              Active Tenant
+            </span>
           </div>
 
-          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 flex-shrink-0">
-            Active Tenant
-          </span>
+          <h2 className="font-serif font-bold text-lg text-oxford dark:text-white leading-snug break-words group-hover:text-burgundy dark:group-hover:text-[#bdc2ff] transition-colors">
+            {school.name}
+          </h2>
         </div>
 
         {/* Card Body Metadata */}
