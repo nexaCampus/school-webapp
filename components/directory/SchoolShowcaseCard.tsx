@@ -56,9 +56,9 @@ export default function SchoolShowcaseCard({
                   Estd. {school.established}
                 </span>
               </div>
-              <h3 className="font-serif font-bold text-base text-oxford dark:text-white leading-snug mt-1 group-hover:text-burgundy dark:group-hover:text-[#bdc2ff] transition-colors line-clamp-1">
+              <h2 className="font-serif font-bold text-base text-oxford dark:text-white leading-snug mt-1 group-hover:text-burgundy dark:group-hover:text-[#bdc2ff] transition-colors line-clamp-1">
                 {school.name}
-              </h3>
+              </h2>
             </div>
           </div>
 
