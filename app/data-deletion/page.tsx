@@ -161,6 +161,7 @@ export default function DataDeletionPage() {
                   Scope of Deletion Request *
                 </label>
                 <select
+                  aria-label="Reason for contact"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   className="w-full px-4 py-2.5 rounded-xl bg-surface text-on-surface border border-outline/20 focus:border-primary focus:ring-1 focus:ring-primary text-xs font-medium"
