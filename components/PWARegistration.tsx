@@ -81,9 +81,9 @@ export default function PWARegistration() {
             <span className="material-symbols-outlined text-[20px]">school</span>
           </div>
           <div className="min-w-0">
-            <h4 className="text-[12.5px] font-bold text-on-surface truncate leading-tight">
+            <h2 className="text-[12.5px] font-bold text-on-surface truncate leading-tight">
               Install NexaCampus App
-            </h4>
+            </h2>
             <p className="text-[10px] text-on-surface-variant truncate mt-0.5">
               Instant mobile access &amp; offline diary
             </p>
