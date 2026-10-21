@@ -42,7 +42,7 @@ export default function BusPage() {
             Next stop: {nextStop} • On Time
           </p>
           <div className="h-2 rounded-full bg-white/25 mt-space-md overflow-hidden">
-            <div className="h-full w-3/4 rounded-full bg-white animate-pulse"></div>
+            <div className="h-full w-3/4 rounded-full bg-white dark:bg-[#151622] animate-pulse"></div>
           </div>
         </section>
 

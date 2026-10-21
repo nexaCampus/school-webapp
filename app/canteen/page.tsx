@@ -77,7 +77,7 @@ export default function CanteenPage() {
               Spent today ₹{spentToday.toFixed(2)} of ₹{limit.toFixed(2)} daily limit
             </p>
             <div className="h-2 rounded-full bg-white/25 mt-space-sm max-w-xs overflow-hidden">
-              <div className="h-full rounded-full bg-white" style={{ width: `${pct}%` }}></div>
+              <div className="h-full rounded-full bg-white dark:bg-[#151622]" style={{ width: `${pct}%` }}></div>
             </div>
           </div>
           <button
@@ -85,7 +85,7 @@ export default function CanteenPage() {
               setErrorMessage(null);
               setIsTopUpOpen(true);
             }}
-            className="h-[46px] px-6 rounded-full bg-white text-primary text-[14px] font-bold shadow-sm hover:bg-surface-bright transition-colors cursor-pointer active:scale-95 flex items-center justify-center gap-2"
+            className="h-[46px] px-6 rounded-full bg-white dark:bg-[#151622] text-primary text-[14px] font-bold shadow-sm hover:bg-surface-bright transition-colors cursor-pointer active:scale-95 flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-[18px]">add_card</span>
             <span>Top Up Balance</span>
