@@ -2355,7 +2355,7 @@ export default function ExecutiveHomePage() {
               <div className="pt-2">
                 <Link
                   href="/health"
-                  className="w-full py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs text-center block transition-all"
+                  className="w-full py-2.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs text-center block transition-all"
                 >
                   View Complete Medical File
                 </Link>
