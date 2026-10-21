@@ -100,9 +100,9 @@ export default function NoticesPage() {
               </div>
               <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
                 <span className="text-[12px] sm:text-label-md font-semibold text-on-surface truncate">{student.name}</span>
-                <span className="text-outline text-[11px] sm:text-label-sm">â€¢</span>
+                <span className="text-outline text-[11px] sm:text-label-sm">•</span>
                 <span className="text-[11px] sm:text-label-sm text-on-surface-variant truncate">{student.gradeSection}</span>
-                <span className="text-outline text-[11px] sm:text-label-sm">â€¢</span>
+                <span className="text-outline text-[11px] sm:text-label-sm">•</span>
                 <span className="text-[11px] sm:text-label-sm text-primary font-bold truncate">{student.rollNo}</span>
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function NoticesPage() {
             </h2>
             <div className="flex items-center gap-1 mt-1 sm:mt-space-xs text-[10.5px] sm:text-body-sm text-on-primary-container">
               <span className="material-symbols-outlined text-[13px] sm:text-[14px]">verified</span>
-              <span>Issued today, 10:30 AM â€¢ Office of the Principal</span>
+              <span>Issued today, 10:30 AM • Office of the Principal</span>
             </div>
 
             <div className="mt-2.5 sm:mt-space-md">
@@ -207,7 +207,7 @@ export default function NoticesPage() {
               type="button"
               onClick={async () => {
                 await sendTestNotification(
-                  'LCGVM School Circular Alert ðŸ“¢',
+                  'LCGVM School Circular Alert 📢',
                   'Term 1 examination schedules and parent-teacher meeting slots are now published.',
                   '/notices'
                 );
@@ -245,7 +245,7 @@ export default function NoticesPage() {
                 </span>
                 <span className="text-[10px] sm:text-label-sm text-outline flex items-center gap-1">
                   <span className="material-symbols-outlined text-[13px] sm:text-[14px]">schedule</span>
-                  24 Sep â€¢ 2:23 PM
+                  24 Sep • 2:23 PM
                 </span>
               </div>
               <h3 className="text-[13.5px] sm:text-headline-sm font-bold text-on-surface leading-snug">
@@ -274,7 +274,7 @@ export default function NoticesPage() {
                       PTM_Schedule_2026.pdf
                     </div>
                     <div className="text-[9.5px] sm:text-label-sm text-outline">
-                      1.2 MB â€¢ Acrobat Document
+                      1.2 MB • Acrobat Document
                     </div>
                   </div>
                 </div>
@@ -308,7 +308,7 @@ export default function NoticesPage() {
                 </span>
                 <span className="text-[10px] sm:text-label-sm text-outline flex items-center gap-1">
                   <span className="material-symbols-outlined text-[13px] sm:text-[14px]">schedule</span>
-                  21 Sep â€¢ 6:33 PM
+                  21 Sep • 6:33 PM
                 </span>
               </div>
               <h3 className="text-[13.5px] sm:text-headline-sm font-bold text-on-surface leading-snug">
