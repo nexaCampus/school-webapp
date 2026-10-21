@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+import { SESSION_COOKIE_NAME, verifySessionToken } from '@/lib/auth/sessionToken';
+import { SHARED_COOKIE_DOMAIN } from '@/lib/tenantUrls';
+
 /**
  * NexaCampus Multi-Tenant Edge Route Guard & Subdomain Resolver
  * Intercepts requests at the edge before HTML rendering:
- * 1. Resolves tenant slug from Host header (<slug>.nexacampus.tech, <slug>.admin.nexacampus.tech, <slug>-nexacampus.vercel.app)
- * 2. Handles path-based fallback routing (/s/:slug and /s/:slug/admin) for instant testing
+ * 1. Resolves tenant slug from Host header (<slug>.nexacampus.tech, <slug>.admin.nexacampus.tech, <slug>.<APP_HOST>)
+ * 2. Canonicalises path-based tenant URLs (/school/:slug, /s/:slug) into their subdomain form
  * 3. Injects x-school-slug and x-portal-role headers and school_tenant_slug cookie
  * 4. Protects non-public routes with HttpOnly session token checks
  */
@@ -23,6 +26,17 @@ const RESERVED_SLUGS = new Set([
   'school-webapp-self',
 ]);
 
+/**
+ * Canonical host that serves the webapp. Every tenant is addressed as
+ * <slug>.<APP_HOST> (student) and <slug>.admin.<APP_HOST> (admin).
+ * The legacy path form (/school/<slug>) is redirected to it.
+ */
+const APP_HOST = (process.env.NEXT_PUBLIC_CANONICAL_APP_HOST || 'school-webapp-self.vercel.app')
+  .toLowerCase()
+  .trim();
+
+const APP_HOST_PATTERN = APP_HOST.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 interface TenantResolution {
   slug: string | null;
   role: 'student' | 'admin';
@@ -39,31 +53,47 @@ function resolveTenantFromHost(host: string): TenantResolution {
     return { slug: adminCustomMatch[1], role: 'admin', isAdminHost: true };
   }
 
-  // 2. Admin Vercel alias: <slug>-admin-nexacampus.vercel.app
+  // 2. Admin app host: <slug>.admin.<APP_HOST>  (e.g. greenwood.admin.school-webapp-self.vercel.app)
+  const adminAppHostMatch = cleanHost.match(
+    new RegExp(`^([a-z0-9-]+)\\.admin\\.${APP_HOST_PATTERN}$`)
+  );
+  if (adminAppHostMatch && !RESERVED_SLUGS.has(adminAppHostMatch[1])) {
+    return { slug: adminAppHostMatch[1], role: 'admin', isAdminHost: true };
+  }
+
+  // 3. Admin Vercel alias: <slug>-admin-nexacampus.vercel.app
   const adminVercelMatch = cleanHost.match(/^([a-z0-9-]+)-admin-nexacampus\.vercel\.app$/);
   if (adminVercelMatch && !RESERVED_SLUGS.has(adminVercelMatch[1])) {
     return { slug: adminVercelMatch[1], role: 'admin', isAdminHost: true };
   }
 
-  // 3. Localhost Admin: <slug>.admin.localhost
+  // 4. Localhost Admin: <slug>.admin.localhost
   const adminLocalMatch = cleanHost.match(/^([a-z0-9-]+)\.admin\.localhost$/);
   if (adminLocalMatch && !RESERVED_SLUGS.has(adminLocalMatch[1])) {
     return { slug: adminLocalMatch[1], role: 'admin', isAdminHost: true };
   }
 
-  // 4. Student/Public custom domain: <slug>.nexacampus.tech (or .com)
+  // 5. Student/Public custom domain: <slug>.nexacampus.tech (or .com)
   const studentCustomMatch = cleanHost.match(/^([a-z0-9-]+)\.nexacampus\.(?:tech|com)$/);
   if (studentCustomMatch && !RESERVED_SLUGS.has(studentCustomMatch[1])) {
     return { slug: studentCustomMatch[1], role: 'student', isAdminHost: false };
   }
 
-  // 5. Student/Public Vercel alias: <slug>-nexacampus.vercel.app
+  // 6. Student app host: <slug>.<APP_HOST>  (e.g. greenwood.school-webapp-self.vercel.app)
+  const studentAppHostMatch = cleanHost.match(
+    new RegExp(`^([a-z0-9-]+)\\.${APP_HOST_PATTERN}$`)
+  );
+  if (studentAppHostMatch && !RESERVED_SLUGS.has(studentAppHostMatch[1])) {
+    return { slug: studentAppHostMatch[1], role: 'student', isAdminHost: false };
+  }
+
+  // 7. Student/Public Vercel alias: <slug>-nexacampus.vercel.app
   const studentVercelMatch = cleanHost.match(/^([a-z0-9-]+)-nexacampus\.vercel\.app$/);
   if (studentVercelMatch && !RESERVED_SLUGS.has(studentVercelMatch[1])) {
     return { slug: studentVercelMatch[1], role: 'student', isAdminHost: false };
   }
 
-  // 6. Localhost Student: <slug>.localhost
+  // 8. Localhost Student: <slug>.localhost
   const studentLocalMatch = cleanHost.match(/^([a-z0-9-]+)\.localhost$/);
   if (studentLocalMatch && !RESERVED_SLUGS.has(studentLocalMatch[1])) {
     return { slug: studentLocalMatch[1], role: 'student', isAdminHost: false };
@@ -72,7 +102,32 @@ function resolveTenantFromHost(host: string): TenantResolution {
   return { slug: null, role: 'student', isAdminHost: false };
 }
 
-export function middleware(request: NextRequest) {
+/**
+ * Builds the canonical tenant URL for a slug.
+ * Production -> https://<slug>.<APP_HOST> (admin: https://<slug>.admin.<APP_HOST>)
+ * Local dev  -> http://<slug>.localhost:<port>
+ */
+function canonicalTenantUrl(
+  request: NextRequest,
+  slug: string,
+  isAdmin: boolean,
+  pathname: string,
+  search: string
+): URL {
+  const host = (request.headers.get('host') || '').toLowerCase();
+  const isLocal = host.endsWith('localhost') || host.startsWith('127.0.0.1') || host === '[::1]';
+
+  if (isLocal) {
+    const port = host.includes(':') ? host.split(':')[1] : '3000';
+    const localHost = isAdmin ? `${slug}.admin.localhost:${port}` : `${slug}.localhost:${port}`;
+    return new URL(`${pathname}${search}`, `http://${localHost}`);
+  }
+
+  const canonicalHost = isAdmin ? `${slug}.admin.${APP_HOST}` : `${slug}.${APP_HOST}`;
+  return new URL(`${pathname}${search}`, `https://${canonicalHost}`);
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
   const host = request.headers.get('host') || '';
 
@@ -114,8 +169,22 @@ export function middleware(request: NextRequest) {
         targetPath = '/';
       }
 
-      if (subSegments[0] === 'admin') {
+      const isAdminPath = subSegments[0] === 'admin';
+      if (isAdminPath) {
         effectiveRole = 'admin';
+      }
+
+      // Canonical form: <slug>.<APP_HOST> (or <slug>.admin.<APP_HOST>).
+      // Only skip the redirect when the request is already on the tenant host.
+      if (tenantResolution.slug !== pathSlug) {
+        const canonical = canonicalTenantUrl(
+          request,
+          pathSlug,
+          isAdminPath,
+          targetPath,
+          request.nextUrl.search
+        );
+        return NextResponse.redirect(canonical, 308);
       }
 
       rewriteUrl = new URL(targetPath, request.url);
@@ -149,6 +218,8 @@ export function middleware(request: NextRequest) {
   requestHeaders.set('x-portal-role', effectiveRole);
 
   // 3. Whitelisted public paths (splash, auth entry, registration, statutory policies, maker & public directory)
+  // NOTE: /admin is intentionally NOT public — the admin console requires a signed
+  // session cookie and performs its own credential check.
   const publicPaths = [
     '/',
     '/chooser',
@@ -166,7 +237,6 @@ export function middleware(request: NextRequest) {
     '/disclosures',
     '/facilities',
     '/faculty',
-    '/admin', // admin login view handles its own credential validation
   ];
 
   const targetPath = rewriteUrl ? rewriteUrl.pathname : pathname;
@@ -175,10 +245,14 @@ export function middleware(request: NextRequest) {
     targetPath.startsWith('/s/') ||
     publicPaths.some((p) => targetPath === p || targetPath.startsWith(p + '/'));
 
-  // 4. Inspect HttpOnly auth cookie or session indicator cookie
-  const authToken = request.cookies.get('school_auth_token')?.value;
-  const sessionActive = request.cookies.get('school_session_active')?.value;
-  const isAuthenticated = Boolean(authToken || sessionActive);
+  // 4. Verify the signed session cookie minted by /api/auth/session.
+  //    A client-writable flag cookie is NOT trusted: it can be forged.
+  const sessionSecret = (process.env.SESSION_SECRET || '').trim();
+  const sessionPayload = await verifySessionToken(
+    request.cookies.get(SESSION_COOKIE_NAME)?.value,
+    sessionSecret
+  );
+  const isAuthenticated = Boolean(sessionPayload);
 
   let response: NextResponse;
 
@@ -196,12 +270,15 @@ export function middleware(request: NextRequest) {
     });
   }
 
-  // Attach tenant slug cookie for effortless client hydration
+  // Attach tenant slug cookie for effortless client hydration.
+  // It is scoped to the shared parent domain so it survives the canonical
+  // subdomain redirect (platform host -> <slug>.<app-host>).
   if (effectiveSlug) {
     response.cookies.set('school_tenant_slug', effectiveSlug, {
       path: '/',
       sameSite: 'lax',
       httpOnly: false, // accessible to client scripts
+      domain: SHARED_COOKIE_DOMAIN,
     });
   }
 
@@ -217,6 +294,19 @@ export function middleware(request: NextRequest) {
       loginUrl.searchParams.set('tenant', effectiveSlug);
     }
     return NextResponse.redirect(loginUrl);
+  }
+
+  // 6. The admin console is restricted to administrator / creator sessions.
+  if (targetPath === '/admin' || targetPath.startsWith('/admin/')) {
+    const role = sessionPayload?.role;
+    if (role !== 'admin' && role !== 'creator') {
+      const loginUrl = new URL('/chooser', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      if (effectiveSlug) {
+        loginUrl.searchParams.set('tenant', effectiveSlug);
+      }
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
   return response;

@@ -6,6 +6,8 @@ import { useSearchParams } from 'next/navigation';
 import PublicHeader from '@/components/public/PublicHeader';
 import PortalFooter from '@/components/PortalFooter';
 import { useTenant } from '@/lib/context/TenantContext';
+import { tenantPortalUrls } from '@/lib/tenantUrls';
+import RequireSession from '@/components/common/RequireSession';
 
 interface ModuleDef {
   id: string;
@@ -143,14 +145,15 @@ function AdminDashboardContent() {
             >
               Notice CMS &amp; Gazette →
             </Link>
-            <Link
-              href={`/school/${effectiveSlug}`}
+            <a
+              href={tenantPortalUrls(effectiveSlug).appDomain}
               target="_blank"
+              rel="noopener noreferrer"
               className="w-full sm:w-auto px-4 py-2.5 bg-[#1c2ac8] hover:bg-[#15209e] text-white text-xs font-bold rounded-xl shadow-sm text-center transition-all flex items-center justify-center gap-1.5"
             >
               <span>View Public Portal</span>
               <span className="text-amber-300">↗</span>
-            </Link>
+            </a>
           </div>
         </div>
 
@@ -283,7 +286,9 @@ export default function AdminDashboardPage() {
         </div>
       }
     >
-      <AdminDashboardContent />
+      <RequireSession mode="creator">
+        <AdminDashboardContent />
+      </RequireSession>
     </React.Suspense>
   );
 }

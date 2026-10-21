@@ -222,6 +222,29 @@ Every hamburger opens a **full-screen** surface on phones — no half-height she
 - **Tap targets**: every hamburger is at least 40×40 px (`w-11 h-11` on phones, `w-10 h-10` on `sm` and up).
 - **Header rows never overflow**: brand blocks are `min-w-0` with `truncate` so the school name yields space instead of pushing the menu button off-screen; the landing header drops the duplicate platform menu button for school tenants (the school drawer button already covers it) and shortens `Enter Portal` to `Portal` on phones.
 
+### 4.10. Canonical Tenant URLs (subdomain model)
+
+A tenant is addressed by its **own subdomain of the deployed webapp**, never by a path:
+
+| Surface | Student | Admin |
+|---|---|---|
+| Canonical app URL | `https://<slug>.<APP_HOST>` | `https://<slug>.admin.<APP_HOST>` |
+| DNS-bound custom domain | `https://<slug>.nexacampus.tech` | `https://<slug>.admin.nexacampus.tech` |
+| Last-resort path fallback | `https://<APP_HOST>/school/<slug>` | `https://<APP_HOST>/school/<slug>/admin` |
+
+- `APP_HOST` comes from `NEXT_PUBLIC_CANONICAL_APP_HOST` (default `school-webapp-self.vercel.app`). The single source of truth is `lib/tenantUrls.ts` (`tenantPortalUrls(slug)`), used by the directory cards, the share modal, the admin console, the SchoolMaker studio and the API client.
+- `middleware.ts` **redirects** (308) the legacy path form to the canonical subdomain: `/school/greenwood` → `https://greenwood.school-webapp-self.vercel.app/`, `/school/greenwood/admin` → `https://greenwood.admin.school-webapp-self.vercel.app/admin`. On `localhost` the same redirect targets `http://<slug>.localhost:<port>`.
+- The host is resolved by the edge guard and by `TenantContext`, so the tenant slug travels in the **host**, not in a query string.
+- Because the redirect crosses a host boundary, the session cookie and the tenant-slug cookie are issued for the **shared parent domain** (`SHARED_COOKIE_DOMAIN`, e.g. `.school-webapp-self.vercel.app`) so a signed-in visitor stays signed in on the tenant subdomain.
+
+### 4.11. Authentication Model
+
+- **Signed session cookie.** The portal session itself stays in the browser (Firebase + `localStorage`), but the edge cannot read `localStorage`. `POST /api/auth/session` therefore mints a **signed, HttpOnly** cookie (`school_auth_token`, HMAC-SHA256 over `{sub, role, tenant, iat, exp}`, secret `SESSION_SECRET`) and `middleware.ts` verifies the signature before letting a protected route through. A client-writable flag cookie can be forged; a signed one cannot.
+- **Every mint is verified server-side**: a Firebase ID token is checked against the Identity Toolkit (`accounts:lookup`), an admission number against the Go backend roster (`/api/v1/auth/student-login`), and a SchoolMaker creator token against the Go backend (`/api/v1/maker/auth/validate-token`).
+- **Roles.** The token carries a role (`student` | `admin` | `creator`). `/admin` and `/admin/cms` are **no longer public** and additionally require an `admin`/`creator` role; the pages are wrapped in `<RequireSession mode="creator">`, which blocks rendering until the session is confirmed (no content flash).
+- **Local development.** The `Secure` attribute is only applied over HTTPS — applying it on `http://localhost` made the browser drop the cookie and left the edge guard without a session.
+- The middleware public list now contains only genuinely public routes (landing, chooser, sign-in, statutory pages, maker, explore, apply, disclosures, facilities, faculty).
+
 ---
 
 ## 5. Security & Defensive Design

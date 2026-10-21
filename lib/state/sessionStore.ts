@@ -6,6 +6,7 @@
  */
 
 import type { Student } from '../data';
+import { SHARED_COOKIE_DOMAIN } from '../tenantUrls';
 import {
   TWO_WEEKS_MS,
   getStudentIdentifier,
@@ -48,6 +49,88 @@ function notify(session: Session | null): void {
       console.warn('[SessionStore] Listener error:', e);
     }
   });
+}
+
+/**
+ * The Secure attribute is only honoured (and only correct) over HTTPS.
+ * Applying it on http://localhost makes the browser drop the cookie, which used
+ * to leave the edge guard without any session indicator during local dev.
+ */
+function secureCookieSuffix(): string {
+  if (typeof window === 'undefined') return '';
+  return window.location.protocol === 'https:' ? '; Secure' : '';
+}
+
+/**
+ * Scopes the client-written cookies to the shared parent domain so they are
+ * still present on the tenant subdomain after the canonical redirect.
+ */
+function sharedCookieDomainSuffix(): string {
+  if (typeof window === 'undefined') return '';
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return '';
+  }
+  return `; domain=${SHARED_COOKIE_DOMAIN ?? ''}`;
+}
+
+/**
+ * Asks the Next.js server to mint the signed, HttpOnly session cookie that the
+ * edge guard verifies. The request is best-effort: the portal still works
+ * client-side if the server cannot be reached.
+ */
+async function issueSignedSession(session: Session): Promise<void> {
+  if (typeof window === 'undefined' || typeof fetch === 'undefined') return;
+
+  try {
+    // Firebase-backed sessions prove themselves with an ID token.
+    const { getAuthUser } = await import('../firebase');
+    const user = getAuthUser();
+    if (user) {
+      const idToken = await user.getIdToken();
+      await fetch('/api/auth/session', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mode: 'firebase',
+          idToken,
+          tenant: readTenantSlug(),
+        }),
+      });
+      return;
+    }
+
+    // Admission-number sessions are validated server-side against the roster.
+    const admissionNumber = session.student?.id || '';
+    if (!admissionNumber) return;
+    await fetch('/api/auth/session', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mode: 'admission',
+        admissionNumber,
+        tenant: readTenantSlug(),
+      }),
+    });
+  } catch {
+    // Non-fatal: the client session remains valid for the current tab.
+  }
+}
+
+function readTenantSlug(): string {
+  if (typeof document === 'undefined') return '';
+  const match = document.cookie.match(/(?:^|;\s*)school_tenant_slug=([^;]+)/);
+  return match?.[1]?.trim().toLowerCase() || '';
+}
+
+/**
+ * Re-issues the signed session cookie when it is missing (e.g. after a deploy
+ * that rotated the secret, or a session restored from localStorage).
+ */
+export function refreshSignedSession(): void {
+  const session = getSession();
+  if (session) void issueSignedSession(session);
 }
 
 /**
@@ -97,7 +180,7 @@ export function getSession(): Session | null {
 
     store.setItem(KEY, JSON.stringify(session));
     if (typeof document !== 'undefined') {
-      document.cookie = 'school_session_active=1; path=/; max-age=1209600; SameSite=Strict; Secure';
+      document.cookie = `school_session_active=1; path=/; max-age=1209600; SameSite=Strict${secureCookieSuffix()}${sharedCookieDomainSuffix()}`;
     }
     return session;
   } catch {
@@ -133,11 +216,14 @@ export function setSession(session: Session): void {
 
   store.setItem(KEY, JSON.stringify(updated));
   if (typeof document !== 'undefined') {
-    document.cookie = 'school_session_active=1; path=/; max-age=1209600; SameSite=Strict; Secure';
+    document.cookie = `school_session_active=1; path=/; max-age=1209600; SameSite=Strict${secureCookieSuffix()}${sharedCookieDomainSuffix()}`;
     try {
       localStorage.removeItem('nexacampus_jwt_token');
     } catch {}
   }
+
+  // Mint the signed, HttpOnly session cookie the edge guard verifies.
+  void issueSignedSession(updated);
 
   notify(updated);
 }
@@ -148,11 +234,15 @@ export function setSession(session: Session): void {
 export function clearSession(): void {
   storage()?.removeItem(KEY);
   if (typeof document !== 'undefined') {
-    document.cookie = 'school_session_active=; path=/; max-age=0; SameSite=Strict; Secure';
-    document.cookie = 'school_auth_token=; path=/; max-age=0; SameSite=Strict; Secure';
+    document.cookie = `school_session_active=; path=/; max-age=0; SameSite=Strict${secureCookieSuffix()}${sharedCookieDomainSuffix()}`;
+    document.cookie = `school_auth_token=; path=/; max-age=0; SameSite=Strict${secureCookieSuffix()}`;
     try {
       localStorage.removeItem('nexacampus_jwt_token');
     } catch {}
+  }
+  // Drop the server-issued signed session too.
+  if (typeof fetch !== 'undefined') {
+    void fetch('/api/auth/session', { method: 'DELETE', credentials: 'include' }).catch(() => {});
   }
   notify(null);
 }

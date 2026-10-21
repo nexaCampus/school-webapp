@@ -5,6 +5,7 @@ import SchoolShowcaseCard, { SchoolRecord } from './SchoolShowcaseCard';
 import DirectoryFilterDrawer, { FilterState } from './DirectoryFilterDrawer';
 import SharePortalModal, { SchoolShareInfo } from './SharePortalModal';
 import { fetchAllSchools } from '@/lib/api/makerClient';
+import { tenantPortalUrls } from '@/lib/tenantUrls';
 
 export const SAMPLE_SCHOOLS: SchoolRecord[] = [
   {
@@ -150,19 +151,23 @@ export default function ExploreCampusesGrid({
           const mapped: SchoolRecord[] = backendSchools.map((s, idx) => {
             const teacherNum = parseInt(String(s.teacher_count || '50'), 10) || 50;
             const scholarsStr = s.enrolled_scholars ? String(s.enrolled_scholars) : `${teacherNum * 30}`;
-            return {
-              id: `sch-db-${idx}-${s.subdomain_slug}`,
-              name: s.school_name,
-              slug: s.subdomain_slug,
-              affiliation: `${s.affiliation_board || 'CBSE/CISCE'} • ${teacherNum} Faculty`,
-              board: toBoardType(s.affiliation_board),
-              location: `${s.city}, ${s.state_territory}`,
-              state: s.state_territory || 'West Bengal',
-              institutionType: 'Co-ed',
-              studentStrength: `${scholarsStr} Scholars`,
-              established: 2026,
-              annualFeeRange: '₹85K - ₹1.75L',
-              portalUrl: s.subdomain_slug === 'lcgvm' ? '/' : `/school/${s.subdomain_slug}`,
+              const tenantUrls = tenantPortalUrls(s.subdomain_slug);
+              return {
+                id: `sch-db-${idx}-${s.subdomain_slug}`,
+                name: s.school_name,
+                slug: s.subdomain_slug,
+                affiliation: `${s.affiliation_board || 'CBSE/CISCE'} • ${teacherNum} Faculty`,
+                board: toBoardType(s.affiliation_board),
+                location: `${s.city}, ${s.state_territory}`,
+                state: s.state_territory || 'West Bengal',
+                institutionType: 'Co-ed',
+                studentStrength: `${scholarsStr} Scholars`,
+                established: 2026,
+                annualFeeRange: '₹85K - ₹1.75L',
+                portalUrl:
+                  s.subdomain_slug === 'lcgvm'
+                    ? '/'
+                    : s.vercel_fallback_domain || tenantUrls.appDomain,
               crestLetter: (s.school_name || 'N')[0].toUpperCase(),
               primaryColor: '#0A192F',
               accentBadge: s.subdomain_slug === 'lcgvm' ? 'Premier Flagship' : 'Autonomous Campus',
