@@ -35,14 +35,14 @@ export default function FacilitiesPage() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-10 space-y-12">
         {/* Section Header */}
-        <div className="border-b border-slate-300 pb-6">
-          <div className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy">
+        <div className="border-b border-slate-300 dark:border-[#2b2f48] pb-6">
+          <div className="text-xs font-mono font-bold uppercase tracking-widest text-burgundy dark:text-[#f2a5b5]">
             Campus Infrastructure & Telematics
           </div>
-          <h1 className="font-serif font-bold text-3xl md:text-4xl text-oxford mt-1.5">
+          <h1 className="font-serif font-bold text-3xl md:text-4xl text-oxford dark:text-[#eaedff] mt-1.5">
             Campus Facilities & Transit Directory
           </h1>
-          <p className="text-xs md:text-sm text-slate-600 mt-2 max-w-3xl leading-relaxed">
+          <p className="text-xs md:text-sm text-slate-600 dark:text-[#a0a4c0] mt-2 max-w-3xl leading-relaxed">
             State-of-the-art facilities engineered to stimulate scientific inquiry, athletic grit, and student safety across our 12.5-acre campus.
           </p>
         </div>
@@ -52,16 +52,16 @@ export default function FacilitiesPage() {
           {FACILITIES_DATA.map((fac) => (
             <div
               key={fac.title}
-              className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs flex flex-col justify-between"
+              className="bg-white dark:bg-[#151622] rounded-xl p-6 border border-slate-200 dark:border-[#222538] shadow-xs flex flex-col justify-between"
             >
               <div>
-                <span className="font-mono text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                <span className="font-mono text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/15 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-500/30">
                   {fac.metric}
                 </span>
-                <h3 className="font-serif font-bold text-base text-oxford mt-3">
+                <h2 className="font-serif font-bold text-base text-oxford dark:text-[#eaedff] mt-3">
                   {fac.title}
-                </h3>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                </h2>
+                <p className="text-xs text-slate-600 dark:text-[#a0a4c0] mt-2 leading-relaxed">
                   {fac.desc}
                 </p>
               </div>
