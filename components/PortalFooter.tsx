@@ -175,7 +175,7 @@ export default function PortalFooter() {
                 call
               </span>
               <span className="text-[12px]">
-                <a href={`tel:${phone}`} className="hover:text-primary transition-colors underline-offset-2 hover:underline">
+                <a href={`tel:${phone}`} className="inline-block py-1 hover:text-primary transition-colors underline-offset-2 hover:underline">
                   {phone}
                 </a>
               </span>
@@ -184,7 +184,7 @@ export default function PortalFooter() {
               <span className="material-symbols-outlined text-[17px] text-primary flex-shrink-0">
                 mail
               </span>
-              <a href={`mailto:${email}`} className="text-[12px] hover:text-primary transition-colors underline-offset-2 hover:underline">
+              <a href={`mailto:${email}`} className="text-[12px] inline-block py-1 hover:text-primary transition-colors underline-offset-2 hover:underline">
                 {email}
               </a>
             </div>
