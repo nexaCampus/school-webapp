@@ -44,7 +44,10 @@ export function getApiBase(): string {
     // In local development on localhost or 127.0.0.1, prioritize local Go backend on port 8080
     const host = window.location.hostname;
     if (host === 'localhost' || host === '127.0.0.1') {
-      return 'http://localhost:8080';
+      return (
+        process.env.NEXT_PUBLIC_LOCAL_GO_API_URL ||
+        'http://localhost:8080'
+      );
     }
   }
   return (
@@ -76,7 +79,14 @@ export async function sendMakerOTP(
 
     return await res.json();
   } catch (err: unknown) {
-    console.warn('[makerClient] sendMakerOTP backend fetch error, using safe fallback:', err);
+    const message = err instanceof Error ? err.message : String(err);
+    const isNetworkFailure =
+      err instanceof TypeError ||
+      /fetch failed|network|ECONNREFUSED|Failed to fetch/i.test(message);
+    if (!isNetworkFailure) {
+      throw err;
+    }
+    console.warn('[makerClient] sendMakerOTP backend unreachable, using offline fallback:', err);
     // Safe dev fallback: allow verification with 123456
     return {
       success: true,
@@ -109,7 +119,14 @@ export async function verifyMakerOTP(
 
     return await res.json();
   } catch (err: unknown) {
-    console.warn('[makerClient] verifyMakerOTP backend fetch error, fallback:', err);
+    const message = err instanceof Error ? err.message : String(err);
+    const isNetworkFailure =
+      err instanceof TypeError ||
+      /fetch failed|network|ECONNREFUSED|Failed to fetch/i.test(message);
+    if (!isNetworkFailure) {
+      throw err;
+    }
+    console.warn('[makerClient] verifyMakerOTP backend unreachable, using offline fallback:', err);
     if (otp.trim() === '123456') {
       const token = 'tok_dev_' + Math.random().toString(36).substring(2, 15);
       const session: CreatorSessionData = {
@@ -216,13 +233,23 @@ export async function provisionSchool(payload: {
     });
 
     if (!res.ok) {
+      // A rejected request (slug taken, forbidden, invalid payload) must surface
+      // as a failure - it is never downgraded to a local "optimistic" record.
       const errData = await res.json().catch(() => ({}));
       throw new Error(errData.message || `Provisioning failed with status ${res.status}`);
     }
 
     return await res.json();
   } catch (err: unknown) {
-    console.warn('[makerClient] provisionSchool backend error, generating optimistic record:', err);
+    const message = err instanceof Error ? err.message : String(err);
+    const isNetworkFailure =
+      err instanceof TypeError ||
+      /fetch failed|network|ECONNREFUSED|Failed to fetch/i.test(message);
+    if (!isNetworkFailure) {
+      throw err;
+    }
+
+    console.warn('[makerClient] provisionSchool backend unreachable, generating offline record:', err);
     const slug = bodyData.subdomain_slug;
     const optimisticRecord: SchoolRecordData = {
       id: 'sch-' + slug,
