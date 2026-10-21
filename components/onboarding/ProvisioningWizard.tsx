@@ -360,7 +360,7 @@ export default function ProvisioningWizard() {
                     <span>&quot;{cleanSlug}&quot; is reserved for system infrastructure. Please choose another identifier.</span>
                   </div>
                 ) : isValidSlug ? (
-                  <div className="p-3 bg-emerald-50 text-emerald-800 rounded-lg border border-emerald-200 flex items-center justify-between">
+                  <div className="p-3 bg-emerald-50 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-200 rounded-lg border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                       <span className="font-bold">Available!</span>
