@@ -210,18 +210,19 @@ export default function ProvisioningWizard() {
                   value={form.officialName}
                   onChange={(e) => setForm({ ...form, officialName: e.target.value })}
                   placeholder="e.g. Saraswati Centennial Vidyapeeth"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white focus:ring-1 focus:ring-oxford text-slate-800 font-medium"
+                  className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white focus:ring-1 focus:ring-oxford dark:focus:ring-[#3b49df] text-slate-800 dark:text-[#dfe2f4] font-medium"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">
+                <label className="block font-bold text-slate-700 dark:text-[#c4c7e0] mb-1">
                   Affiliation Board *
                 </label>
                 <select
+                  aria-label="Affiliation board"
                   value={form.board}
                   onChange={(e) => setForm({ ...form, board: e.target.value as any })}
-                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white focus:ring-1 focus:ring-oxford text-slate-800"
+                  className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white focus:ring-1 focus:ring-oxford dark:focus:ring-[#3b49df] text-slate-800 dark:text-[#dfe2f4]"
                 >
                   <option value="CBSE">Central Board of Secondary Education (CBSE)</option>
                   <option value="CISCE">Council for the Indian School Certificate (CISCE)</option>

@@ -252,17 +252,18 @@ export default function AdmissionWizard() {
                         value={formData.studentName}
                         onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
                         placeholder="e.g. Sagnik Banerjee"
-                        className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white focus:ring-1 focus:ring-oxford"
+                        className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white focus:ring-1 focus:ring-oxford dark:focus:ring-[#3b49df]"
                       />
                     </div>
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
+                      <label className="block font-semibold text-slate-700 dark:text-[#c4c7e0] mb-1">
                         Grade Applying For *
                       </label>
                       <select
+                        aria-label="Grade applying for"
                         value={formData.gradeApplying}
                         onChange={(e) => setFormData({ ...formData, gradeApplying: e.target.value })}
-                        className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white focus:ring-1 focus:ring-oxford"
+                        className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white focus:ring-1 focus:ring-oxford dark:focus:ring-[#3b49df]"
                       >
                         <option>Nursery</option>
                         <option>Lower KG</option>
@@ -276,24 +277,26 @@ export default function AdmissionWizard() {
                       </select>
                     </div>
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
+                      <label className="block font-semibold text-slate-700 dark:text-[#c4c7e0] mb-1">
                         Date of Birth (as per Municipal Cert) *
                       </label>
                       <input
                         type="date"
+                        aria-label="Date of birth (as per Municipal Certificate)"
                         value={formData.dob}
                         onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-                        className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white focus:ring-1 focus:ring-oxford"
+                        className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white focus:ring-1 focus:ring-oxford dark:focus:ring-[#3b49df]"
                       />
                     </div>
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">
+                      <label className="block font-semibold text-slate-700 dark:text-[#c4c7e0] mb-1">
                         Blood Group & Rh Factor
                       </label>
                       <select
+                        aria-label="Blood group"
                         value={formData.bloodGroup}
                         onChange={(e) => setFormData({ ...formData, bloodGroup: e.target.value })}
-                        className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded focus:bg-white focus:ring-1 focus:ring-oxford"
+                        className="w-full p-2.5 bg-slate-50 dark:bg-[#101119] border border-slate-300 dark:border-[#2b2f48] rounded focus:bg-white focus:ring-1 focus:ring-oxford dark:focus:ring-[#3b49df]"
                       >
                         <option>A+</option>
                         <option>A-</option>
