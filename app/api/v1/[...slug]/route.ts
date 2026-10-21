@@ -20,6 +20,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   return proxyMutationRequest(request, slug);
 }
 
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+  const { slug } = await params;
+  return proxyMutationRequest(request, slug);
+}
+
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params;
   return proxyMutationRequest(request, slug);
@@ -78,7 +83,8 @@ async function proxyGetRequest(request: NextRequest, slug: string[]) {
 
   const cleanPath = path.startsWith('v1/') ? path.slice(3) : path;
   const baseUrl = GO_BACKEND_URL.replace(/\/+$/, '');
-  const targetUrl = `${baseUrl}/v1/${cleanPath}${search}`;
+  // The Go orchestrator exposes its public surface under /api/v1/*
+  const targetUrl = `${baseUrl}/api/v1/${cleanPath}${search}`;
 
   try {
     const cachedResult = await getOrCompute(cacheKey, ttl, async () => {
@@ -124,7 +130,8 @@ async function proxyMutationRequest(request: NextRequest, slug: string[]) {
   const search = request.nextUrl.search;
   const cleanPath = path.startsWith('v1/') ? path.slice(3) : path;
   const baseUrl = GO_BACKEND_URL.replace(/\/+$/, '');
-  const targetUrl = `${baseUrl}/v1/${cleanPath}${search}`;
+  // The Go orchestrator exposes its public surface under /api/v1/*
+  const targetUrl = `${baseUrl}/api/v1/${cleanPath}${search}`;
 
   const forwardHeaders = new Headers();
   request.headers.forEach((value, key) => {
