@@ -28,7 +28,7 @@ export default function TimetablePage() {
   const [student, setStudent] = useState({
     name: 'Student',
     section: 'Sec E',
-    details: 'Class 12-E â€¢ Roll No. 20',
+    details: 'Class 12-E • Roll No. 20',
     initials: 'ST',
   });
   const [joinToast, setJoinToast] = useState<string | null>(null);
@@ -54,7 +54,7 @@ export default function TimetablePage() {
     setStudent({
       name,
       section: `Sec ${section}`,
-      details: `Class ${grade}-${section} â€¢ Roll No. ${roll}`,
+      details: `Class ${grade}-${section} • Roll No. ${roll}`,
       initials,
     });
 
@@ -74,7 +74,7 @@ export default function TimetablePage() {
 
   const handleJoinClass = (period: TimetablePeriod) => {
     setJoinToast(
-      `Connecting to live classroom: ${period.subject} with ${period.teacher.split('Â·')[0].trim()}...`
+      `Connecting to live classroom: ${period.subject} with ${period.teacher.split('·')[0].trim()}...`
     );
     setTimeout(() => {
       setJoinToast(null);
@@ -132,7 +132,7 @@ export default function TimetablePage() {
               <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse" />
               <span>Offline Cache Active</span>
             </div>
-            <span className="hidden sm:inline">â€¢</span>
+            <span className="hidden sm:inline">•</span>
             <span>CISCE Curriculum 2026</span>
           </div>
         </section>
