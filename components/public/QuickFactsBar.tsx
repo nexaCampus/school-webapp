@@ -61,7 +61,7 @@ export default function QuickFactsBar() {
               Academic Audits & Institutional Scale
             </h2>
           </div>
-          <div className="text-xs font-mono text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded border border-slate-700">
+          <div className="text-xs font-mono text-slate-400 dark:text-[#8a8fa8] bg-slate-800/80 px-3 py-1.5 rounded border border-slate-700">
             Official Data Verified: Session 2025-26
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function QuickFactsBar() {
               <div className="text-xs font-bold text-white mt-1 leading-snug">
                 {fact.label}
               </div>
-              <p className="text-[11px] text-slate-400 mt-1 leading-tight line-clamp-2">
+              <p className="text-[11px] text-slate-400 dark:text-[#8a8fa8] mt-1 leading-tight line-clamp-2">
                 {fact.detail}
               </p>
             </div>
