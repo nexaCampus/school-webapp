@@ -434,7 +434,7 @@ export default function EmailPage() {
             {googleBusy ? (
               <span className="w-[18px] h-[18px] rounded-full border-2 border-surface-container-high border-t-primary animate-spin" />
             ) : (
-              <span className="w-6 h-6 rounded-full bg-white shadow-sm flex items-center justify-center">
+              <span className="w-6 h-6 rounded-full bg-white dark:bg-[#151622] shadow-sm flex items-center justify-center">
                 <span className="text-[15px] font-extrabold" style={{ color: '#4285F4' }}>
                   G
                 </span>
