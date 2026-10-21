@@ -69,11 +69,6 @@ export default function PublicHeader() {
         ...(isModuleEnabled('attendance') ? [{ label: 'Attendance System', href: '/attendance', desc: 'Biometric & period-wise statutory attendance' }] : []),
       ],
     },
-    {
-      label: 'Explore Campuses',
-      href: '/explore',
-      badge: 'Directory',
-    },
   ];
 
   return (
