@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { tenantPortalUrls } from '@/lib/tenantUrls';
 
 export interface SchoolShareInfo {
   name: string;
@@ -21,7 +22,7 @@ export default function SharePortalModal({
   const [copiedEmbed, setCopiedEmbed] = useState(false);
   const [activeTab, setActiveTab] = useState<'link' | 'qr' | 'embed'>('link');
 
-  const portalUrl = school.url || `https://${school.slug}.nexacampus.tech`;
+  const portalUrl = school.url || tenantPortalUrls(school.slug).appDomain;
   const embedCode = `<iframe src="${portalUrl}/embed" width="100%" height="600" frameborder="0" title="${school.name} Portal"></iframe>`;
 
   const handleCopyLink = () => {
