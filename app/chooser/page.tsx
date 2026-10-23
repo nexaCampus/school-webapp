@@ -182,7 +182,7 @@ function UniversalChooserContent() {
                     <div>
                       <div className="text-xs font-bold text-on-surface">{sch.school_name}</div>
                       <div className="text-[10px] text-on-surface-variant font-mono">
-                        {sch.subdomain_slug}.nexacampus.tech • {sch.city}
+                        {sch.subdomain_slug}.nexacampus.school • {sch.city}
                       </div>
                     </div>
                     <span className="text-xs font-bold text-[#1c2ac8]dark:text-[#bdc2ff]">Select →</span>
@@ -334,7 +334,7 @@ function UniversalChooserContent() {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-white font-bold">Subdomain:</span>
-                        <span className="text-amber-300">{selectedSchool.subdomain_slug}.nexacampus.tech</span>
+                        <span className="text-amber-300">{selectedSchool.subdomain_slug}.nexacampus.school</span>
                       </div>
                     </div>
 
@@ -371,7 +371,7 @@ function UniversalChooserContent() {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-[16px] text-amber-300">link</span>
-                        <span className="text-amber-300 font-mono">&lt;school-abbreviation&gt;.nexacampus.tech</span>
+                        <span className="text-amber-300 font-mono">&lt;school-abbreviation&gt;.nexacampus.school</span>
                       </div>
                     </div>
                   </>
@@ -440,7 +440,7 @@ function UniversalChooserContent() {
                               {sch.school_name}
                             </div>
                             <div className="text-[11px] text-on-surface-variant font-mono">
-                              {sch.subdomain_slug}.nexacampus.tech • {sch.city}, {sch.state_territory}
+                              {sch.subdomain_slug}.nexacampus.school • {sch.city}, {sch.state_territory}
                             </div>
                           </div>
                         </div>

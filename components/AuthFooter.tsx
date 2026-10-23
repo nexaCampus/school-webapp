@@ -13,7 +13,7 @@ export default function AuthFooter({ className = '' }: { className?: string }) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         {/* School Identity */}
         <div className="flex items-center gap-3">
-          <Link href="/" title={isPlatformRoot ? "NexaCampus" : (tenant?.school_name || "School Portal")} className="flex-shrink-0 flex items-center">
+          <Link href="/" aria-label="NexaCampus Home" className="flex-shrink-0 flex items-center">
             <LogoEmblem className="h-8 w-8" />
           </Link>
           <div className="flex flex-col">
@@ -28,7 +28,7 @@ export default function AuthFooter({ className = '' }: { className?: string }) {
             <span className="text-[11px] text-on-surface-variant">
               {isPlatformRoot
                 ? "Autonomous Academic Infrastructure · ISO 27001 Certified"
-                : `${tenant?.city || 'Campus'}${tenant?.state_territory ? `, ${tenant.state_territory}` : ''} · Subdomain: ${tenant?.subdomain_slug || 'portal'}.nexacampus.tech`}
+                : `${tenant?.city || 'Campus'}${tenant?.state_territory ? `, ${tenant.state_territory}` : ''} · Subdomain: ${tenant?.subdomain_slug || 'portal'}.nexacampus.school`}
             </span>
           </div>
         </div>

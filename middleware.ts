@@ -31,7 +31,7 @@ const RESERVED_SLUGS = new Set([
  * <slug>.<APP_HOST> (student) and <slug>.admin.<APP_HOST> (admin).
  * The legacy path form (/school/<slug>) is redirected to it.
  */
-const APP_HOST = (process.env.NEXT_PUBLIC_CANONICAL_APP_HOST || 'school-webapp-self.vercel.app')
+const APP_HOST = (process.env.NEXT_PUBLIC_CANONICAL_APP_HOST || 'nexacampus.school')
   .toLowerCase()
   .trim();
 
@@ -48,7 +48,7 @@ function resolveTenantFromHost(host: string): TenantResolution {
   const cleanHost = host.split(':')[0].toLowerCase();
 
   // 1. Admin custom domain: <slug>.admin.nexacampus.tech (or .com)
-  const adminCustomMatch = cleanHost.match(/^([a-z0-9-]+)\.admin\.nexacampus\.(?:tech|com)$/);
+  const adminCustomMatch = cleanHost.match(/^([a-z0-9-]+)\.admin\.nexacampus\.(?:school|tech|com)$/);
   if (adminCustomMatch && !RESERVED_SLUGS.has(adminCustomMatch[1])) {
     return { slug: adminCustomMatch[1], role: 'admin', isAdminHost: true };
   }
@@ -74,7 +74,7 @@ function resolveTenantFromHost(host: string): TenantResolution {
   }
 
   // 5. Student/Public custom domain: <slug>.nexacampus.tech (or .com)
-  const studentCustomMatch = cleanHost.match(/^([a-z0-9-]+)\.nexacampus\.(?:tech|com)$/);
+  const studentCustomMatch = cleanHost.match(/^([a-z0-9-]+)\.nexacampus\.(?:school|tech|com)$/);
   if (studentCustomMatch && !RESERVED_SLUGS.has(studentCustomMatch[1])) {
     return { slug: studentCustomMatch[1], role: 'student', isAdminHost: false };
   }

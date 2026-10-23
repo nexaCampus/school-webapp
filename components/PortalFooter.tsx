@@ -15,7 +15,7 @@ export default function PortalFooter() {
   const motto = tenant?.school_motto || (isPlatformRoot ? 'The Operating System for Next-Gen Autonomous Campuses' : 'Academic Excellence & Innovation');
   const location = tenant ? `${tenant.city}, ${tenant.state_territory}` : 'Autonomous Campus Network';
   const phone = tenant?.creator_phone || '+91 6289652321';
-  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : (slug ? `office@${slug}.nexacampus.tech` : 'global@nexacampus.tech');
+  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.school` : (slug ? `office@${slug}.nexacampus.school` : 'global@nexacampus.tech');
   const year = new Date().getFullYear();
 
   return (
@@ -24,7 +24,7 @@ export default function PortalFooter() {
         {/* Top Institutional Header Row */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 pb-5 md:pb-8 border-b border-outline/10">
           <div className="flex items-start md:items-center gap-3">
-            <Link href="/" title={schoolName} className="flex-shrink-0 flex items-center">
+            <Link href="/" aria-label="NexaCampus Home" className="flex-shrink-0 flex items-center">
               <LogoEmblem className="h-9 w-9 md:h-11 md:w-11 shadow-sm" />
             </Link>
             <div>
