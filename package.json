@@ -4,7 +4,9 @@
   "version": "2.6.0",
   "description": "NexaCampus School web twin — Next.js App Router, mobile-first, pixel-faithful to the Android app (Stitch Academic Fluidity system).",
   "scripts": {
+    "predev": "node scripts/generate-firebase-sw.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/generate-firebase-sw.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
