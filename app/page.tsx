@@ -1237,47 +1237,11 @@ export default function ExecutiveHomePage() {
             <Link
               key={item.id}
               href={item.href}
-              className={`levitate-card group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/60 hover:shadow-2xl hover:shadow-[#1c2ac8]/18 dark:hover:shadow-[#3b49df]/25 flex-col justify-between cursor-pointer relative overflow-hidden ${
+              className={`levitate-card group p-5 rounded-2xl bg-white dark:bg-[#1a1c2b] border border-[#e2e7ff] dark:border-[#262a40] hover:border-[#3b49df]/60 hover:shadow-2xl hover:shadow-[#1c2ac8]/18 dark:hover:shadow-[#3b49df]/25 flex-col justify-between cursor-pointer overflow-hidden ${
                 index < visibleModuleCount ? 'flex' : 'hidden lg:flex'
               }`}
             >
-              {/* 45° diamond lattice behind the content. Light and dark variants are
-                  separate layers so each theme gets its own line colour; the lines
-                  sit at 30% and the content stays on top via `relative z-10`. */}
-              <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
-                <div
-                  className="absolute inset-0 dark:hidden"
-                  style={{
-                    backgroundImage: [
-                      'repeating-linear-gradient(45deg, rgba(28,42,200,0.14) 0 1px, rgba(28,42,200,0) 1px 15px)',
-                      'repeating-linear-gradient(-45deg, rgba(28,42,200,0.14) 0 1px, rgba(28,42,200,0) 1px 15px)',
-                    ].join(','),
-                    filter: 'blur(0.8px)',
-                  }}
-                />
-                <div
-                  className="absolute inset-0 hidden dark:block"
-                  style={{
-                    backgroundImage: [
-                      'repeating-linear-gradient(45deg, rgba(255,255,255,0.14) 0 1px, rgba(255,255,255,0) 1px 15px)',
-                      'repeating-linear-gradient(-45deg, rgba(255,255,255,0.14) 0 1px, rgba(255,255,255,0) 1px 15px)',
-                    ].join(','),
-                    filter: 'blur(0.8px)',
-                  }}
-                />
-                {[
-                  { left: `${8 + ((index * 37) % 62)}%`, top: `${6 + ((index * 53) % 30)}%`, size: 26 },
-                  { left: `${12 + ((index * 61) % 58)}%`, top: `${56 + ((index * 29) % 32)}%`, size: 15 },
-                ].map((tile, t) => (
-                  <span
-                    key={t}
-                    className="absolute rotate-45 rounded-[2px] border border-current bg-current text-[#1c2ac8] dark:text-white"
-                    style={{ left: tile.left, top: tile.top, width: tile.size, height: tile.size, opacity: 0.07 }}
-                  />
-                ))}
-              </div>
-
-              <div className="relative z-10">
+              <div>
                 <div className="flex items-center justify-between mb-4">
                   <div className={`w-11 h-11 rounded-xl bg-gradient-to-tr ${item.accent} flex items-center justify-center text-white shadow-md group-hover:scale-110 group-hover:rotate-1 transition-transform duration-300`}>
                     <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
@@ -1294,7 +1258,7 @@ export default function ExecutiveHomePage() {
                 </p>
               </div>
 
-              <div className="relative z-10 mt-5 pt-3 border-t border-[#f2f3ff] dark:border-[#24283d] flex items-center justify-between text-[12px] font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">
+              <div className="mt-5 pt-3 border-t border-[#f2f3ff] dark:border-[#24283d] flex items-center justify-between text-[12px] font-bold text-[#1c2ac8] dark:text-[#bdc2ff]">
                 <span>Launch Screen</span>
                 <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1.5 transition-transform duration-300">
                   arrow_forward
