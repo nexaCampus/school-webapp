@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import LogoEmblem from '@/components/LogoEmblem';
 import DarkModeToggle from '@/components/DarkModeToggle';
 import HeroTypewriter from '@/components/HeroTypewriter';
+import SplashScreen from '@/components/SplashScreen';
 import RevealMore from '@/components/common/RevealMore';
 import NoticeMarquee from '@/components/public/NoticeMarquee';
 import SchoolNavDrawer from '@/components/public/SchoolNavDrawer';
@@ -576,6 +577,8 @@ export default function ExecutiveHomePage() {
 
   return (
     <div className="min-h-screen bg-[#faf8ff] dark:bg-[#12131a] text-[#131b2e] dark:text-[#eaedff] selection:bg-[#3b49df] selection:text-white transition-colors duration-200">
+      {/* Cinematic boot splash — plays once per tab, then unmounts entirely */}
+      <SplashScreen />
       <main id="main-content">
       {/* =========================================================================
           DIV 1: EXECUTIVE 3D INTERACTIVE HERO SECTION
