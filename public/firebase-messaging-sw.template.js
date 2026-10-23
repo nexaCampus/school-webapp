@@ -1,18 +1,15 @@
 /* eslint-disable no-restricted-globals */
 // Firebase Cloud Messaging Background Service Worker for NexaCampus
 // Handles incoming push notifications on Phone (PWA/Chrome) and Desktop browsers
+//
+// TEMPLATE - do not put real keys here.
+// public/firebase-messaging-sw.js is generated from this file by
+// scripts/generate-firebase-sw.mjs (runs via predev / prebuild).
 
 importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js');
 
-const firebaseConfig = {
-  apiKey: 'REDACTED_GOOGLE_API_KEY',
-  authDomain: 'nexacampusschool.firebaseapp.com',
-  projectId: 'nexacampusschool',
-  storageBucket: 'nexacampusschool.firebasestorage.app',
-  messagingSenderId: '116245328238',
-  appId: '1:116245328238:web:f8c93f7dfd23b982b9917f',
-};
+const firebaseConfig = __FIREBASE_CONFIG_JSON__;
 
 if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);

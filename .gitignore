@@ -66,9 +66,12 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
+.env
 .env.*
 !.env.example
-!.env
+
+# Firebase messaging service worker (generated from template by predev/prebuild)
+public/firebase-messaging-sw.js
 
 # Graphify knowledge graph (local-only, never commit)
 graphify-out/

@@ -105,6 +105,11 @@ npm start                    # serve the production build
 - `NEXT_PUBLIC_CANONICAL_APP_HOST` — optional override when the webapp is served
   from a host other than `school-webapp-self.vercel.app`
 
+> `public/firebase-messaging-sw.js` is **generated**, never committed:
+> `npm run dev` / `npm run build` produce it from
+> `public/firebase-messaging-sw.template.js` plus your env values, so no Firebase
+> key is ever checked in.
+
 ### Console prerequisites
 
 - Firebase Authentication → Sign-in method: enable **Email/Password** and

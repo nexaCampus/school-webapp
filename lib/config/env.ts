@@ -39,7 +39,7 @@ function getEnvVar(key: string, defaultValue = ''): string {
 }
 
 export const firebaseEnv: FirebaseEnvironmentConfig = {
-  apiKey: getEnvVar('NEXT_PUBLIC_FIREBASE_API_KEY', 'REDACTED_GOOGLE_API_KEY'),
+  apiKey: getEnvVar('NEXT_PUBLIC_FIREBASE_API_KEY'),
   authDomain: getEnvVar('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN', 'nexacampusschool.firebaseapp.com'),
   projectId: getEnvVar('NEXT_PUBLIC_FIREBASE_PROJECT_ID', 'nexacampusschool'),
   storageBucket: getEnvVar('NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET', 'nexacampusschool.firebasestorage.app'),
