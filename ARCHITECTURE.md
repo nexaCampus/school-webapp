@@ -245,6 +245,12 @@ A tenant is addressed by its **own subdomain of the deployed webapp**, never by 
 - **Local development.** The `Secure` attribute is only applied over HTTPS — applying it on `http://localhost` made the browser drop the cookie and left the edge guard without a session.
 - The middleware public list now contains only genuinely public routes (landing, chooser, sign-in, statutory pages, maker, explore, apply, disclosures, facilities, faculty).
 
+### 4.12. Boot Splash Screen (`/` route)
+
+- **`components/SplashScreen.tsx`** renders a cinematic deep-navy (`#070D18`) cover over the landing route: ambient pulsing radial glow, emblem scale-in with a cyan drop-shadow, gradient wordmark un-blurring upward, and a 1px scan line beneath it. Hold is **1.2s** (0.7s under `prefers-reduced-motion`), then a 0.3s exit — either a fade + zoom (`exitVariant="fade"`, default) or a circular iris (`exitVariant="portal"` via `clip-path: circle(0% at 50% 50%)`). A discreet `Skip` button fades in top-right. `onComplete` fires when the overlay has fully left the DOM; `forceShow` bypasses the replay flag for previews.
+- **No-flash replay guard.** The overlay is part of the SSR markup, so first paint is always the dark cover — the light page can never flash beneath it. Replays are governed by a per-tab `sessionStorage` flag (`hasSeenSplash`); because storage is unreadable during SSR, the inline head script in `app/layout.tsx` stamps `<html class="splash-seen">` before first paint and `globals.css` display:nones `.splash-overlay` for such tabs — a repeat visitor never sees one frame of it.
+- **Clean lifecycle.** The cover is an `AnimatePresence` child: the hold timer (or Skip) triggers the exit transition, `onExitComplete` stops rendering the overlay subtree entirely, and the body scroll lock is restored. Framer Motion drives the choreography; `useReducedMotion` collapses it into a static brand frame with a short cross-fade.
+
 ---
 
 ## 5. Security & Defensive Design

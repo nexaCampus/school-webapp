@@ -467,3 +467,10 @@ textarea {
 .via-surface-container-lowest\/90 { --tw-gradient-via-position: 50%; --tw-gradient-stops: var(--tw-gradient-from), color-mix(in srgb, var(--color-surface-container-lowest, #ffffff) 90%, transparent) var(--tw-gradient-via-position), var(--tw-gradient-to); }
 .to-primary\/10 { --tw-gradient-to: color-mix(in srgb, var(--color-primary, #1c2ac8) 10%, transparent) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
 .to-surface-container-low\/80 { --tw-gradient-to: color-mix(in srgb, var(--color-surface-container-low, #f2f3ff) 80%, transparent) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+
+/* SplashScreen replay guard: the inline head script stamps this class before
+   first paint when this tab already watched the boot animation (per-tab
+   sessionStorage flag), so repeat loads never see one frame of the cover. */
+html.splash-seen .splash-overlay {
+  display: none;
+}
