@@ -64,7 +64,7 @@ export const LCGVM_FLAGSHIP: SchoolTenant = {
   state_territory: 'West Bengal',
   student_domain: 'https://lcgvm.nexacampus.school',
   admin_domain: 'https://lcgvm.admin.nexacampus.school',
-  vercel_fallback_domain: 'https://lcgvm-nexacampus.vercel.app',
+  vercel_fallback_domain: 'https://lcgvm.nexacampus.school',
   provisioning_status: 'active',
   theme_color: '#0A192F',
   active_modules: {
@@ -149,7 +149,7 @@ function extractSlugFromWindow(currentPath?: string): string | null {
   // 3. Check hostname subdomains
   const host = window.location.hostname.toLowerCase();
   const appHost = (
-    process.env.NEXT_PUBLIC_CANONICAL_APP_HOST || 'school-webapp-self.vercel.app'
+    process.env.NEXT_PUBLIC_CANONICAL_APP_HOST || 'nexacampus.school'
   )
     .toLowerCase()
     .trim();
@@ -251,7 +251,7 @@ export function TenantProvider({ children }: { children: ReactNode }) {
           school_motto: 'Autonomous School OS • NexaCampus',
           student_domain: `https://${targetSlug}.nexacampus.school`,
           admin_domain: `https://${targetSlug}.admin.nexacampus.school`,
-          vercel_fallback_domain: `https://${targetSlug}-nexacampus.vercel.app`,
+          vercel_fallback_domain: `https://${targetSlug}.nexacampus.school`,
         });
       }
     } catch {
@@ -266,7 +266,7 @@ export function TenantProvider({ children }: { children: ReactNode }) {
           school_motto: 'Autonomous School OS • NexaCampus',
           student_domain: `https://${targetSlug}.nexacampus.school`,
           admin_domain: `https://${targetSlug}.admin.nexacampus.school`,
-          vercel_fallback_domain: `https://${targetSlug}-nexacampus.vercel.app`,
+          vercel_fallback_domain: `https://${targetSlug}.nexacampus.school`,
         });
       }
     } finally {

@@ -20,7 +20,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
   const city = tenant?.city || 'Campus';
   const state = tenant?.state_territory || 'India';
   const phone = tenant?.creator_phone || '+91 6289652321';
-  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.school` : (slug ? `office@${encodeURIComponent(slug)}.nexacampus.school` : 'support@nexacampus.tech');
+  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.school` : (slug ? `office@${encodeURIComponent(slug)}.nexacampus.school` : 'support@nexacampus.school');
   const motto = tenant?.school_motto || 'Academic Excellence & Innovation';
 
   const signInUrl = slug ? `/chooser?tenant=${encodeURIComponent(slug)}` : '/chooser';

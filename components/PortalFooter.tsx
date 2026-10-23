@@ -15,7 +15,7 @@ export default function PortalFooter() {
   const motto = tenant?.school_motto || (isPlatformRoot ? 'The Operating System for Next-Gen Autonomous Campuses' : 'Academic Excellence & Innovation');
   const location = tenant ? `${tenant.city}, ${tenant.state_territory}` : 'Autonomous Campus Network';
   const phone = tenant?.creator_phone || '+91 6289652321';
-  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.school` : (slug ? `office@${slug}.nexacampus.school` : 'global@nexacampus.tech');
+  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.school` : (slug ? `office@${slug}.nexacampus.school` : 'global@nexacampus.school');
   const year = new Date().getFullYear();
 
   return (

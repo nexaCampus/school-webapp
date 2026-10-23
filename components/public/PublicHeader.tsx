@@ -38,7 +38,7 @@ export default function PublicHeader() {
   const motto = tenant?.school_motto || (slug ? 'Autonomous Campus Operating System' : isPlatformRoot ? 'Autonomous Multi-Tenant School Operating System' : 'Academic Excellence & Innovation');
   const board = tenant?.affiliation_board || (slug ? 'CBSE' : isPlatformRoot ? 'All Boards' : 'CBSE / CISCE');
   const phone = tenant?.creator_phone || '+91 6289652321';
-  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.school` : (slug ? `office@${slug}.nexacampus.school` : 'support@nexacampus.tech');
+  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.school` : (slug ? `office@${slug}.nexacampus.school` : 'support@nexacampus.school');
 
   const signInUrl = slug ? `/chooser?tenant=${encodeURIComponent(slug)}` : '/chooser';
   const adminUrl = slug ? `/admin?tenant=${encodeURIComponent(slug)}` : '/admin';

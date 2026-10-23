@@ -29,7 +29,7 @@ export const PLATFORM_NOTICES: NoticeItem[] = [
   {
     id: 'pn-2',
     gazetteId: 'NEXA/DNS/2026/02',
-    title: 'Multi-Tenant Subdomain Routing Online (*.nexacampus.tech & *.admin.nexacampus.tech)',
+    title: 'Multi-Tenant Subdomain Routing Online (*.nexacampus.school & *.admin.nexacampus.school)',
     date: 'Active',
     category: 'Administrative',
     isNew: true,
