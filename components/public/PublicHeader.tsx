@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTenant } from '@/lib/context/TenantContext';
 import DarkModeToggle from '@/components/DarkModeToggle';
+import { sanitizeSlug, sanitizeTelHref, sanitizeMailtoHref } from '@/lib/tenantUrls';
 import LogoEmblem from '@/components/LogoEmblem';
 import SchoolNavDrawer from './SchoolNavDrawer';
 
@@ -32,15 +33,15 @@ export default function PublicHeader() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const slug = tenant?.subdomain_slug || contextSlug || '';
+  const slug = sanitizeSlug(tenant?.subdomain_slug || contextSlug || '');
   const schoolName = tenant?.school_name || (slug ? `${slug.toUpperCase()} School Campus` : isPlatformRoot ? 'NexaCampus OS' : 'NexaCampus Partner School');
   const motto = tenant?.school_motto || (slug ? 'Autonomous Campus Operating System' : isPlatformRoot ? 'Autonomous Multi-Tenant School Operating System' : 'Academic Excellence & Innovation');
   const board = tenant?.affiliation_board || (slug ? 'CBSE' : isPlatformRoot ? 'All Boards' : 'CBSE / CISCE');
   const phone = tenant?.creator_phone || '+91 6289652321';
   const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : (slug ? `office@${slug}.nexacampus.tech` : 'support@nexacampus.tech');
 
-  const signInUrl = slug ? `/chooser?tenant=${slug}` : '/chooser';
-  const adminUrl = slug ? `/admin?tenant=${slug}` : '/admin';
+  const signInUrl = slug ? `/chooser?tenant=${encodeURIComponent(slug)}` : '/chooser';
+  const adminUrl = slug ? `/admin?tenant=${encodeURIComponent(slug)}` : '/admin';
 
   // Build dynamic navigation items based on active modules
   const NAV_ITEMS: NavItem[] = [
@@ -111,7 +112,7 @@ export default function PublicHeader() {
             {!isPlatformRoot && (
               <>
                 <a
-                  href={`tel:${phone}`}
+                  href={sanitizeTelHref(phone)}
                   className="flex items-center gap-1.5 hover:text-white transition-colors"
                 >
                   <svg className="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -121,7 +122,7 @@ export default function PublicHeader() {
                 </a>
                 <span className="text-slate-600 dark:text-slate-700">|</span>
                 <a
-                  href={`mailto:${email}`}
+                  href={sanitizeMailtoHref(email)}
                   className="flex items-center gap-1.5 hover:text-white transition-colors"
                 >
                   <svg className="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -289,7 +290,7 @@ export default function PublicHeader() {
             <DarkModeToggle className="w-8 h-8" />
             {!isPlatformRoot && (
               <a
-                href={`tel:${phone}`}
+                href={sanitizeTelHref(phone)}
                 className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-full bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900/40 text-[11px] sm:text-xs font-bold"
                 aria-label="Call school helpline"
               >

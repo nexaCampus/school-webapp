@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import LogoEmblem from './LogoEmblem';
 import { useTenant } from '@/lib/context/TenantContext';
+import { sanitizeSlug } from '@/lib/tenantUrls';
 
 export default function AuthFooter({ className = '' }: { className?: string }) {
   const { tenant, isPlatformRoot } = useTenant();

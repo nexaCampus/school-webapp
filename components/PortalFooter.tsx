@@ -4,9 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import LogoEmblem from './LogoEmblem';
 import { useTenant } from '@/lib/context/TenantContext';
+import { sanitizeSlug, sanitizeTelHref, sanitizeMailtoHref } from '@/lib/tenantUrls';
 
 export default function PortalFooter() {
-  const { tenant, slug, isPlatformRoot, isModuleEnabled } = useTenant();
+  const { tenant, slug: rawSlug, isPlatformRoot, isModuleEnabled } = useTenant();
+  const slug = sanitizeSlug(rawSlug);
 
   const schoolName = tenant?.school_name || (slug ? `${slug.toUpperCase()} School Campus` : isPlatformRoot ? 'NexaCampus Autonomous OS' : 'NexaCampus Partner School');
   const board = tenant?.affiliation_board || (slug ? 'CBSE' : 'CBSE / CISCE');
@@ -175,7 +177,7 @@ export default function PortalFooter() {
                 call
               </span>
               <span className="text-[12px]">
-                <a href={`tel:${phone}`} className="inline-block py-1 hover:text-primary transition-colors underline-offset-2 hover:underline">
+                <a href={sanitizeTelHref(phone)} className="inline-block py-1 hover:text-primary transition-colors underline-offset-2 hover:underline">
                   {phone}
                 </a>
               </span>
@@ -184,7 +186,7 @@ export default function PortalFooter() {
               <span className="material-symbols-outlined text-[17px] text-primary flex-shrink-0">
                 mail
               </span>
-              <a href={`mailto:${email}`} className="text-[12px] inline-block py-1 hover:text-primary transition-colors underline-offset-2 hover:underline">
+              <a href={sanitizeMailtoHref(email)} className="text-[12px] inline-block py-1 hover:text-primary transition-colors underline-offset-2 hover:underline">
                 {email}
               </a>
             </div>
