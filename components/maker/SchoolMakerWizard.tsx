@@ -219,14 +219,14 @@ export default function SchoolMakerWizard({
   const [selectedPosition, setSelectedPosition] = useState('founder');
 
   // Section 2: School Core Details
-  const [schoolName, setSchoolName] = useState('Greenwood Centennial Academy');
-  const [teacherCount, setTeacherCount] = useState('48');
-  const [studentCapacity, setStudentCapacity] = useState('1,850');
+  const [schoolName, setSchoolName] = useState('');
+  const [teacherCount, setTeacherCount] = useState('50');
+  const [studentCapacity, setStudentCapacity] = useState('1,200');
   const [board, setBoard] = useState('CBSE');
-  const [city, setCity] = useState('Kolkata');
+  const [city, setCity] = useState('');
   const [state, setState] = useState('West Bengal');
-  const [subdomain, setSubdomain] = useState('greenwood');
-  const [motto, setMotto] = useState('Veritas et Virtus (Truth & Virtue)');
+  const [subdomain, setSubdomain] = useState('');
+  const [motto, setMotto] = useState('');
   const [themeColor, setThemeColor] = useState('#0A192F');
 
   // Subdomain validation state
@@ -633,7 +633,7 @@ export default function SchoolMakerWizard({
                   required
                   value={subdomain}
                   onChange={(e) => setSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                  placeholder="e.g. greenwood"
+                  placeholder="e.g. lcgvm, vidyamandir, dps"
                   className="w-1/2 p-2.5 font-mono font-bold text-[#131b2e] dark:text-white focus:outline-hidden bg-transparent"
                 />
                 <span className="w-1/2 p-2.5 bg-[#f2f3ff] dark:bg-[#151622] text-[#454655] dark:text-[#a0a4c0] font-mono text-xs font-bold border-l border-[#c6c5d8] dark:border-[#2b2f4a]">

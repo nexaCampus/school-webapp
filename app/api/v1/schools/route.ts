@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     const now = new Date().toISOString();
     const modulesJson = JSON.stringify(body.enabled_modules || body.active_modules || {});
 
-    // Insert or update schools in Turso
+    // 1. Insert or update schools master table in Turso
     await turso.execute({
       sql: `INSERT INTO schools (
         id, creator_phone, creator_name, leadership_position,
@@ -133,6 +133,53 @@ export async function POST(request: NextRequest) {
         now,
       ],
     });
+
+    // 2. Synchronize relational school_subdomains table
+    try {
+      await turso.execute({
+        sql: `INSERT OR REPLACE INTO school_subdomains (id, school_id, subdomain_slug, domain_type, full_domain, target_cname, status, created_at)
+              VALUES (?, ?, ?, 'student', ?, 'cname.vercel-dns.com', 'active', ?)`,
+        args: [`sub-${cleanSlug}-student`, schoolId, cleanSlug, urls.customDomain, now],
+      });
+      await turso.execute({
+        sql: `INSERT OR REPLACE INTO school_subdomains (id, school_id, subdomain_slug, domain_type, full_domain, target_cname, status, created_at)
+              VALUES (?, ?, ?, 'admin', ?, 'cname.vercel-dns.com', 'active', ?)`,
+        args: [`sub-${cleanSlug}-admin`, schoolId, cleanSlug, urls.customAdminDomain, now],
+      });
+    } catch (subErr) {
+      console.warn('[Turso] Notice: updating school_subdomains:', subErr);
+    }
+
+    // 3. Synchronize relational school_modules table
+    try {
+      const parsedMods = (body.enabled_modules || body.active_modules || {}) as Record<string, boolean>;
+      for (const [modKey, isEnabled] of Object.entries(parsedMods)) {
+        await turso.execute({
+          sql: `INSERT OR REPLACE INTO school_modules (id, school_id, module_key, is_enabled, updated_at)
+                VALUES (?, ?, ?, ?, ?)`,
+          args: [`mod-${cleanSlug}-${modKey}`, schoolId, modKey, isEnabled ? 1 : 0, now],
+        });
+      }
+    } catch (modErr) {
+      console.warn('[Turso] Notice: updating school_modules:', modErr);
+    }
+
+    // 4. Record audit event
+    try {
+      await turso.execute({
+        sql: `INSERT INTO maker_audit_logs (id, school_id, creator_phone, action, details, created_at)
+              VALUES (?, ?, ?, 'school_created', ?, ?)`,
+        args: [
+          `audit-${cleanSlug}-${Date.now()}`,
+          schoolId,
+          String(body.creator_phone || body.creatorPhone || 'system'),
+          JSON.stringify({ school_name: body.school_name || cleanSlug, slug: cleanSlug }),
+          now,
+        ],
+      });
+    } catch (auditErr) {
+      console.warn('[Turso] Notice: logging maker audit:', auditErr);
+    }
 
     return NextResponse.json({
       success: true,

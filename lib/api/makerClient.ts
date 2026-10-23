@@ -43,62 +43,40 @@ export function getApiBase(): string {
     const localOverride = localStorage.getItem('nexacampus_api_url');
     if (localOverride) return localOverride;
 
-    // In local development on localhost or 127.0.0.1, prioritize local Go backend on port 8080
-    const host = window.location.hostname;
-    if (host === 'localhost' || host === '127.0.0.1') {
-      return (
-        process.env.NEXT_PUBLIC_LOCAL_GO_API_URL ||
-        'http://localhost:8080'
-      );
-    }
+    // Use relative path in browser so all requests hit the Next.js App Router
+    // endpoints connected to Turso SQLite on the same origin.
+    return '';
   }
   return (
     process.env.NEXT_PUBLIC_GO_API_URL ||
     process.env.GO_BACKEND_URL ||
-    'https://backend-school-go.onrender.com'
+    ''
   );
 }
 
-/** Dispatches SMS OTP to creator phone number */
+/** Dispatches WhatsApp OTP to creator phone number */
 export async function sendMakerOTP(
   phone: string,
   creatorName: string
-): Promise<{ success: boolean; message: string; dev_otp?: string }> {
+): Promise<{ success: boolean; message: string; channel?: string; delivered?: boolean }> {
   const base = getApiBase();
   const cleanPhone = phone.trim();
 
-  try {
-    const res = await fetch(`${base}/api/v1/maker/auth/send-otp`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: cleanPhone, creator_name: creatorName }),
-    });
+  const res = await fetch(`${base}/api/v1/maker/auth/send-otp`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phone: cleanPhone, creator_name: creatorName }),
+  });
 
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.message || `Failed to send OTP (${res.status})`);
-    }
-
-    return await res.json();
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    const isNetworkFailure =
-      err instanceof TypeError ||
-      /fetch failed|network|ECONNREFUSED|Failed to fetch/i.test(message);
-    if (!isNetworkFailure) {
-      throw err;
-    }
-    console.warn('[makerClient] sendMakerOTP backend unreachable, using offline fallback:', err);
-    // Safe dev fallback: allow verification with 123456
-    return {
-      success: true,
-      message: `Verification code sent to ${cleanPhone}`,
-      dev_otp: '123456',
-    };
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || errData.message || `Failed to dispatch WhatsApp verification code (${res.status})`);
   }
+
+  return await res.json();
 }
 
-/** Verifies creator OTP code and returns session token */
+/** Verifies creator WhatsApp OTP code and returns session token */
 export async function verifyMakerOTP(
   phone: string,
   otp: string,
@@ -107,40 +85,18 @@ export async function verifyMakerOTP(
   const base = getApiBase();
   const cleanPhone = phone.trim();
 
-  try {
-    const res = await fetch(`${base}/api/v1/maker/auth/verify-otp`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: cleanPhone, otp: otp.trim(), creator_name: creatorName }),
-    });
+  const res = await fetch(`${base}/api/v1/maker/auth/verify-otp`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phone: cleanPhone, otp: otp.trim(), creator_name: creatorName }),
+  });
 
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.message || `Verification failed (${res.status})`);
-    }
-
-    return await res.json();
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    const isNetworkFailure =
-      err instanceof TypeError ||
-      /fetch failed|network|ECONNREFUSED|Failed to fetch/i.test(message);
-    if (!isNetworkFailure) {
-      throw err;
-    }
-    console.warn('[makerClient] verifyMakerOTP backend unreachable, using offline fallback:', err);
-    if (otp.trim() === '123456') {
-      const token = 'tok_dev_' + Math.random().toString(36).substring(2, 15);
-      const session: CreatorSessionData = {
-        phone: cleanPhone,
-        creatorName: creatorName.trim() || 'School Administrator',
-        verifiedAt: new Date().toISOString(),
-        token,
-      };
-      return { success: true, token, session };
-    }
-    throw err;
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || errData.message || `Verification failed (${res.status})`);
   }
+
+  return await res.json();
 }
 
 /** Checks subdomain availability in real-time */
