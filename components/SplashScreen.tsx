@@ -2,15 +2,15 @@
 
 // Cinematic boot splash for the landing route. A deep-navy cover paints with
 // the very first pixel (it is part of the SSR markup) so the light page can
-// never flash beneath it, choreographs the emblem and wordmark in over ~1.2s,
+// never flash beneath it, choreographs the emblem and wordmark in over ~2s,
 // then dissolves itself from the DOM entirely — no residue, no scroll lock,
 // no timers left running.
 //
-// Replays are governed by a per-tab sessionStorage flag. Because sessionStorage
-// is unreadable during SSR, the inline head script in app/layout.tsx stamps
-// <html class="splash-seen"> before first paint for tabs that already watched
-// the animation, and globals.css display:nones the cover for those — a repeat
-// visitor never sees even one frame of it.
+// Replay model: modules have one lifetime per full document load, so the flag
+// below resets on every reload and survives client-side navigation. Every
+// reload therefore replays the splash; hopping back to `/` from another route
+// inside the app never does. No storage is involved, which keeps the choice
+// readable during first render (no post-hydration flash for skips).
 //
 // Animation engine: Framer Motion. `prefers-reduced-motion` collapses the
 // staggered choreography into a static brand frame with a short cross-fade
@@ -19,12 +19,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import LogoEmblem from './LogoEmblem';
 
-/** Per-tab replay flag. Written when the splash plays, honoured until the tab closes. */
-export const SPLASH_SESSION_KEY = 'hasSeenSplash';
+/** True once the splash has played in this document load; resets on every reload. */
+let playedThisLoad = false;
 
-/** Total hold before the exit transition begins. */
-const HOLD_MS = 1200;
-const HOLD_MS_REDUCED = 700;
+/** Total hold before the exit transition begins — 2 seconds sharp. */
+const HOLD_MS = 2000;
+const HOLD_MS_REDUCED = 1200;
 
 /** Signature ease-out shared by every stage of the choreography. */
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -32,9 +32,9 @@ const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 export type SplashExitVariant = 'fade' | 'portal';
 
 export interface SplashScreenProps {
-  /** Fires once the overlay has fully left the DOM (or instantly when skipped by the replay flag). */
+  /** Fires once the overlay has fully left the DOM (or instantly when the splash was skipped). */
   onComplete?: () => void;
-  /** Ignore the replay flag — always play the full choreography (debugging / previews). */
+  /** Always play the full choreography, even if it already ran this load (debugging / previews). */
   forceShow?: boolean;
   /** Exit choreography: 'fade' zooms the cover away (default), 'portal' irises it into the centre. */
   exitVariant?: SplashExitVariant;
@@ -47,8 +47,10 @@ export default function SplashScreen({
 }: SplashScreenProps) {
   const reduce = !!useReducedMotion();
 
-  /** Drives the AnimatePresence exit once the hold elapses or Skip is pressed. */
-  const [visible, setVisible] = useState(true);
+  /** Drives the AnimatePresence exit once the hold elapses or Skip is pressed.
+   *  Read synchronously from module state so an in-app return trip to `/` never
+   *  renders the cover for a single frame before the effect runs. */
+  const [visible, setVisible] = useState(() => forceShow || !playedThisLoad);
   /** Stops rendering the (now idle) AnimatePresence subtree altogether. */
   const [gone, setGone] = useState(false);
 
@@ -67,30 +69,15 @@ export default function SplashScreen({
   }, []);
 
   useEffect(() => {
-    let seen = false;
-    try {
-      seen = window.sessionStorage.getItem(SPLASH_SESSION_KEY) === 'true';
-    } catch {
-      // Storage can throw in privacy modes; treat as first visit.
-    }
-
-    if (seen && !forceShow) {
-      // The pre-paint CSS already hid the cover; drop it without any exit.
-      setVisible(false);
-      setGone(true);
+    if (!visible) {
+      // Already played this load (in-app return trip) — nothing to do.
       handleComplete();
       return;
     }
-
-    try {
-      window.sessionStorage.setItem(SPLASH_SESSION_KEY, 'true');
-    } catch {
-      // Replay-per-load is the graceful degradation.
-    }
-
+    playedThisLoad = true;
     const id = window.setTimeout(() => setVisible(false), reduce ? HOLD_MS_REDUCED : HOLD_MS);
     return () => window.clearTimeout(id);
-  }, [forceShow, reduce, handleComplete]);
+  }, [visible, reduce, handleComplete]);
 
   // While the cover is up the page beneath must not scroll.
   useEffect(() => {
