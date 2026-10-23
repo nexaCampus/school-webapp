@@ -70,7 +70,7 @@ export default function DisclosuresPage() {
               </div>
               <div className="bg-slate-50 dark:bg-[#101119] p-3 rounded border border-slate-100 dark:border-[#1e2133]">
                 <span className="text-slate-400 dark:text-[#8a8fa8] block font-mono text-[10px] uppercase">Official Helpline &amp; Email</span>
-                <span className="font-mono font-medium text-slate-700 dark:text-[#c4c7e0]">{tenant?.creator_phone || '+91 6289 652 321'} / desk@{tenant?.subdomain_slug || 'school'}.nexacampus.tech</span>
+                <span className="font-mono font-medium text-slate-700 dark:text-[#c4c7e0]">{tenant?.creator_phone || '+91 6289 652 321'} / desk@{tenant?.subdomain_slug || 'school'}.nexacampus.school</span>
               </div>
             </div>
           </div>

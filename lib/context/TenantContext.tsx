@@ -62,8 +62,8 @@ export const LCGVM_FLAGSHIP: SchoolTenant = {
   enrolled_scholars: '2400',
   city: 'Kolkata',
   state_territory: 'West Bengal',
-  student_domain: 'https://lcgvm.nexacampus.tech',
-  admin_domain: 'https://lcgvm.admin.nexacampus.tech',
+  student_domain: 'https://lcgvm.nexacampus.school',
+  admin_domain: 'https://lcgvm.admin.nexacampus.school',
   vercel_fallback_domain: 'https://lcgvm-nexacampus.vercel.app',
   provisioning_status: 'active',
   theme_color: '#0A192F',
@@ -174,8 +174,8 @@ function extractSlugFromWindow(currentPath?: string): string | null {
     return adminAppHost[1];
   }
 
-  // Admin match: <slug>.admin.nexacampus.tech
-  const adminMatch = host.match(/^([a-z0-9-]+)\.admin\.nexacampus\.(?:tech|com)$/);
+  // Admin match: <slug>.admin.nexacampus.school
+  const adminMatch = host.match(/^([a-z0-9-]+)\.admin\.nexacampus\.(?:school|tech|com)$/);
   if (adminMatch && adminMatch[1]) return adminMatch[1];
 
   // Admin Vercel match: <slug>-admin-nexacampus.vercel.app
@@ -188,8 +188,8 @@ function extractSlugFromWindow(currentPath?: string): string | null {
     return studentAppHost[1];
   }
 
-  // Student match: <slug>.nexacampus.tech
-  const studentMatch = host.match(/^([a-z0-9-]+)\.nexacampus\.(?:tech|com)$/);
+  // Student match: <slug>.nexacampus.school
+  const studentMatch = host.match(/^([a-z0-9-]+)\.nexacampus\.(?:school|tech|com)$/);
   if (studentMatch && studentMatch[1] && !reserved.includes(studentMatch[1])) {
     return studentMatch[1];
   }
@@ -249,8 +249,8 @@ export function TenantProvider({ children }: { children: ReactNode }) {
           subdomain_slug: targetSlug,
           school_name: `${targetSlug.toUpperCase()} Campus`,
           school_motto: 'Autonomous School OS • NexaCampus',
-          student_domain: `https://${targetSlug}.nexacampus.tech`,
-          admin_domain: `https://${targetSlug}.admin.nexacampus.tech`,
+          student_domain: `https://${targetSlug}.nexacampus.school`,
+          admin_domain: `https://${targetSlug}.admin.nexacampus.school`,
           vercel_fallback_domain: `https://${targetSlug}-nexacampus.vercel.app`,
         });
       }
@@ -264,8 +264,8 @@ export function TenantProvider({ children }: { children: ReactNode }) {
           subdomain_slug: targetSlug,
           school_name: `${targetSlug.toUpperCase()} School Campus`,
           school_motto: 'Autonomous School OS • NexaCampus',
-          student_domain: `https://${targetSlug}.nexacampus.tech`,
-          admin_domain: `https://${targetSlug}.admin.nexacampus.tech`,
+          student_domain: `https://${targetSlug}.nexacampus.school`,
+          admin_domain: `https://${targetSlug}.admin.nexacampus.school`,
           vercel_fallback_domain: `https://${targetSlug}-nexacampus.vercel.app`,
         });
       }

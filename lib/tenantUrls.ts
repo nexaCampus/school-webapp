@@ -10,12 +10,12 @@
  */
 
 export const CANONICAL_APP_HOST = (
-  process.env.NEXT_PUBLIC_CANONICAL_APP_HOST || 'school-webapp-self.vercel.app'
+  process.env.NEXT_PUBLIC_CANONICAL_APP_HOST || 'nexacampus.school'
 )
   .toLowerCase()
   .trim();
 
-export const PRODUCTION_BASE_DOMAIN = 'nexacampus.tech';
+export const PRODUCTION_BASE_DOMAIN = 'nexacampus.school';
 
 /**
  * Parent domain for cookies that must be shared between the platform host and

@@ -2473,9 +2473,9 @@ export default function ExecutiveHomePage() {
                   <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]dark:text-[#bdc2ff]">call</span>
                   <span>{tenant?.creator_phone || '+91 33 2437 1234 / +91 91798 0679513'}</span>
                 </a>
-                <a href={sanitizeMailtoHref(tenant ? `office@${sanitizeSlug(tenant.subdomain_slug)}.nexacampus.tech` : 'office@lcgvm.edu.in')} className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
+                <a href={sanitizeMailtoHref(tenant ? `office@${sanitizeSlug(tenant.subdomain_slug)}.nexacampus.school` : 'office@lcgvm.edu.in')} className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
                   <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]dark:text-[#bdc2ff]">mail</span>
-                  <span>{tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : 'office@lcgvm.edu.in'}</span>
+                  <span>{tenant ? `office@${tenant.subdomain_slug}.nexacampus.school` : 'office@lcgvm.edu.in'}</span>
                 </a>
               </div>
               <div className="mt-4 flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold font-mono">
