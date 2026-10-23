@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { SchoolAppConfig, AVAILABLE_MODULES } from './SchoolMakerWizard';
-import { CANONICAL_APP_HOST, tenantPortalUrls } from '@/lib/tenantUrls';
+import { CANONICAL_APP_HOST, tenantPortalUrls, sanitizeSlug } from '@/lib/tenantUrls';
 
 export default function SchoolMakerGeneratedApp({
   config,
@@ -16,7 +16,7 @@ export default function SchoolMakerGeneratedApp({
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [activeModuleModal, setActiveModuleModal] = useState<string | null>(null);
 
-  const urls = tenantPortalUrls(config.subdomain);
+  const urls = tenantPortalUrls(sanitizeSlug(config.subdomain));
   const studentDomain = urls.appDomain;
   const adminDomain = urls.appAdminDomain;
   const customDomain = urls.customDomain;

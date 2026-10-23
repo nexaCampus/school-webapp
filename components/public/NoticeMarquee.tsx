@@ -327,7 +327,7 @@ export default function NoticeMarquee({ notices }: { notices?: NoticeItem[] }) {
                   Close
                 </button>
                 <a
-                  href={`#download-${selectedNotice.id}`}
+                  href={`#download-${encodeURIComponent(String(selectedNotice.id))}`}
                   onClick={(e) => {
                     e.preventDefault();
                     alert(`Simulated Download: Document ${selectedNotice.gazetteId} (${selectedNotice.fileSize}) verified.`);

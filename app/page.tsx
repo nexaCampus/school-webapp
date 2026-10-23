@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import LogoEmblem from '@/components/LogoEmblem';
+import { sanitizeSlug, sanitizeTelHref, sanitizeMailtoHref } from '@/lib/tenantUrls';
 import DarkModeToggle from '@/components/DarkModeToggle';
 import HeroTypewriter from '@/components/HeroTypewriter';
 import SplashScreen from '@/components/SplashScreen';
@@ -911,14 +912,14 @@ export default function ExecutiveHomePage() {
                 ) : (
                   <>
                     <Link
-                      href={`/chooser?tenant=${studentSlug}`}
+                      href={`/chooser?tenant=${encodeURIComponent(sanitizeSlug(studentSlug))}`}
                       className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#1c2ac8] hover:bg-[#3b49df] text-white font-bold text-[14px] shadow-lg shadow-[#1c2ac8]/30 hover:shadow-xl hover:shadow-[#1c2ac8]/40 active:scale-95 transition-all"
                     >
                       <span className="material-symbols-outlined text-[20px]">badge</span>
                       <span>Student &amp; Parent Portal</span>
                     </Link>
                     <Link
-                      href={`/admin?tenant=${studentSlug}`}
+                      href={`/admin?tenant=${encodeURIComponent(sanitizeSlug(studentSlug))}`}
                       className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-full bg-white dark:bg-[#1e202f] hover:bg-[#eaedff] dark:hover:bg-[#25283d] text-[#721121] dark:text-rose-400 font-bold text-[14px] border border-[#c6c5d8]/40 dark:border-[#343852] shadow-sm active:scale-95 transition-all"
                     >
                       <span className="material-symbols-outlined text-[20px]">admin_panel_settings</span>
@@ -2437,7 +2438,7 @@ export default function ExecutiveHomePage() {
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
-                  href={isPlatformRoot ? '/maker' : `/chooser?tenant=${studentSlug}`}
+                  href={isPlatformRoot ? '/maker' : `/chooser?tenant=${encodeURIComponent(sanitizeSlug(studentSlug))}`}
                   className="px-6 py-3.5 rounded-full bg-[#ffffff] dark:bg-[#eaedff] text-[#1c2ac8] dark:text-[#101c9c] font-black text-sm shadow-lg hover:bg-slate-100 dark:hover:bg-[#f2f3ff] transition-all active:scale-95"
                 >
                   {isPlatformRoot ? 'Launch Your School App' : 'Enter Portal Chooser'}
@@ -2468,11 +2469,11 @@ export default function ExecutiveHomePage() {
                   : `Official high-speed web application for ${schoolName}. Operates at <3MB storage with instant cache warming and zero background battery drain.`}
               </p>
               <div className="mt-3 flex flex-col gap-1.5 text-xs text-[#454655] dark:text-[#a0a4c0]">
-                <a href={`tel:${tenant?.creator_phone || '+913324371234'}`} className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
+                <a href={sanitizeTelHref(tenant?.creator_phone || '+913324371234')} className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
                   <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]dark:text-[#bdc2ff]">call</span>
                   <span>{tenant?.creator_phone || '+91 33 2437 1234 / +91 91798 0679513'}</span>
                 </a>
-                <a href={`mailto:${tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : 'office@lcgvm.edu.in'}`} className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
+                <a href={sanitizeMailtoHref(tenant ? `office@${sanitizeSlug(tenant.subdomain_slug)}.nexacampus.tech` : 'office@lcgvm.edu.in')} className="hover:text-[#1c2ac8]dark:hover:text-[#bdc2ff] dark:hover:text-[#bdc2ff] transition-colors flex items-center gap-2">
                   <span className="material-symbols-outlined text-[15px] text-[#1c2ac8]dark:text-[#bdc2ff]">mail</span>
                   <span>{tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : 'office@lcgvm.edu.in'}</span>
                 </a>

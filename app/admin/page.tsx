@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import PublicHeader from '@/components/public/PublicHeader';
 import PortalFooter from '@/components/PortalFooter';
 import { useTenant } from '@/lib/context/TenantContext';
-import { tenantPortalUrls } from '@/lib/tenantUrls';
+import { tenantPortalUrls, sanitizeSlug } from '@/lib/tenantUrls';
 import RequireSession from '@/components/common/RequireSession';
 
 interface ModuleDef {
@@ -94,7 +94,7 @@ function AdminDashboardContent() {
     }
   };
 
-  const effectiveSlug = tenant?.subdomain_slug || queryTenant || slug || '';
+  const effectiveSlug = sanitizeSlug(tenant?.subdomain_slug || queryTenant || slug || '');
   const schoolName = tenant?.school_name || (effectiveSlug ? `${effectiveSlug.toUpperCase()} School Campus` : 'NexaCampus Administrative Center');
   const board = tenant?.affiliation_board || 'Academic Board';
   const displaySlug = effectiveSlug || 'portal';

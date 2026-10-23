@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { fetchSchoolBySlug, updateSchoolModules, SchoolTenant } from '@/lib/api/makerClient';
-import { SHARED_COOKIE_DOMAIN } from '@/lib/tenantUrls';
+import { SHARED_COOKIE_DOMAIN, sanitizeSlug } from '@/lib/tenantUrls';
 
 export interface TenantContextType {
   tenant: SchoolTenant | null;

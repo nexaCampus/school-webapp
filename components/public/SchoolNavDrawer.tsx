@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
+import { sanitizeSlug, sanitizeTelHref, sanitizeMailtoHref } from '@/lib/tenantUrls';
 import LogoEmblem from '@/components/LogoEmblem';
 import { useTenant } from '@/lib/context/TenantContext';
 
@@ -13,17 +14,17 @@ interface SchoolNavDrawerProps {
 export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProps) {
   const { tenant, slug: contextSlug, isPlatformRoot, isModuleEnabled } = useTenant();
 
-  const slug = tenant?.subdomain_slug || contextSlug || '';
+  const slug = sanitizeSlug(tenant?.subdomain_slug || contextSlug || '');
   const schoolName = tenant?.school_name || (slug ? `${slug.toUpperCase()} School Campus` : 'School Campus');
   const board = tenant?.affiliation_board || 'CBSE';
   const city = tenant?.city || 'Campus';
   const state = tenant?.state_territory || 'India';
   const phone = tenant?.creator_phone || '+91 6289652321';
-  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : (slug ? `office@${slug}.nexacampus.tech` : 'support@nexacampus.tech');
+  const email = tenant ? `office@${tenant.subdomain_slug}.nexacampus.tech` : (slug ? `office@${encodeURIComponent(slug)}.nexacampus.tech` : 'support@nexacampus.tech');
   const motto = tenant?.school_motto || 'Academic Excellence & Innovation';
 
-  const signInUrl = slug ? `/chooser?tenant=${slug}` : '/chooser';
-  const adminUrl = slug ? `/admin?tenant=${slug}` : '/admin';
+  const signInUrl = slug ? `/chooser?tenant=${encodeURIComponent(slug)}` : '/chooser';
+  const adminUrl = slug ? `/admin?tenant=${encodeURIComponent(slug)}` : '/admin';
 
   // Handle escape key to close drawer
   useEffect(() => {
@@ -75,7 +76,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
                   {schoolName}
                 </h3>
                 <p className="text-xs sm:text-[11px] text-slate-500 dark:text-slate-400 font-mono truncate mt-0.5">
-                  {city}, {state} • {slug ? `${slug}.nexacampus.tech` : 'NexaCampus OS'}
+                  {city}, {state} • {slug ? `${encodeURIComponent(slug)}.nexacampus.tech` : 'NexaCampus OS'}
                 </p>
               </div>
             </div>
@@ -129,7 +130,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
               </Link>
 
               <Link
-                href={slug ? `/faculty?tenant=${slug}` : '/faculty'}
+                href={slug ? `/faculty?tenant=${encodeURIComponent(slug)}` : '/faculty'}
                 onClick={onClose}
                 className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
               >
@@ -148,7 +149,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
               </Link>
 
               <Link
-                href={slug ? `/disclosures?tenant=${slug}` : '/disclosures'}
+                href={slug ? `/disclosures?tenant=${encodeURIComponent(slug)}` : '/disclosures'}
                 onClick={onClose}
                 className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
               >
@@ -199,7 +200,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
             </div>
             <div className="mt-2.5 space-y-1.5">
               <Link
-                href={slug ? `/academics?tenant=${slug}` : '/academics'}
+                href={slug ? `/academics?tenant=${encodeURIComponent(slug)}` : '/academics'}
                 onClick={onClose}
                 className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
               >
@@ -219,7 +220,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
 
               {isModuleEnabled('exams') && (
                 <Link
-                  href={slug ? `/exams?tenant=${slug}` : '/exams'}
+                  href={slug ? `/exams?tenant=${encodeURIComponent(slug)}` : '/exams'}
                   onClick={onClose}
                   className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
                 >
@@ -240,7 +241,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
 
               {isModuleEnabled('diary') && (
                 <Link
-                  href={slug ? `/diary?tenant=${slug}` : '/diary'}
+                  href={slug ? `/diary?tenant=${encodeURIComponent(slug)}` : '/diary'}
                   onClick={onClose}
                   className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
                 >
@@ -261,7 +262,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
 
               {isModuleEnabled('attendance') && (
                 <Link
-                  href={slug ? `/attendance?tenant=${slug}` : '/attendance'}
+                  href={slug ? `/attendance?tenant=${encodeURIComponent(slug)}` : '/attendance'}
                   onClick={onClose}
                   className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
                 >
@@ -314,7 +315,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
             <div className="mt-2.5 space-y-1.5">
               {isModuleEnabled('bus') && (
                 <Link
-                  href={slug ? `/bus?tenant=${slug}` : '/bus'}
+                  href={slug ? `/bus?tenant=${encodeURIComponent(slug)}` : '/bus'}
                   onClick={onClose}
                   className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
                 >
@@ -335,7 +336,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
 
               {isModuleEnabled('canteen') && (
                 <Link
-                  href={slug ? `/canteen?tenant=${slug}` : '/canteen'}
+                  href={slug ? `/canteen?tenant=${encodeURIComponent(slug)}` : '/canteen'}
                   onClick={onClose}
                   className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
                 >
@@ -356,7 +357,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
 
               {isModuleEnabled('library') && (
                 <Link
-                  href={slug ? `/library?tenant=${slug}` : '/library'}
+                  href={slug ? `/library?tenant=${encodeURIComponent(slug)}` : '/library'}
                   onClick={onClose}
                   className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
                 >
@@ -377,7 +378,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
 
               {isModuleEnabled('health') && (
                 <Link
-                  href={slug ? `/health?tenant=${slug}` : '/health'}
+                  href={slug ? `/health?tenant=${encodeURIComponent(slug)}` : '/health'}
                   onClick={onClose}
                   className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
                 >
@@ -397,7 +398,7 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
               )}
 
               <Link
-                href={slug ? `/facilities?tenant=${slug}` : '/facilities'}
+                href={slug ? `/facilities?tenant=${encodeURIComponent(slug)}` : '/facilities'}
                 onClick={onClose}
                 className="flex items-center gap-3 p-3 sm:p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#181c2e] transition-colors group"
               >
@@ -492,10 +493,10 @@ export default function SchoolNavDrawer({ isOpen, onClose }: SchoolNavDrawerProp
           </div>
 
           <div className="pt-2 flex items-center justify-between text-xs sm:text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-            <a href={`tel:${phone}`} className="hover:text-oxford dark:hover:text-white flex items-center gap-1">
+            <a href={sanitizeTelHref(phone)} className="hover:text-oxford dark:hover:text-white flex items-center gap-1">
               <span>📞 {phone}</span>
             </a>
-            <a href={`mailto:${email}`} className="hover:text-oxford dark:hover:text-white flex items-center gap-1">
+            <a href={sanitizeMailtoHref(email)} className="hover:text-oxford dark:hover:text-white flex items-center gap-1">
               <span>✉️ {email}</span>
             </a>
           </div>

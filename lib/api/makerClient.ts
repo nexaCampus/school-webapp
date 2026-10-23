@@ -3,7 +3,7 @@
  * Interfaces with Go Orchestrator Backend deployed on Render or Local Dev.
  */
 
-import { tenantPortalUrls } from '@/lib/tenantUrls';
+import { tenantPortalUrls, sanitizeSlug } from '@/lib/tenantUrls';
 
 export interface CreatorSessionData {
   phone: string;
@@ -157,7 +157,21 @@ export async function checkSlugAvailability(slug: string): Promise<{
   };
 }> {
   const base = getApiBase();
-  const cleanSlug = slug.toLowerCase().trim();
+  const cleanSlug = sanitizeSlug(slug);
+  if (!cleanSlug) {
+    return {
+      valid: false,
+      available: false,
+      slug: slug || '',
+      reason: 'Invalid slug format',
+      urls: {
+        student_custom: '',
+        admin_custom: '',
+        vercel_fallback: '',
+        path_fallback: '',
+      },
+    };
+  }
 
   try {
     const res = await fetch(`${base}/api/v1/schools/check-slug?slug=${encodeURIComponent(cleanSlug)}`);
@@ -298,7 +312,7 @@ export async function fetchSchoolBySlug(slug: string): Promise<SchoolRecordData 
       return await res.json();
     }
   } catch (err) {
-    console.warn(`[makerClient] Failed to fetch school '${cleanSlug}' from backend:`, err);
+    console.warn('[makerClient] Failed to fetch school %s from backend:', cleanSlug, err);
   }
 
   // Fallback check in localStorage for client-side created schools
@@ -360,7 +374,7 @@ export async function updateSchoolModules(
       return await res.json();
     }
   } catch (err) {
-    console.warn(`[makerClient] updateSchoolModules backend error for ${cleanSlug}:`, err);
+    console.warn('[makerClient] updateSchoolModules backend error for %s:', cleanSlug, err);
   }
 
   return null;
